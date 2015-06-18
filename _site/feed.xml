@@ -6,8 +6,8 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 17 Jun 2015 22:19:59 +0800</pubDate>
-    <lastBuildDate>Wed, 17 Jun 2015 22:19:59 +0800</lastBuildDate>
+    <pubDate>Thu, 18 Jun 2015 22:00:59 +0800</pubDate>
+    <lastBuildDate>Thu, 18 Jun 2015 22:00:59 +0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -30,6 +30,29 @@
         <pubDate>Thu, 18 Jun 2015 06:19:36 +0800</pubDate>
         <link>http://yourdomain.com/jekyll/update/2015/06/18/welcome-to-jekyll.html</link>
         <guid isPermaLink="true">http://yourdomain.com/jekyll/update/2015/06/18/welcome-to-jekyll.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>Test the new blog!</title>
+        <description>&lt;p&gt;这是第一篇博客。&lt;/p&gt;
+
+&lt;p&gt;首先，通过github-pages与传统博客比较&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Feature：是什么&lt;/li&gt;
+  &lt;li&gt;Advantage：比别人好在哪些地方&lt;/li&gt;
+  &lt;li&gt;Benefit：会得到什么好处&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 18 Jun 2015 06:19:36 +0800</pubDate>
+        <link>http://yourdomain.com/jekyll/update/2015/06/18/test-new-blog.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/jekyll/update/2015/06/18/test-new-blog.html</guid>
         
         
         <category>jekyll</category>

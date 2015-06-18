@@ -1,4 +1,9 @@
-### Test the new blog
+---
+layout: post
+title:  "Test the new blog!"
+date:   2015-06-17 22:19:36
+categories: jekyll update
+---
 
 这是第一篇博客。
 
