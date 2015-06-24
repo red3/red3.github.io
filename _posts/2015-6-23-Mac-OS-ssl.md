@@ -11,22 +11,21 @@ categories: jekyll update
 
 1. 生成主机密匙 （'ssl'这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）
 
-{% highlight shell %}
-sudo mkdir /private/etc/apache2/ssl
-cd /private/etc/apache2/ssl
-sudo ssh-keygen -f server.key
-{% endhighlight %}
+
+		sudo mkdir /private/etc/apache2/ssl
+		cd /private/etc/apache2/ssl
+		sudo ssh-keygen -f server.key
+
 
 2. 生成证书请求文件（这个过程感觉跟iOS生成开发证书类似）
-`
- sudo openssl req -new -key server.key -out request.csr
- `
- `
-    // 这个过程中会让输入一些证书机构的信息，按照提示或者留空就行
-    `
+
+		sudo openssl req -new -key server.key -out request.csr
+    	// 这个过程中会让输入一些证书机构的信息，按照提示或者留空就行
+   
     
 3. 使用server.key 和 request.csr 生成ssl证书
-	sudo openssl x509 -req -days 365 -in request.csr -signkey server.key -out server.crt
+
+		sudo openssl x509 -req -days 365 -in request.csr -signkey server.key -out server.crt
 
 - 配置Apache
 
