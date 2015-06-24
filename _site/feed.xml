@@ -6,9 +6,49 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 24 Jun 2015 08:17:06 +0800</pubDate>
-    <lastBuildDate>Wed, 24 Jun 2015 08:17:06 +0800</lastBuildDate>
+    <pubDate>Wed, 24 Jun 2015 23:09:37 +0800</pubDate>
+    <lastBuildDate>Wed, 24 Jun 2015 23:09:37 +0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>iOS数据持久化的思考</title>
+        <description>&lt;h3 id=&quot;section&quot;&gt;缘由&lt;/h3&gt;
+
+&lt;p&gt;之前做佳缘一对一iOS App的时候，需要解决网络数据做离线缓存，现在红娘经纪人项目考虑用数据库作为缓存解决方案。后来觉得有必要思考下数据持久化该采取的方案。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;说到数据持久化，到底有哪些方案可以采取&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;NSUserDefault&lt;/li&gt;
+  &lt;li&gt;NSKeyedArchive&lt;/li&gt;
+  &lt;li&gt;Write To File (NSString, NSArray, NSData, NSDictionary)&lt;/li&gt;
+  &lt;li&gt;数据库
+当数据有本地存取的需求的时候，如何保证数据在本地的合理安排？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;应该采取哪种方案&lt;/h3&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;业界是怎么做的&lt;/h3&gt;
+
+&lt;p&gt;-&lt;a href=&quot;https://github.com/yuantiku/YTKKeyValueStore&quot;&gt;YTKKeyValueStore&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;www.devtang.com&quot;&gt;唐巧&lt;/a&gt;开源的基于sqlite的Key-Value式的存储，猿题库的项目采用该方案。&lt;/p&gt;
+
+&lt;p&gt;-&lt;a href=&quot;https://github.com/casatwy/SQLiteManager4iOS&quot;&gt;SQLiteManager4iOS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://casatwy.com/&quot;&gt;casatwy&lt;/a&gt;基于SQLiteMananger这个repo做的迁移方案，解决版本迁移问题。&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 25 Jun 2015 06:19:36 +0800</pubDate>
+        <link>http://yourdomain.com/jekyll/update/2015/06/25/iOS-save-local-data.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/jekyll/update/2015/06/25/iOS-save-local-data.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
     
       <item>
         <title>Mac OS X 中为Apache开启ssl</title>
@@ -135,8 +175,9 @@ sudo apachectl restart
 
 &lt;p&gt;参考：&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/y500/p/3596473.html&quot;&gt;http://www.cnblogs.com/y500/p/3596473.html&lt;/a&gt;
-&lt;a href=&quot;http://stackoverflow.com/questions/13969272/apache-sslmutex-issue&quot;&gt;http://stackoverflow.com/questions/13969272/apache-sslmutex-issue&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/y500/p/3596473.html&quot;&gt;http://www.cnblogs.com/y500/p/3596473.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://stackoverflow.com/questions/13969272/apache-sslmutex-issue&quot;&gt;http://stackoverflow.com/questions/13969272/apache-sslmutex-issue&lt;/a&gt;&lt;/p&gt;
 
 </description>
         <pubDate>Wed, 24 Jun 2015 06:19:36 +0800</pubDate>
