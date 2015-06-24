@@ -105,8 +105,8 @@ Include /private/etc/apache2/extra/httpd-vhosts.conf
 
 参考：
 
-1. http://www.cnblogs.com/y500/p/3596473.html
-2. http://stackoverflow.com/questions/13969272/apache-sslmutex-issue
+[http://www.cnblogs.com/y500/p/3596473.html](http://www.cnblogs.com/y500/p/3596473.html)
+[http://stackoverflow.com/questions/13969272/apache-sslmutex-issue](http://stackoverflow.com/questions/13969272/apache-sslmutex-issue)
 
 
 
