@@ -1,12 +1,36 @@
-# Site settings
-title: 二笨笨的博客
+markdown: kramdown
+
+highlighter: pygments
+permalink: /:year/:month/:day/:title.html
+name: "red3 shutter"
+
+author: "Harry"
+atom-baseurl: ""
+disqus: "gopherwood"
+
+title: harry's blog
 email: heruicross@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  二笨笨写字的地方
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+  write the code
+# baseurl: "" # the subpath of your site, e.g. /blog/
+# url: "/" # the base hostname & protocol for your site
 twitter_username: red3
 github_username:  red3
 
-# Build settings
-markdown: kramdown
+navigations:
+  - title: Archive
+    class: fa fa-list-ul
+    href: /archive.html
+  - title: Tags
+    class: fa fa-tags
+    href: /tags.html
+  - title: About
+    class: fa fa-user
+    href: /about.html
+  - title: Gallery
+    class: fa fa-film
+    href: http://redthree.lofter.com
+  - title: Subscribe
+    class: fa fa-rss
+    href: /atom.xml
+

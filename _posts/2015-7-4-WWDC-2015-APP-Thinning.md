@@ -1,8 +1,10 @@
 ---
 layout: post
-title:  "WWDC2015 Session笔记-App-Thinning"
+title:  "WWDC2015 Session笔记-App Thinning"
 date:   2015-07-04 22:45:36
 categories: jekyll update
+tags:
+  - WWDC
 ---
 
 本文是我依据 WWDC15 Session Video 写的一篇笔记，涉及的 Session 有
@@ -37,9 +39,15 @@ categories: jekyll update
 - Ad-hoc/Enterprise Distribution可以根据设备导出对应的ipa文件
 - 企业证书通过Over-the-Air安装，也就是采用itms-service协议直接通过浏览器安装的时候，需要勾选"Include manifest for over-the-air installation"选项，这样不同的设备会自动对应到适应的安装包
 
-<div  align="center">    
-<img src="./../_site/images/ad-hoc-app-thinning.png" width = "757" height = "334" alt="" align=center />
-</div>
+
+ 
+
+
+![](/assets/2015/ad-hoc-app-thinning.jpg)
+
+
+
+
 
 
 
