@@ -37,6 +37,12 @@ categories: jekyll update
 - Ad-hoc/Enterprise Distribution可以根据设备导出对应的ipa文件
 - 企业证书通过Over-the-Air安装，也就是采用itms-service协议直接通过浏览器安装的时候，需要勾选"Include manifest for over-the-air installation"选项，这样不同的设备会自动对应到适应的安装包
 
+<div  align="center">    
+<img src="./../_site/images/ad-hoc-app-thinning.png" width = "757" height = "334" alt="" align=center />
+</div>
+
+
+
 ##总结
 应该说给App瘦身这件事是近几年呼声挺高的一件事，而今年在Xcode7上苹果加入了这个功能，并且可以让开发者以极其小的付出就可以拥抱这次变化，可谓大快人心！
 
