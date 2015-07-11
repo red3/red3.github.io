@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="Harry" />
     
-    <title>red3 shutter</title>
+    <title>为什么我们需要Persent这种模态推出视图的方式？</title>
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link href="/atom.xml" rel="alternate" title="red3 shutter" type="application/atom+xml" />
@@ -36,33 +36,37 @@
           </nav>
         </header>
         <div id="content">
-        <div>
-  <ul class="listing">
+        <article>
+  <section class="title">
+    <h2>为什么我们需要Persent这种模态推出视图的方式？ </h2>
+  </section>
+  <section class="meta">
+  <span class="time">
+    <time datetime="2015-07-11">2015-07-11</time>
+  </span>
   
-  <article class="content">
-    <section class="title">
-      <h2><a href="/2015/07/11/why-we-use-present-or-push.html">为什么我们需要Persent这种模态推出视图的方式？</a></h2>
-    </section>
-    <section class="meta">
-    <span class="time">
-      <time datetime="2015-07-11">2015-07-11</time>
-    </span>
+  <span class="tags">
     
-    <span class="tags">
-      
-    </span>
-    
-    <!-- BEGIN this would not work on any other domain -->
-    <span class="like-wrapper" like-shortname="gopherwood" like-identifier="" like-name="为什么我们需要Persent这种模态推出视图的方式？" like-link="/index.html" like-btn="&#xf087;"></span>
-    <script type="text/javascript">
-      var l = document.createElement('script'); l.type = 'text/javascript'; l.async = true;
-      l.src = 'http://www.like-btn.com/javascript/widget.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(l);
-    </script>
-    <!-- END this would not work on any other domain -->
-    </section>
-    <section class="post">
-    <p>iOS开发者都知道，推出新页面有两种方式，一种是导航Push，另一种是视图本身Present另一个视图。一般的应用程序都是UITabBarController+4个UINavigationController，然后每个导航Push或者Pop就解决了问题。</p>
+  </span>
+  <!-- BEGIN this would not work on any other domain -->
+  <span
+    class           = "like-wrapper"
+    like-shortname  = 'gopherwood'
+    like-identifier = ''
+    like-name       = '为什么我们需要Persent这种模态推出视图的方式？'
+    like-btn        = '&#xf087;'
+    like-link       = '/2015/07/11/why-we-use-present-or-push.html'
+    ></span>
+  <script type="text/javascript">
+    var l = document.createElement('script');
+    l.type = 'text/javascript'; l.async = true; l.src = 'http://www.like-btn.com/javascript/widget.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(l);
+  </script>
+  <!-- END this would not work on any other domain -->
+  
+  </section>
+  <section class="post">
+  <p>iOS开发者都知道，推出新页面有两种方式，一种是导航Push，另一种是视图本身Present另一个视图。一般的应用程序都是UITabBarController+4个UINavigationController，然后每个导航Push或者Pop就解决了问题。</p>
 
 <p>这次引发我思考的是佳缘经纪人项目中要添加银行卡的一个功能：这个功能有两个入口，第一个入口是从导航栈中的某个视图Push出的（非根视图），第二个入口是从导航的根视图Push出的。这个功能本身又需要分2个步骤，验证手机收到的验证码以及输入银行卡号，是两个页面。这样在成功添加银行卡号后要跳转到发起该请求的页面的时候可以这样：
 - 如果是根视图：PopToRootViewController
@@ -120,61 +124,9 @@
 <p>所以我想我们在开发中不要总是一味去照搬以前的方式去蛮干，而要思考，有没有更好的方式。经常的，还要回过头来看看自己写的代码，到底设计得是不是够好，够规范，够易维护。这样才能有所积累。</p>
 
 
-    </section>
-    </article>
+  </section>
   
-  </ul>
-  <div class="divider"></div>
-  <ul class="listing main-listing">
-    <li class="listing-seperator">Happend earlier this year
-  
-  
-    
-    
-    <li class="listing-item">
-      <time datetime="2015-07-05">2015-07-05</time>
-      <a href="/2015/07/05/WWDC-2015-APP-Thinning.html" title="WWDC2015 Session笔记-App Thinning">WWDC2015 Session笔记-App Thinning</a>
-    </li>
-  
-    
-    
-    <li class="listing-item">
-      <time datetime="2015-07-03">2015-07-03</time>
-      <a href="/2015/07/03/readNotes-about-iOSPro.html" title="iOS进阶读书笔记">iOS进阶读书笔记</a>
-    </li>
-  
-    
-    
-    <li class="listing-item">
-      <time datetime="2015-06-25">2015-06-25</time>
-      <a href="/2015/06/25/iOS-save-local-data.html" title="iOS数据持久化的思考">iOS数据持久化的思考</a>
-    </li>
-  
-    
-    
-    <li class="listing-item">
-      <time datetime="2015-06-24">2015-06-24</time>
-      <a href="/2015/06/24/Mac-OS-ssl.html" title="Mac OS X 中为Apache开启ssl">Mac OS X 中为Apache开启ssl</a>
-    </li>
-  
-    
-    
-    <li class="listing-item">
-      <time datetime="2015-06-18">2015-06-18</time>
-      <a href="/2015/06/18/welcome-to-jekyll.html" title="Welcome to Jekyll!">Welcome to Jekyll!</a>
-    </li>
-  
-    
-    
-    <li class="listing-item">
-      <time datetime="2015-06-18">2015-06-18</time>
-      <a href="/2015/06/18/test-new-blog.html" title="Test the new blog!">Test the new blog!</a>
-    </li>
-  
-    <li class="listing-seperator"><a href="/archive.html">Long long ago</a></li>
-  
-
-</li></ul></div>
+</article>
 
         </div>
         <footer>
