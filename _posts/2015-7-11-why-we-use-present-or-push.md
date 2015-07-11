@@ -18,14 +18,14 @@ iOS开发者都知道，推出新页面有两种方式，一种是导航Push，�
 
 意识到这个问题的时候，我在想，有类似流程设计的肯定不止一家，其实是可以参考其他软件是怎么设计的。于是花费了时间，看了看微信在类似的场景的设计。下图是微信的更换绑定手机号的流程截图，其实“更换手机号”这个页面是“绑定手机号”这个页面Present出的。
 
-![](../assets/2015/wechat_change_phone.png)
+![](/assets/2015/wechat_change_phone.png)
 
 ###苹果在iOS框架中的设计
 
 其实苹果自己设计的UIImagePickerController就是一个值得参考的例子。
 它的流程是这样的
 
-![](../assets/2015/ios_imagePicker.png)
+![](/assets/2015/ios_imagePicker.png)
 “Photos”这个页面是被Present出的，并且在Xcode中可以看到UIImagePickerController是继承自UINavigationController的。
 
 ###因此
