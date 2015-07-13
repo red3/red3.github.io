@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "为什么我们需要Persent这种模态推出视图的方式？"
+title:  "为什么我们需要Present这种模态推出视图的方式？"
 date:   2015-07-11 10:37:36
 categories: jekyll update
 ---
@@ -10,7 +10,8 @@ iOS开发者都知道，推出新页面有两种方式，一种是导航Push，�
 - 如果是根视图：PopToRootViewController
 - 如果不是根视图：先找到导航栈中的那个控制器，然后PopToViewController：
 从流程上讲：它应该是这个样子
-![]()
+
+![](/assets/2015/broker_add_bankCard.png)
 
 那么问题来了，如果哪天这个功能还要有一个入口，在Pop回去的地方就又要多加判断，意味着这个流程里面就有了很多垃圾代码去判断是从哪个页面来的。这个时候我开始考虑，这样的设计可能是存在问题的。
 
