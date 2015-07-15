@@ -14,6 +14,7 @@ description: > # this means to ignore newlines until "baseurl:"
   write the code
 # baseurl: "" # the subpath of your site, e.g. /blog/
 # url: "/" # the base hostname & protocol for your site
+production_url: http://red3.github.io
 twitter_username: red3
 github_username:  red3
 
