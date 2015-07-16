@@ -4,7 +4,7 @@ http://red3.github.io/about.html
 http://red3.github.io/archive.html
 http://red3.github.io/atom.xml
 http://red3.github.io/index.html
-http://red3.github.io/sitemap.xml
+http://red3.github.io/sitemap.txt
 http://red3.github.io/tags.html
 
 http://red3.github.io/2015/07/11/why-we-use-present-or-push.html
