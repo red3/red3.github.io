@@ -1,16 +1,16 @@
 
-http://red3.github.io/404.html
-http://red3.github.io/about.html
-http://red3.github.io/archive.html
-http://red3.github.io/atom.xml
-http://red3.github.io/index.html
-http://red3.github.io/sitemap.txt
-http://red3.github.io/tags.html
+http://coderharry.com/404.html
+http://coderharry.com/about.html
+http://coderharry.com/archive.html
+http://coderharry.com/atom.xml
+http://coderharry.com/index.html
+http://coderharry.com/sitemap.txt
+http://coderharry.com/tags.html
 
-http://red3.github.io/2015/07/11/why-we-use-present-or-push.html
-http://red3.github.io/2015/07/05/WWDC-2015-APP-Thinning.html
-http://red3.github.io/2015/07/03/readNotes-about-iOSPro.html
-http://red3.github.io/2015/06/25/iOS-save-local-data.html
-http://red3.github.io/2015/06/24/Mac-OS-ssl.html
-http://red3.github.io/2015/06/18/welcome-to-jekyll.html
-http://red3.github.io/2015/06/18/test-new-blog.html
+http://coderharry.com/2015/07/11/why-we-use-present-or-push.html
+http://coderharry.com/2015/07/05/WWDC-2015-APP-Thinning.html
+http://coderharry.com/2015/07/03/readNotes-about-iOSPro.html
+http://coderharry.com/2015/06/25/iOS-save-local-data.html
+http://coderharry.com/2015/06/24/Mac-OS-ssl.html
+http://coderharry.com/2015/06/18/welcome-to-jekyll.html
+http://coderharry.com/2015/06/18/test-new-blog.html
