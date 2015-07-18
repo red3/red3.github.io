@@ -7,6 +7,7 @@ http://coderharry.com/index.html
 http://coderharry.com/sitemap.txt
 http://coderharry.com/tags.html
 
+http://coderharry.com/2015/07/17/Apple-Watch-Demo-1.html
 http://coderharry.com/2015/07/11/why-we-use-present-or-push.html
 http://coderharry.com/2015/07/05/WWDC-2015-APP-Thinning.html
 http://coderharry.com/2015/07/03/readNotes-about-iOSPro.html
