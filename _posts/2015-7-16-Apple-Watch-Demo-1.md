@@ -82,7 +82,7 @@ Glance和Notification Interface稍微还要费电周折，分别讲一下：
 #下期预告
 今天的系列就先到这里，下一系列讲讲怎么创建一个功能栏，就是抬腕可以在表盘上看见的那个东西。
 
-- 惯例：
+- 惯例：[点击这里下载Demo](https://github.com/red3/WatchDemo/archive/master.zip)
 - 重要：因为博客暂时没有评论区，如果你对本文有什么疑惑，或者你发现本文由存在错误的地方，非常欢迎你联系我指出。QQ：309333018，WeiChat：flipgo
 
 
