@@ -69,6 +69,7 @@ CentOS下推荐适用yum安装软件，故通过下列命令安装我们所需�
 	service iptables save
 
 至此，Apache的设置就完成了。
+
 ##配置SFTP
 默认的，和Apache一样，sftp的配置文件在这个目录`/etc//vsftpd/`下。sftp默认是不允许root用户登录的，因为是我自己的服务器，并不需要别人参与开发，所以就简单的设置下如何配置root用户可以登录（需要说明的是开启root用户会很不安全，因为root用户的权限太大）：
 
@@ -80,7 +81,21 @@ CentOS下推荐适用yum安装软件，故通过下列命令安装我们所需�
 	
 现在尝试在客户端通过sftp连接服务器吧。对于Mac电脑，推荐这个软件[Filezilla](https://filezilla-project.org/download.php?type=client)，或者给Sublime装个插件，都可以连上服务器了。
 
-今天的系列就先到这了，下一系列说说配置MySQL的事情。
+##配置MySQL
+之前的这个步骤`yum install -y mysql-server mysql`已经安装了MySQL所需的软件服务。要运行MySQL服务，需要这些命令：
+	
+	// 启动mysqld服务 要关闭的话将start替换成stop
+	service mysqld start
+	// 给root用户设置密码为ab123 默认刚安装的数据库是没有密码的，所以需要先设置密码
+	mysqladmin -uroot -password ab123
+	// 连接数据库
+	mysql -uroot -p
+	// 提示输入密码后，就可进入mysql命令模式了
+	// 推出mysql命令模式
+	// exit
+	
+关于数据库的管理，还是推荐使用phpMyAdmin更加方便些。关于phpmyadmin，可以选择yum安装，也可以直接从[官网](http://www.phpmyadmin.net/downloads/)下载。
+今天的系列就先到这了，下一系列说说配置域名的事情。
 
 
 
