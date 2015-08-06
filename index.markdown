@@ -35,6 +35,19 @@ layout: default
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(l);
     </script>
     <!-- END this would not work on any other domain -->
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-66016948-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+
     </section>
     <section class="post">
     {{ post.content }}
@@ -44,7 +57,7 @@ layout: default
   </ul>
   <div class="divider"></div>
   <ul class="listing main-listing">
-    <li class="listing-seperator">Happend earlier this year</i>
+    <li class="listing-seperator">早些时候</i>
   {% capture year %}{{ site.time | date:"%Y"}}{% endcapture %}
   {% for post in site.posts offset:1 %}
     {% capture y %}{{ post.date | date:"%Y"}}{% endcapture %}
@@ -56,6 +69,6 @@ layout: default
       <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
     </li>
   {% endfor %}
-    <li class="listing-seperator"><a href="/archive.html">Long long ago</a></li>
+    <li class="listing-seperator"><a href="/archive.html">很久以前</a></li>
   </ul>
 </div>
