@@ -23,7 +23,7 @@ tags:
 
 ##缘由
 
-前端时间读到[叶孤城___ ](http://www.jianshu.com/users/b82d2721ba07/latest_articles)的博客，有个系列文档是讲怎么实现从服务端后台到移动端App的整个过程，看了很受触动。真的非常感谢iOS业界有这些经常将自己的技术实践分享出来的前辈，从他们的博客中可以收获很多东西。之所以还要写这个系列，是因为在[叶孤城___ ](http://www.jianshu.com/users/b82d2721ba07/latest_articles)的博客文章中，是通过Mongodb数据库将数据存储起来的，在接口层是通过Python实现的。佳缘的后台是通过MySQL+PHP实现的，所以便打算将爬虫里面的Mongodb存储替换成MySQL，在接口层替换Python通过PHP操作MySQL。之前的博客中有提到过，我最近有买了一台服务器，所以顺便学习了将爬虫部署在服务器上，以及爬虫的自动运行等。
+前端时间读到[叶孤城 ](http://www.jianshu.com/users/b82d2721ba07/latest_articles)的博客，有个系列文档是讲怎么实现从服务端后台到移动端App的整个过程，看了很受触动。真的非常感谢iOS业界有这些经常将自己的技术实践分享出来的前辈，从他们的博客中可以收获很多东西。之所以还要写这个系列，是因为在[叶孤城](http://www.jianshu.com/users/b82d2721ba07/latest_articles)的博客文章中，是通过Mongodb数据库将数据存储起来的，在接口层是通过Python实现的。佳缘的后台是通过MySQL+PHP实现的，所以便打算将爬虫里面的Mongodb存储替换成MySQL，在接口层替换Python通过PHP操作MySQL。之前的博客中有提到过，我最近有买了一台服务器，所以顺便学习了将爬虫部署在服务器上，以及爬虫的自动运行等。
 
 这个系列的文档仅是做为入门的一个实现，毕竟之前也没有做过Python的开发。随着技术的深入了解，我会随时补充一些东西。
 
