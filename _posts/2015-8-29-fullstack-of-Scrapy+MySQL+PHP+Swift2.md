@@ -25,6 +25,7 @@ tags:
 爬虫框架我选择用Python写的Scrapy。
 
 当然准备工作是确保你的Mac安装了`commandline`和`pip`.
+
 - 安装`commandline`可以通过直接安装`Xcode`或者在终端运行`xcode-select --install`命令安装。
 - 安装`pip`：遵从官方的这个[步骤](https://pip.pypa.io/en/stable/installing.html#install-pip)
 
