@@ -4,7 +4,7 @@
  <title>red3 harry</title>
  <link href="/atom.xml" rel="self"/>
  <link href=""/>
- <updated>2015-08-29T11:01:19+08:00</updated>
+ <updated>2015-08-29T11:05:46+08:00</updated>
  <id>/</id>
  <author>
    <name>Harry</name>
@@ -33,9 +33,12 @@
 &lt;h2 id=&quot;scrapy&quot;&gt;安装Scrapy&lt;/h2&gt;
 &lt;p&gt;爬虫框架我选择用Python写的Scrapy。&lt;/p&gt;
 
-&lt;p&gt;当然准备工作是确保你的Mac安装了&lt;code&gt;commandline&lt;/code&gt;和&lt;code&gt;pip&lt;/code&gt;.
-- 安装&lt;code&gt;commandline&lt;/code&gt;可以通过直接安装&lt;code&gt;Xcode&lt;/code&gt;或者在终端运行&lt;code&gt;xcode-select --install&lt;/code&gt;命令安装。
-- 安装&lt;code&gt;pip&lt;/code&gt;：遵从官方的这个&lt;a href=&quot;https://pip.pypa.io/en/stable/installing.html#install-pip&quot;&gt;步骤&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;当然准备工作是确保你的Mac安装了&lt;code&gt;commandline&lt;/code&gt;和&lt;code&gt;pip&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装&lt;code&gt;commandline&lt;/code&gt;可以通过直接安装&lt;code&gt;Xcode&lt;/code&gt;或者在终端运行&lt;code&gt;xcode-select --install&lt;/code&gt;命令安装。&lt;/li&gt;
+  &lt;li&gt;安装&lt;code&gt;pip&lt;/code&gt;：遵从官方的这个&lt;a href=&quot;https://pip.pypa.io/en/stable/installing.html#install-pip&quot;&gt;步骤&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;然后通过&lt;code&gt;pip&lt;/code&gt;安装&lt;code&gt;Scrapy&lt;/code&gt;.&lt;/p&gt;
 
