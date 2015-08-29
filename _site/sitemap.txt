@@ -1,17 +1,21 @@
 
-http://coderharry.com/404.html
-http://coderharry.com/about.html
-http://coderharry.com/archive.html
-http://coderharry.com/atom.xml
-http://coderharry.com/index.html
-http://coderharry.com/sitemap.txt
-http://coderharry.com/tags.html
+http://blog.coderharry.com/404.html
+http://blog.coderharry.com/about.html
+http://blog.coderharry.com/archive.html
+http://blog.coderharry.com/atom.xml
+http://blog.coderharry.com/index.html
+http://blog.coderharry.com/sitemap.txt
+http://blog.coderharry.com/tags.html
 
-http://coderharry.com/2015/07/17/Apple-Watch-Demo-1.html
-http://coderharry.com/2015/07/11/why-we-use-present-or-push.html
-http://coderharry.com/2015/07/05/WWDC-2015-APP-Thinning.html
-http://coderharry.com/2015/07/03/readNotes-about-iOSPro.html
-http://coderharry.com/2015/06/25/iOS-save-local-data.html
-http://coderharry.com/2015/06/24/Mac-OS-ssl.html
-http://coderharry.com/2015/06/18/welcome-to-jekyll.html
-http://coderharry.com/2015/06/18/test-new-blog.html
+http://blog.coderharry.com/2015/08/29/fullstack-of-Scrapy+MySQL+PHP+Swift2.html
+http://blog.coderharry.com/2015/08/09/fullstack-of-Scrapy+MySQL+PHP+Swift.html
+http://blog.coderharry.com/2015/08/02/prepare-my-own-vps2.html
+http://blog.coderharry.com/2015/07/26/prepare-my-own-vps1.html
+http://blog.coderharry.com/2015/07/17/Apple-Watch-Demo-1.html
+http://blog.coderharry.com/2015/07/11/why-we-use-present-or-push.html
+http://blog.coderharry.com/2015/07/05/WWDC-2015-APP-Thinning.html
+http://blog.coderharry.com/2015/07/03/readNotes-about-iOSPro.html
+http://blog.coderharry.com/2015/06/25/iOS-save-local-data.html
+http://blog.coderharry.com/2015/06/24/Mac-OS-ssl.html
+http://blog.coderharry.com/2015/06/18/welcome-to-jekyll.html
+http://blog.coderharry.com/2015/06/18/test-new-blog.html

@@ -1,15 +1,407 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>red3 shutter</title>
+ <title>red3 harry</title>
  <link href="/atom.xml" rel="self"/>
  <link href=""/>
- <updated>2015-07-18T12:27:46+08:00</updated>
+ <updated>2015-08-29T11:01:19+08:00</updated>
  <id>/</id>
  <author>
    <name>Harry</name>
  </author>
 
+ 
+ <entry>
+   <title>Scrapy+MySQL+PHP+Swift开发攻略系列（二）爬虫篇</title>
+   <link href="/2015/08/29/fullstack-of-Scrapy+MySQL+PHP+Swift2.html"/>
+   <updated>2015-08-29T17:09:09+08:00</updated>
+   <id>/2015/08/29/fullstack-of-Scrapy+MySQL+PHP+Swift2</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;系列目录&lt;/h2&gt;
+
+&lt;p&gt;你可以从这个地方做一个快速跳转。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;scrapy&quot;&gt;安装Scrapy&lt;/h2&gt;
+&lt;p&gt;爬虫框架我选择用Python写的Scrapy。&lt;/p&gt;
+
+&lt;p&gt;当然准备工作是确保你的Mac安装了&lt;code&gt;commandline&lt;/code&gt;和&lt;code&gt;pip&lt;/code&gt;.
+- 安装&lt;code&gt;commandline&lt;/code&gt;可以通过直接安装&lt;code&gt;Xcode&lt;/code&gt;或者在终端运行&lt;code&gt;xcode-select --install&lt;/code&gt;命令安装。
+- 安装&lt;code&gt;pip&lt;/code&gt;：遵从官方的这个&lt;a href=&quot;https://pip.pypa.io/en/stable/installing.html#install-pip&quot;&gt;步骤&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;然后通过&lt;code&gt;pip&lt;/code&gt;安装&lt;code&gt;Scrapy&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo pip install scrapy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;开始爬虫&lt;/h2&gt;
+
+&lt;p&gt;通过下面这个命令生成一个爬虫工程：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;scrapy startproject spiders
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后我们会看到&lt;code&gt;scrapy&lt;/code&gt;已经为我们生成了一个工程。这个工程大概是这个结构&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;dbmeizi
+|__ __init__.py
+|__ items.py
+|__ pipelines.py
+|__ settings.py
+|__ spiders
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面分别解释下各个文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;items.py&lt;/code&gt; - item相当于是mvc中的model，在items里我们定义了自己需要的模型
+&lt;code&gt;piplines.py&lt;/code&gt; - pipline俗称管道，这个文件主要用来把我们获取的item类型存入MySQL
+&lt;code&gt;settings.py&lt;/code&gt; -  在这个文件里面配置整个工程的一些设置。例如MySQL的数据库名，数据库地址和数据库端口号等等。
+&lt;code&gt;spiders&lt;/code&gt; - 这个文件夹存放爬虫文件。&lt;/p&gt;
+
+&lt;p&gt;至此，我们就可以正式开始我们的编码工作了。&lt;/p&gt;
+
+&lt;h2 id=&quot;model&quot;&gt;定义Model层&lt;/h2&gt;
+
+&lt;p&gt;首先我们想确定一个网站上的图片包含哪些信息，要解决这个问题，就需要打开这个网页使用&lt;code&gt;开发者工具&lt;/code&gt;, 使用&lt;code&gt;页面选择器&lt;/code&gt;(开发者工作左上角的放大镜图标)选择一张图片，效果如下:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看出，我们选中的&lt;code&gt;div&lt;/code&gt;块中包含了我们想要的最基本的资料。这个过程，其实就是我们爬虫的一个工作原理，通过网页元素找到我们想要的内容，只不过现在我们是手动查找，等发现规律，我们就通过爬虫程序自动爬取内容。&lt;/p&gt;
+
+&lt;p&gt;所以item.py里面是这个样子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from scrapy.item import Item, Field
+
+class MeiziItem(Item):
+
+	imgsrc = Field()
+	title = Field()
+	topic_link = Field()
+	star_count = Field()
+	update_time = Field()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;相当于我们继承自类Item创建了我们自己的MeiziItem，然后我们的自定义类有5个属性，&lt;code&gt;star_count&lt;/code&gt;是设计用来让用户点赞的，最后的&lt;code&gt;update_time &lt;/code&gt;可以用来记录修改时间。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;编写爬虫&lt;/h2&gt;
+
+&lt;p&gt;在&lt;code&gt;spiders&lt;/code&gt;文件夹下新建&lt;code&gt;dbmeizi_scrapy.py&lt;/code&gt;文件。
+这个文件里面是这个样子：&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Spider&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.selector&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Selector&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dbmeizi.items&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MeiziItem&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;time&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;dbmeiziSpider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;dbmeiziSpider&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;allowed_domin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dbmeinv.com&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;strArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;http://www.dbmeinv.com/?pager_offset=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%d&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;strArray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;start_urls&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strArray&lt;/span&gt;
+            
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;divResults&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;//div[@class=&amp;quot;img_single&amp;quot;]&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;divResults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MeiziItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;href&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;.//a&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;.//img&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;topic_link&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;@href&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;@title&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; 
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;imgsrc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;@src&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;star_count&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;update_time&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;需要解释的几点概念：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;allowed_domin &lt;/code&gt; - 指定在哪个网站爬东西&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;start_urls&lt;/code&gt; - 需要爬取哪些页面&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;parse &lt;/code&gt;方法 - 继承自父类，可以想象成这个方法一开始拿到的数据就是整个网页的html代码，我们要通过各种过滤，拿到最终我们感兴趣的内容。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最终，爬虫通过上面的代码爬到我们感兴趣的内容了，通过这些内容为&lt;code&gt;item&lt;/code&gt;赋值，&lt;code&gt;item&lt;/code&gt;会通过管道文件输出，所以接下来我们要创建管道文件。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;定义管道文件&lt;/h2&gt;
+
+&lt;p&gt;打开&lt;code&gt;pipelines.py&lt;/code&gt;，这个文件应该是这个样子：&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.conf&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.exceptions&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DropItem&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PrintPipeline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;sd&quot;&gt;&amp;quot;&amp;quot;&amp;quot;just prit the item&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process_item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                meizi(title, imgsrc, topic_link, star_count, update_time) &lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                values(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;            &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;imgsrc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;topic_link&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;star_count&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;update_time&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;process_item&lt;/code&gt;这个方法中我们暂时只是将item打印输出，看是不是符合我们的数据要求。&lt;/p&gt;
+
+&lt;p&gt;然后到&lt;code&gt;setting.py&lt;/code&gt;这个文件里面加上这么一行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ITEM_PIPELINES = [&#39;dbmeizi.pipelines.PrintPipeline&#39;,] 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;是指定爬虫爬取后通过&lt;code&gt;PrintPipeline&lt;/code&gt;这个管道输出内容。所以这两个名字要写一致。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;运行爬虫&lt;/h2&gt;
+&lt;p&gt;到现在为止，这个爬虫就可以正常工作了。在工程的根目录下执行如下命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;scrapy crawl dbmeiziSpider
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;大功告成。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;最后&lt;/h2&gt;
+
+&lt;p&gt;按照惯例，放上源码地址：&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇</title>
+   <link href="/2015/08/09/fullstack-of-Scrapy+MySQL+PHP+Swift.html"/>
+   <updated>2015-08-09T06:22:33+08:00</updated>
+   <id>/2015/08/09/fullstack-of-Scrapy+MySQL+PHP+Swift</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;系列目录&lt;/h2&gt;
+
+&lt;p&gt;你可以从这个地方做一个快速跳转。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/2015/08/09/fullstack-of-Scrapy+MySQL+PHP+Swift.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;缘由&lt;/h2&gt;
+
+&lt;p&gt;前端时间读到&lt;a href=&quot;http://www.jianshu.com/users/b82d2721ba07/latest_articles&quot;&gt;叶孤城 &lt;/a&gt;的博客，有个系列文档是讲怎么实现从服务端后台到移动端App的整个过程，看了很受触动。真的非常感谢iOS业界有这些经常将自己的技术实践分享出来的前辈，从他们的博客中可以收获很多东西。之所以还要写这个系列，是因为在&lt;a href=&quot;http://www.jianshu.com/users/b82d2721ba07/latest_articles&quot;&gt;叶孤城&lt;/a&gt;的博客文章中，是通过Mongodb数据库将数据存储起来的，在接口层是通过Python实现的。佳缘的后台是通过MySQL+PHP实现的，所以便打算将爬虫里面的Mongodb存储替换成MySQL，在接口层替换Python通过PHP操作MySQL。之前的博客中有提到过，我最近有买了一台服务器，所以顺便学习了将爬虫部署在服务器上，以及爬虫的自动运行等。&lt;/p&gt;
+
+&lt;p&gt;这个系列的文档仅是做为入门的一个实现，毕竟之前也没有做过Python的开发。随着技术的深入了解，我会随时补充一些东西。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;这个系列到底做些什么&lt;/h2&gt;
+
+&lt;p&gt;如文章标题所说，这个系列我主要通过爬虫爬了一家网站的妹子的照片，然后把照片相关信息存储到了MySQL数据库。然后把这个爬虫部署在服务器上（没有服务器的话在自己的电脑上也是可以的，保证电脑长时间是开机状态即可）让爬虫自动运行。这样我们就有了持续不断的内容了。接着在接口层，要开发一个接口，提供给客户端每天的最新照片信息，以及给照片点赞的接口。在客户端层面，要展示一组图片列表，要实现客户端的点赞功能跟服务器的交互。客户端会通过图片的点赞数量，选出当日热门图片。客户端主要会采用Swift编写。&lt;/p&gt;
+
+&lt;p&gt;目前为止，这个项目已经进展到了接口阶段，服务器的数据库上每天都会有新的信息保存进来。接下来的时间，我会把已经完成的部分抽空更新出来。&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>折腾自己的服务器系列（二）之解析域名到服务器</title>
+   <link href="/2015/08/02/prepare-my-own-vps2.html"/>
+   <updated>2015-08-02T02:58:33+08:00</updated>
+   <id>/2015/08/02/prepare-my-own-vps2</id>
+   <content type="html">&lt;p&gt;生命不息，折腾不止。此次系列主要记录怎么将自己的域名解析到服务器上。当然，首先，你需要一个域名。这里吐槽下阿里云，我是因为买域名送了买服务器的优惠券才选择购买的阿里云，到头来我要将自己的域名解析到阿里云的时候，阿里云又需要备案域名才可以解析，我购买的服务器的期限是1个月，估计备案域名的时间也需要这么长时间，意味着备案成功后，我的服务器也到期了。那我还解析个毛啊，果断退了阿里云服务器，购买了香港的vps。&lt;/p&gt;
+
+&lt;p&gt;解析域名，当然首推&lt;a href=&quot;https://www.dnspod.cn/&quot;&gt;Dnspod&lt;/a&gt;. 注册也挺方便，直接使用QQ扫描登陆授权就可以了。&lt;/p&gt;
+
+&lt;p&gt;首先需要添加一条域名记录，默认新添加一条记录后是这个样子：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2015/img_prepaer_vps1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;需要把红线框住的两条&lt;code&gt;NS记录&lt;/code&gt;提交到域名提供商那里。因为我的域名是从万网买的，所以要登陆阿里云，点击“修改DNS”，将DNS记录修改为Dnspod提供的那两条记录&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2015/img_prepaer_vps2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;至此，以后所有域名的操作都可以在Dnspod上搞定了，跟阿里云没有关系了。&lt;/p&gt;
+
+&lt;p&gt;接下来就折腾下怎么把主域名解析到服务器www目录，以及解析一个二级域名到服务器自定义的一个目录。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;解析主域名&lt;/h2&gt;
+&lt;p&gt;当我们需要将域名解析到我们服务器的公网ip的时候，就需要在Dnspod上添加记录，如图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2015/img_prepaer_vps3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看出，我们在刚才的基础上添加了两条&lt;code&gt;A记录&lt;/code&gt;。A记录的意思是把域名解析到一个ip地址，是符合我们当下的需求的。&lt;/p&gt;
+
+&lt;p&gt;在主机记录栏，分别添加了&lt;code&gt;@&lt;/code&gt;和&lt;code&gt;www&lt;/code&gt;两条，分别对应的意思是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 假设域名是bbbb
+@ ： 通过浏览器访问 bbbb.com 会跳转到服务器
+www ：通过浏览器访问 www.bbbb.com 会跳转到服务器
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在记录值栏，要添加成服务器的公网ip，假如你的服务器的公网ip是&lt;code&gt;100.200.160.70&lt;/code&gt;, 就填这个地址就可以。&lt;/p&gt;
+
+&lt;p&gt;现在，等dns解析生效，在浏览器中访问自己的域名，应该可以跳转到服务器了。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;解析二级域名&lt;/h2&gt;
+&lt;p&gt;假设主域名是bbbb.com, 二级域名是类似&lt;code&gt;wx.bbbb.com&lt;/code&gt;这种。现在的需求是把二级域名也解析到服务器上。还是需要添加记录：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2015/img_prepaer_vps4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;还是一条&lt;code&gt;A记录&lt;/code&gt;，因为我们需要先把二级域名解析到服务器上，然后在服务器的Apache设置跳转规则，将二级域名跳转到指定目录。&lt;/p&gt;
+
+&lt;p&gt;在主机记录栏，添加了&lt;code&gt;wx&lt;/code&gt;，意思是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 假设域名是bbbb
+wx ： 通过浏览器访问 wx.bbbb.com 会跳转到服务器
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在记录值那里还是填服务器的公网ip。
+现在等dns解析生效，访问&lt;code&gt;wx.bbbb.com&lt;/code&gt;就会跳转到服务器www目录了。显然这不是我们想要的结果。&lt;/p&gt;
+
+&lt;p&gt;需要指向指定目录，还要更改下Apache的配置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vi /etc/httpd/conf/httpd.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在配置文件末尾添加如下代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RewriteEngine on
+RewriteMap lowercase int:tolower
+RewriteMap vhost txt:/etc/httpd/conf/vhost.map
+RewriteCond ${lowercase:%{SERVER_NAME}} ^(.+)$
+RewriteCond ${vhost:%1} ^(/.*)$
+RewriteRule ^/(.*)$ %1/$1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;目的是告诉Apache，我们有一个&lt;code&gt;vhost.map&lt;/code&gt;文件，通过这个文件来定义连接到服务器的二级域名该跳转到哪个目录。&lt;/p&gt;
+
+&lt;p&gt;接下来创建在&lt;code&gt;/etc/httpd/conf&lt;/code&gt;这个目录下创建这个文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vi vhost.map
+// 这个文件下添加下面的记录
+wx.bbbb.com /var/www/html/bbbb.com/wx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过这个文件，Apache会把&lt;code&gt;wx.bbbb.com&lt;/code&gt;这个域名解析到我们设置的那个目录去。以后的二级域名跳转规则都可以添加到这个文件下，并且不需要重启Apache服务就可以使之生效。&lt;/p&gt;
+
+&lt;p&gt;现在，通过浏览器访问&lt;code&gt;wx.bbbb.com&lt;/code&gt;就可以跳转到我们刚才设置的那个目录了。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;最后&lt;/h2&gt;
+&lt;p&gt;折腾服务器的这个系列就要先告一段落了，因为刚开始接触这些东西，有些东西并不是很深入，人生路漫漫，以后还要接着折腾。&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>折腾自己的服务器系列（一）之配置服务器</title>
+   <link href="/2015/07/26/prepare-my-own-vps1.html"/>
+   <updated>2015-07-26T19:13:36+08:00</updated>
+   <id>/2015/07/26/prepare-my-own-vps1</id>
+   <content type="html">&lt;p&gt;生命不息，折腾不止。为了消灭自己的懒惰情绪，增强匮乏感，也正值阿里云服务器打折，遂买了个服务器折腾一下。在这个过程中所遇到的所有问题、难点等均可在网路上找到相关资料，之所以还再写这个系列，一是记录下这个过程，方便以后查询；二是因为网路中很多资料都已过时，故整理出最新可用的资料供需要的人查询。&lt;/p&gt;
+
+&lt;p&gt;So，这个系列大概要做这些事情：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;配置服务器：包括Apache，PHP，MYSQL，FTP，PhpMyAdmin等&lt;/li&gt;
+  &lt;li&gt;配置域名：将自己的域名指向服务器，以及设置二级域名等。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;今天这个系列主要就是记录写如何配置刚购买的服务器。
+这里需要说明的是，以下的操作都是基于CentOS6.4版本。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;安装基本的软件服务&lt;/h2&gt;
+&lt;p&gt;首先通过远程登录，连接到服务器，因为我用的是Mac，所以直接用ssh命令登录：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh ip地址 -l root 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CentOS下推荐适用yum安装软件，故通过下列命令安装我们所需的服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 安装Apache服务
+yum install -y httpd
+// 安装PHP
+yum install -y php
+// 安装MYSQL
+yum install -y mysql-server mysql
+// 安装sftp
+yum install -y vsftpd 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;至此，基本的服务都已安装，不得不感叹Linux作为服务器来说，确实比MAC和Windows有优势，安装太方便了。接下来的就是配置下这些服务，让他们运行起来。&lt;/p&gt;
+
+&lt;h2 id=&quot;apache&quot;&gt;配置Apache&lt;/h2&gt;
+&lt;p&gt;我们需要修改两个地方，修改配置文件以及在网站根目录创建index.html.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 下面这个目录是配置文件所在目录
+vi /etc/httpd/conf/httpd.conf 找到 `#ServerName www.example.com:80`将注释关闭，变成类似这样的`ServerName 服务器的公网ip:80`。
+
+// 下面这个目录是Apache默认的网站目录
+cd /var/www/html
+touch index.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建&lt;code&gt;index.html&lt;/code&gt;后，往里面随便写点东西。
+现在在本地浏览器中访问服务器的公网ip，应该就可以看到刚才我们在&lt;code&gt;index.html&lt;/code&gt;中输入的内容了。
+需要注意的是阿里云服务器默认是开放&lt;strong&gt;80&lt;/strong&gt;端口的，通过这个命令&lt;code&gt;service iptables status&lt;/code&gt;查看当前防火墙状态:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;service iptables status
+表格：filter
+Chain INPUT (policy ACCEPT)
+num  target    prot opt source            destination         
+1    ACCEPT    tcp  --  0.0.0.0/0         0.0.0.0/0    tcp dpt:22 
+2    ACCEPT    tcp  --  0.0.0.0/0         0.0.0.0/0    tcp dpt:80
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看到当前服务器已经开放了&lt;strong&gt;80&lt;/strong&gt;端口和&lt;strong&gt;22&lt;/strong&gt;端口。
+如果服务器默认没有开放&lt;strong&gt;80&lt;/strong&gt;端口，还需要开放&lt;strong&gt;80&lt;/strong&gt;端口，可以这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 开放80端口 
+iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+// 因为要使用sftp，顺便也开放22端口
+iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+// 保存
+service iptables save
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;至此，Apache的设置就完成了。&lt;/p&gt;
+
+&lt;h2 id=&quot;sftp&quot;&gt;配置SFTP&lt;/h2&gt;
+&lt;p&gt;默认的，和Apache一样，sftp的配置文件在这个目录&lt;code&gt;/etc//vsftpd/&lt;/code&gt;下。sftp默认是不允许root用户登录的，因为是我自己的服务器，并不需要别人参与开发，所以就简单的设置下如何配置root用户可以登录（需要说明的是开启root用户会很不安全，因为root用户的权限太大）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// ftpusers中的用户是黑名单用户是不允许从sftp登录的 
+vi /etc/vsftpd/ftpusers // 把列表中的root注释
+// sftp默认开启userlist_deny，会阻止user_list中的用户
+vi /etc/vsftpd/user_list //  把列表中的root注释
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在尝试在客户端通过sftp连接服务器吧。对于Mac电脑，推荐这个软件&lt;a href=&quot;https://filezilla-project.org/download.php?type=client&quot;&gt;Filezilla&lt;/a&gt;，或者给Sublime装个插件，都可以连上服务器了。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysql&quot;&gt;配置MySQL&lt;/h2&gt;
+&lt;p&gt;之前的这个步骤&lt;code&gt;yum install -y mysql-server mysql&lt;/code&gt;已经安装了MySQL所需的软件服务。要运行MySQL服务，需要这些命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 启动mysqld服务 要关闭的话将start替换成stop
+service mysqld start
+// 给root用户设置密码为ab123 默认刚安装的数据库是没有密码的，所以需要先设置密码
+mysqladmin -uroot -password ab123
+// 连接数据库
+mysql -uroot -p
+// 提示输入密码后，就可进入mysql命令模式了
+// 推出mysql命令模式
+// exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;关于数据库的管理，还是推荐使用phpMyAdmin更加方便些。关于phpmyadmin，可以选择yum安装，也可以直接从&lt;a href=&quot;http://www.phpmyadmin.net/downloads/&quot;&gt;官网&lt;/a&gt;下载。
+今天的系列就先到这了，下一系列说说配置域名的事情。&lt;/p&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>Apple Watch开发系列（一）</title>
@@ -95,7 +487,7 @@ Glance和Notification Interface稍微还要费电周折，分别讲一下：&lt;
 &lt;p&gt;今天的系列就先到这里，下一系列讲讲怎么创建一个功能栏，就是抬腕可以在表盘上看见的那个东西。&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;惯例：&lt;/li&gt;
+  &lt;li&gt;惯例：&lt;a href=&quot;https://github.com/red3/WatchDemo/archive/master.zip&quot;&gt;点击这里下载Demo&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;重要：因为博客暂时没有评论区，如果你对本文有什么疑惑，或者你发现本文由存在错误的地方，非常欢迎你联系我指出。QQ：309333018，WeiChat：flipgo&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -400,46 +792,6 @@ sudo apachectl restart
 
 &lt;p&gt;&lt;a href=&quot;http://stackoverflow.com/questions/13969272/apache-sslmutex-issue&quot;&gt;http://stackoverflow.com/questions/13969272/apache-sslmutex-issue&lt;/a&gt;&lt;/p&gt;
 
-</content>
- </entry>
- 
- <entry>
-   <title>Welcome to Jekyll!</title>
-   <link href="/2015/06/18/welcome-to-jekyll.html"/>
-   <updated>2015-06-18T06:19:36+08:00</updated>
-   <id>/2015/06/18/welcome-to-jekyll</id>
-   <content type="html">&lt;p&gt;You’ll find this post in your &lt;code&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
-
-&lt;p&gt;To add new posts, simply add a file in the &lt;code&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
-
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Tom&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &amp;#39;Hi, Tom&amp;#39; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://github.com/jekyll/jekyll-help&quot;&gt;Jekyll’s dedicated Help repository&lt;/a&gt;.&lt;/p&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>Test the new blog!</title>
-   <link href="/2015/06/18/test-new-blog.html"/>
-   <updated>2015-06-18T06:19:36+08:00</updated>
-   <id>/2015/06/18/test-new-blog</id>
-   <content type="html">&lt;p&gt;这是第一篇博客。&lt;/p&gt;
-
-&lt;p&gt;首先，通过github-pages与传统博客比较&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Feature：是什么&lt;/li&gt;
-  &lt;li&gt;Advantage：比别人好在哪些地方&lt;/li&gt;
-  &lt;li&gt;Benefit：会得到什么好处&lt;/li&gt;
-  &lt;li&gt;test&lt;/li&gt;
-&lt;/ul&gt;
 </content>
  </entry>
  
