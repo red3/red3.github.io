@@ -40,6 +40,7 @@ tags:
 	brew link libxml2 --force
 	brew link libxslt --force
 
+
 安装成功以后，如果`scrapy startproject xxx`报类似的错`ImportError: cannot import name xmlrpc_client`，通过以下方式解决：
 
 	sudo rm -rf /Library/Python/2.7/site-packages/six*
