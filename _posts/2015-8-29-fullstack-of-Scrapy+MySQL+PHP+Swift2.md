@@ -32,7 +32,21 @@ tags:
 然后通过`pip`安装`Scrapy`.
 	
 	sudo pip install scrapy
+	
+如果你安装成功，请直接跳到下一节。我在公司电脑的环境（OS X 10.10 Python2.7.10）以及家里的电脑的环境（OS X 10.11 Python2.7.10）下安装会因为类似`libxml not found`的原因失败，通过以下方式解决：
 
+	brew install libxml2
+	brew install libxslt
+	brew link libxml2 --force
+	brew link libxslt --force
+
+安装成功以后，如果`scrapy startproject xxx`报类似的错`ImportError: cannot import name xmlrpc_client`，通过以下方式解决：
+
+	sudo rm -rf /Library/Python/2.7/site-packages/six*
+	sudo rm -rf /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/six*
+	sudo pip install six
+
+如果以上方法不能失效，请参考[这个链接](http://stackoverflow.com/questions/30964836/scrapy-throws-importerror-cannot-import-name-xmlrpc-client)
 ##开始爬虫
 
 通过下面这个命令生成一个爬虫工程：
