@@ -77,10 +77,10 @@ itms-services://?action=download-manifest&amp;url=https://yourdomain.com/app.pli
 
 <p>应对这个改变，我们有两种方法可以采取：</p>
 
-<ol>
+<ul>
   <li>在本地局域网搭建ssl环境。之前的博客<a href="">Mac OS X 中为Apache开启ssl</a>就是为了应对这个改变做得一些尝试，但是无奈在本地局域网中配置证书太过麻烦，最终放弃。想要尝试该方法的童鞋可以参考<a href="http://blog.cnbluebox.com/blog/2014/03/25/ios7-dot-1xia-shi-yong-adhocfang-fa-xia-zai-de-jie-jue-fang-an/">这篇博客</a></li>
   <li>采用https外链。很高兴了解到<a href="">upyun</a>今天（2015.9.1）宣布全面免费，并且upyun是支持做https外链的。所以今天主要尝试通过upyun做一个支持ssl的外链。</li>
-</ol>
+</ul>
 
 <p>仔细想想，是不是今后博客中的图片都可以放在upyun做CDN加速了，吼吼。</p>
 
@@ -100,7 +100,7 @@ itms-services://?action=download-manifest&amp;url=https://yourdomain.com/app.pli
 
 <p>假设现在我们有一个名为<code>bucket</code>的空间，并且为这个空间授权了一个名为<code>user</code>的操作员。那么：</p>
 
-<ol>
+<ul>
   <li>
     <p>关于FTP的配置</p>
 
@@ -123,7 +123,7 @@ itms-services://?action=download-manifest&amp;url=https://yourdomain.com/app.pli
       <li>如果绑定了自己的域名，只需将默认域名替换为自己的域名就可以了</li>
     </ul>
   </li>
-</ol>
+</ul>
 
 <p>如果是使用客户端的话，推荐使用<a href="">FileZilla</a>这个软件，不要再提Finder的远程连接服务器了，功能弱爆了。</p>
 
@@ -147,7 +147,7 @@ put Info.plist /plist/abc.plist //将本地的工作目录下地Info.plist 上�
 get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本地工作目录下
 </code></pre>
 
-<p>至此，通过<code>https://bucket.b0.upaiyun.com/plist/abc.plist</code>这个</p>
+<p>至此，就可以通过<code>https://bucket.b0.upaiyun.com/plist/abc.plist</code>这个外链来访问plist文件了。</p>
 
 
   </section>

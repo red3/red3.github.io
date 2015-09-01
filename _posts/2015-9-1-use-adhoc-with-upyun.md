@@ -14,8 +14,8 @@ categories: jekyll update
 
 应对这个改变，我们有两种方法可以采取：
 
-1. 在本地局域网搭建ssl环境。之前的博客[Mac OS X 中为Apache开启ssl]()就是为了应对这个改变做得一些尝试，但是无奈在本地局域网中配置证书太过麻烦，最终放弃。想要尝试该方法的童鞋可以参考[这篇博客](http://blog.cnbluebox.com/blog/2014/03/25/ios7-dot-1xia-shi-yong-adhocfang-fa-xia-zai-de-jie-jue-fang-an/)
-2. 采用https外链。很高兴了解到[upyun]()今天（2015.9.1）宣布全面免费，并且upyun是支持做https外链的。所以今天主要尝试通过upyun做一个支持ssl的外链。
+- 在本地局域网搭建ssl环境。之前的博客[Mac OS X 中为Apache开启ssl]()就是为了应对这个改变做得一些尝试，但是无奈在本地局域网中配置证书太过麻烦，最终放弃。想要尝试该方法的童鞋可以参考[这篇博客](http://blog.cnbluebox.com/blog/2014/03/25/ios7-dot-1xia-shi-yong-adhocfang-fa-xia-zai-de-jie-jue-fang-an/)
+- 采用https外链。很高兴了解到[upyun]()今天（2015.9.1）宣布全面免费，并且upyun是支持做https外链的。所以今天主要尝试通过upyun做一个支持ssl的外链。
 
 仔细想想，是不是今后博客中的图片都可以放在upyun做CDN加速了，吼吼。
 
@@ -35,7 +35,7 @@ categories: jekyll update
 
 假设现在我们有一个名为`bucket`的空间，并且为这个空间授权了一个名为`user`的操作员。那么：
 
-1. 关于FTP的配置
+- 关于FTP的配置
 
 	- 主机：v1.ftp.upyun.com (电信) v2.ftp.upyun.com (联通网通) v3.ftp.upyun.com (移动铁通) v0.ftp.upyun.com (自动判断
 	- 用户：操作员的用户名/空间名（对应我们的空间应该是`user/bucket`）
@@ -43,7 +43,7 @@ categories: jekyll update
 	- 端口：21
 	- 文件传输协议：FTP
 
-2. 关于外链的配置
+- 关于外链的配置
 
 	- 默认域名：bucket.b0.upaiyun.com （bucket是空间名）
 	- 文件访问方式：http://默认域名/文件路径
@@ -74,7 +74,9 @@ categories: jekyll update
 	// 下载远程文件
 	get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本地工作目录下
 	
-至此，通过`https://bucket.b0.upaiyun.com/plist/abc.plist`这个
+至此，就可以通过`https://bucket.b0.upaiyun.com/plist/abc.plist`这个外链来访问plist文件了。
+
+
 
 
 

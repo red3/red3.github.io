@@ -4,7 +4,7 @@
  <title>red3 harry</title>
  <link href="/atom.xml" rel="self"/>
  <link href=""/>
- <updated>2015-09-01T16:02:40+08:00</updated>
+ <updated>2015-09-01T16:17:13+08:00</updated>
  <id>/</id>
  <author>
    <name>Harry</name>
@@ -27,10 +27,10 @@ itms-services://?action=download-manifest&amp;amp;url=https://yourdomain.com/app
 
 &lt;p&gt;应对这个改变，我们有两种方法可以采取：&lt;/p&gt;
 
-&lt;ol&gt;
+&lt;ul&gt;
   &lt;li&gt;在本地局域网搭建ssl环境。之前的博客&lt;a href=&quot;&quot;&gt;Mac OS X 中为Apache开启ssl&lt;/a&gt;就是为了应对这个改变做得一些尝试，但是无奈在本地局域网中配置证书太过麻烦，最终放弃。想要尝试该方法的童鞋可以参考&lt;a href=&quot;http://blog.cnbluebox.com/blog/2014/03/25/ios7-dot-1xia-shi-yong-adhocfang-fa-xia-zai-de-jie-jue-fang-an/&quot;&gt;这篇博客&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;采用https外链。很高兴了解到&lt;a href=&quot;&quot;&gt;upyun&lt;/a&gt;今天（2015.9.1）宣布全面免费，并且upyun是支持做https外链的。所以今天主要尝试通过upyun做一个支持ssl的外链。&lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;仔细想想，是不是今后博客中的图片都可以放在upyun做CDN加速了，吼吼。&lt;/p&gt;
 
@@ -50,7 +50,7 @@ itms-services://?action=download-manifest&amp;amp;url=https://yourdomain.com/app
 
 &lt;p&gt;假设现在我们有一个名为&lt;code&gt;bucket&lt;/code&gt;的空间，并且为这个空间授权了一个名为&lt;code&gt;user&lt;/code&gt;的操作员。那么：&lt;/p&gt;
 
-&lt;ol&gt;
+&lt;ul&gt;
   &lt;li&gt;
     &lt;p&gt;关于FTP的配置&lt;/p&gt;
 
@@ -73,7 +73,7 @@ itms-services://?action=download-manifest&amp;amp;url=https://yourdomain.com/app
       &lt;li&gt;如果绑定了自己的域名，只需将默认域名替换为自己的域名就可以了&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;如果是使用客户端的话，推荐使用&lt;a href=&quot;&quot;&gt;FileZilla&lt;/a&gt;这个软件，不要再提Finder的远程连接服务器了，功能弱爆了。&lt;/p&gt;
 
@@ -97,7 +97,7 @@ put Info.plist /plist/abc.plist //将本地的工作目录下地Info.plist 上�
 get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本地工作目录下
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;至此，通过&lt;code&gt;https://bucket.b0.upaiyun.com/plist/abc.plist&lt;/code&gt;这个&lt;/p&gt;
+&lt;p&gt;至此，就可以通过&lt;code&gt;https://bucket.b0.upaiyun.com/plist/abc.plist&lt;/code&gt;这个外链来访问plist文件了。&lt;/p&gt;
 
 </content>
  </entry>
