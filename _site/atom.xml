@@ -4,12 +4,103 @@
  <title>red3 harry</title>
  <link href="/atom.xml" rel="self"/>
  <link href=""/>
- <updated>2015-08-29T11:05:46+08:00</updated>
+ <updated>2015-09-01T16:02:40+08:00</updated>
  <id>/</id>
  <author>
    <name>Harry</name>
  </author>
 
+ 
+ <entry>
+   <title>通过upyun解决iOS7.1后使用AdHoc下载的问题</title>
+   <link href="/2015/09/01/use-adhoc-with-upyun.html"/>
+   <updated>2015-09-01T21:13:13+08:00</updated>
+   <id>/2015/09/01/use-adhoc-with-upyun</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;itms-services://?action=download-manifest&amp;amp;url=http://yourdomain.com/app.plist
+==&amp;gt; //更换为
+itms-services://?action=download-manifest&amp;amp;url=https://yourdomain.com/app.plist
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;应对这个改变，我们有两种方法可以采取：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在本地局域网搭建ssl环境。之前的博客&lt;a href=&quot;&quot;&gt;Mac OS X 中为Apache开启ssl&lt;/a&gt;就是为了应对这个改变做得一些尝试，但是无奈在本地局域网中配置证书太过麻烦，最终放弃。想要尝试该方法的童鞋可以参考&lt;a href=&quot;http://blog.cnbluebox.com/blog/2014/03/25/ios7-dot-1xia-shi-yong-adhocfang-fa-xia-zai-de-jie-jue-fang-an/&quot;&gt;这篇博客&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;采用https外链。很高兴了解到&lt;a href=&quot;&quot;&gt;upyun&lt;/a&gt;今天（2015.9.1）宣布全面免费，并且upyun是支持做https外链的。所以今天主要尝试通过upyun做一个支持ssl的外链。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;仔细想想，是不是今后博客中的图片都可以放在upyun做CDN加速了，吼吼。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;准备工作&lt;/h2&gt;
+
+&lt;p&gt;注册upyun成功后会提示必须绑定支付宝做实名认证，否则无法享受全部功能，吓得我赶紧连接支付宝做了实名认证，没有做实验不实名认证的话，是否支持https外链功能。&lt;/p&gt;
+
+&lt;p&gt;添加一个&lt;code&gt;存储类&lt;/code&gt;空间，并为这个空间开启https访问功能，如下图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://redharry.b0.upaiyun.com/pic/upyun_with_ssl.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;哈哈，其实这么简单地步骤完全没有必要上图，我只是单纯想测试下Mac上录制gif图片（我用的是&lt;a href=&quot;http://www.recordit.co/&quot;&gt;Recordit&lt;/a&gt;这个软件）以及测试下upyun的CDN图片加速。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;上传文件&lt;/h2&gt;
+
+&lt;p&gt;上传文件需要先创建一个&lt;code&gt;操作员&lt;/code&gt;。在&lt;code&gt;账号管理&lt;/code&gt;菜单下选择&lt;code&gt;操作员管理&lt;/code&gt;来新建一个操作员，并在&lt;code&gt;通用&lt;/code&gt;菜单中选择&lt;code&gt;操作员管理授权&lt;/code&gt;将刚才新建的操作员授权于管理空间权限。&lt;/p&gt;
+
+&lt;p&gt;假设现在我们有一个名为&lt;code&gt;bucket&lt;/code&gt;的空间，并且为这个空间授权了一个名为&lt;code&gt;user&lt;/code&gt;的操作员。那么：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;关于FTP的配置&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;主机：v1.ftp.upyun.com (电信) v2.ftp.upyun.com (联通网通) v3.ftp.upyun.com (移动铁通) v0.ftp.upyun.com (自动判断&lt;/li&gt;
+      &lt;li&gt;用户：操作员的用户名/空间名（对应我们的空间应该是&lt;code&gt;user/bucket&lt;/code&gt;）&lt;/li&gt;
+      &lt;li&gt;密码：操作员的密码&lt;/li&gt;
+      &lt;li&gt;端口：21&lt;/li&gt;
+      &lt;li&gt;文件传输协议：FTP&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;关于外链的配置&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;默认域名：bucket.b0.upaiyun.com （bucket是空间名）&lt;/li&gt;
+      &lt;li&gt;文件访问方式：http://默认域名/文件路径
+（例如：文件路径/dir/pic.jpg 该图片对外访问地址为：http://bucket.b0.upaiyun.com/dir/pic.jpg）&lt;/li&gt;
+      &lt;li&gt;ssl方式只需将http替换为https&lt;/li&gt;
+      &lt;li&gt;如果绑定了自己的域名，只需将默认域名替换为自己的域名就可以了&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;如果是使用客户端的话，推荐使用&lt;a href=&quot;&quot;&gt;FileZilla&lt;/a&gt;这个软件，不要再提Finder的远程连接服务器了，功能弱爆了。&lt;/p&gt;
+
+&lt;p&gt;成功登陆后的软件界面大概是这个样子：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://redharry.b0.upaiyun.com/pic/how_does_filezilla_looks_like.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以直接把文件拖到红框圈住的地方实现文件的上传。&lt;/p&gt;
+
+&lt;p&gt;如果非要使用终端的话，下面是终端的操作：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 以`user/bucket`这个用户登录ftp服务器
+ftp user/bucket@v1.ftp.upyun.com
+// 然后输入密码
+// 登录成功
+// 查看所有可用命令
+？
+// 上传本地文件
+put Info.plist /plist/abc.plist //将本地的工作目录下地Info.plist 上传至服务器/plist/abc.plist这个路径，plist这个文件夹如不存在，会自动创建
+// 下载远程文件
+get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本地工作目录下
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;至此，通过&lt;code&gt;https://bucket.b0.upaiyun.com/plist/abc.plist&lt;/code&gt;这个&lt;/p&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>Scrapy+MySQL+PHP+Swift开发攻略系列（二）爬虫篇</title>
@@ -73,9 +164,9 @@
 
 &lt;h2 id=&quot;model&quot;&gt;定义Model层&lt;/h2&gt;
 
-&lt;p&gt;首先我们想确定一个网站上的图片包含哪些信息，要解决这个问题，就需要打开这个网页使用&lt;code&gt;开发者工具&lt;/code&gt;, 使用&lt;code&gt;页面选择器&lt;/code&gt;(开发者工作左上角的放大镜图标)选择一张图片，效果如下:&lt;/p&gt;
+&lt;p&gt;首先我们想确定一个网站上的图片包含哪些信息，要解决这个问题，就需要打开这个网页使用&lt;code&gt;开发者工具&lt;/code&gt;(快捷键&lt;code&gt;option+command+i&lt;/code&gt;), 使用&lt;code&gt;页面选择器&lt;/code&gt;(开发者工作左上角的放大镜图标)选择一张图片，效果如下:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/2015/img_spiders01.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;可以看出，我们选中的&lt;code&gt;div&lt;/code&gt;块中包含了我们想要的最基本的资料。这个过程，其实就是我们爬虫的一个工作原理，通过网页元素找到我们想要的内容，只不过现在我们是手动查找，等发现规律，我们就通过爬虫程序自动爬取内容。&lt;/p&gt;
 
@@ -659,141 +750,6 @@ Glance和Notification Interface稍微还要费电周折，分别讲一下：&lt;
 &lt;p&gt;-&lt;a href=&quot;https://github.com/casatwy/SQLiteManager4iOS&quot;&gt;SQLiteManager4iOS&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://casatwy.com/&quot;&gt;casatwy&lt;/a&gt;基于SQLiteMananger这个repo做的迁移方案，解决版本迁移问题。&lt;/p&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>Mac OS X 中为Apache开启ssl</title>
-   <link href="/2015/06/24/Mac-OS-ssl.html"/>
-   <updated>2015-06-24T06:19:36+08:00</updated>
-   <id>/2015/06/24/Mac-OS-ssl</id>
-   <content type="html">&lt;p&gt;最近由于工作需要，需要给Mac本地的Apache配置ssl环境，折腾了一下午，终于解决了，把过程记录下来，留给有需要的人。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;生成ssl证书&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;生成主机密匙 （’ssl’这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）&lt;/p&gt;
-
-    &lt;pre&gt;&lt;code&gt; sudo mkdir /private/etc/apache2/ssl
- cd /private/etc/apache2/ssl
- sudo ssh-keygen -f server.key
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;生成证书请求文件（这个过程感觉跟iOS生成开发证书类似）&lt;/p&gt;
-
-    &lt;pre&gt;&lt;code&gt; sudo openssl req -new -key server.key -out request.csr
- 	// 这个过程中会让输入一些证书机构的信息，按照提示或者留空就行
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;使用server.key 和 request.csr 生成ssl证书&lt;/p&gt;
-
-    &lt;pre&gt;&lt;code&gt; sudo openssl x509 -req -days 365 -in request.csr -signkey server.key -out server.crt
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;配置Apache&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;编辑httpd.conf文件&lt;/p&gt;
-
-    &lt;p&gt;sudo vi /private/etc/apache2/httpd.conf&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;去掉下面四行前面的 ‘#’&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span class=&quot;x&quot;&gt;LoadModule ssl_module libexec/apache2/mod_ssl.so&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;LoadModule socache_shmcb_module libexec/apache2/mod_socache_shmcb.so&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;Include /private/etc/apache2/extra/httpd-ssl.conf&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;Include /private/etc/apache2/extra/httpd-vhosts.conf&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;编辑httpd-ssl.conf文件&lt;/p&gt;
-
-    &lt;p&gt;sudo vi /private/etc/apache2/extra/httpd-ssl.conf&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;将以下两行：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;SSLCertificateFile &quot;/private/etc/apache2/server.crt&quot;
-
-SSLCertificateKeyFile &quot;/private/etc/apache2/server.key&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;分别修改为：（需要注意的是ssl文件夹为第1步创建的文件夹）&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;SSLCertificateFile &quot;/private/etc/apache2/ssl/server.crt&quot;
-
-SSLCertificateKeyFile &quot;/private/etc/apache2/ssl/server.key&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;需要注意的是该文件68行的代码会在Apache运行的时候报错&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;SSLMutex  &quot;file:/private/var/run/ssl_mutex&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;查找网上的解决方案是将这行代码注释，不知道会不会带来安全隐患，烦请知道的同学告知。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;编辑httpd-vhosts.conf文件&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;在文件末尾添加：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;VirtualHost *:443&amp;gt; 
-SSLEngine on
-SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
-SSLCertificateFile /private/etc/apache2/ssl/server.crt 
-SSLCertificateKeyFile /private/etc/apache2/ssl/server.key
-ServerName localhost
-// copy your DocumentRoot setting in httpd.conf to here
-DocumentRoot &quot;/Users/$yourName/Sites&quot;
-&amp;lt;/VirtualHost&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这时需要注意，httpd-vhosts.conf文件里面有个默认的 &amp;lt;VirtualHost *:80&amp;gt;标签， 不做修改的话，访问localhost会报错:The Request / Not Found&lt;/p&gt;
-
-&lt;p&gt;这是因为&amp;lt;VirtualHost *:80&amp;gt;里的设置会覆盖以前单站点模式下的设置, 所以要把该文件里的一些设置同步过来, 我把他修改成这样:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;VirtualHost *:80&amp;gt;
-ServerAdmin xxx@example.com
-// copy your DocumentRoot setting in httpd.conf to here
-DocumentRoot &quot;/Users/$yourName/Sites&quot;
-ServerName localhost
-ErrorLog &quot;/private/var/log/apache2/error_log&quot;
-CustomLog &quot;/private/var/log/apache2/access_log&quot; common
-&amp;lt;/VirtualHost&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;进行到这里就配置完了，重启Apache，访问https://localhost试试吧！&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo apachectl configtest
-sudo apachectl restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;后记&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;其实最近折腾这个主要是为了练习iOS应用框架中使用SSL加密以及实现iOS自动打包至服务器使用itms-service协议自动安装至手机的过程，然而由于服务器缺少https环境，本地https又缺少SA认证，尚未实现，权当给自己挖个坑，钻研钻研吧！&lt;/p&gt;
-
-&lt;p&gt;参考：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/y500/p/3596473.html&quot;&gt;http://www.cnblogs.com/y500/p/3596473.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://stackoverflow.com/questions/13969272/apache-sslmutex-issue&quot;&gt;http://stackoverflow.com/questions/13969272/apache-sslmutex-issue&lt;/a&gt;&lt;/p&gt;
 
 </content>
  </entry>

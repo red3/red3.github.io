@@ -1,0 +1,26 @@
+<h3 id="section">缘由</h3>
+
+<p>之前做佳缘一对一iOS App的时候，需要解决网络数据做离线缓存，现在红娘经纪人项目考虑用数据库作为缓存解决方案。后来觉得有必要思考下数据持久化该采取的方案。</p>
+
+<h3 id="section-1">说到数据持久化，到底有哪些方案可以采取</h3>
+
+<ul>
+  <li>NSUserDefault</li>
+  <li>NSKeyedArchive</li>
+  <li>Write To File (NSString, NSArray, NSData, NSDictionary)</li>
+  <li>数据库
+当数据有本地存取的需求的时候，如何保证数据在本地的合理安排？</li>
+</ul>
+
+<h3 id="section-2">应该采取哪种方案</h3>
+
+<h3 id="section-3">业界是怎么做的</h3>
+
+<p>-<a href="https://github.com/yuantiku/YTKKeyValueStore">YTKKeyValueStore</a></p>
+
+<p><a href="www.devtang.com">唐巧</a>开源的基于sqlite的Key-Value式的存储，猿题库的项目采用该方案。</p>
+
+<p>-<a href="https://github.com/casatwy/SQLiteManager4iOS">SQLiteManager4iOS</a></p>
+
+<p><a href="http://casatwy.com/">casatwy</a>基于SQLiteMananger这个repo做的迁移方案，解决版本迁移问题。</p>
+

@@ -7,6 +7,7 @@ http://blog.coderharry.com/index.html
 http://blog.coderharry.com/sitemap.txt
 http://blog.coderharry.com/tags.html
 
+http://blog.coderharry.com/2015/09/01/use-adhoc-with-upyun.html
 http://blog.coderharry.com/2015/08/29/fullstack-of-Scrapy+MySQL+PHP+Swift2.html
 http://blog.coderharry.com/2015/08/09/fullstack-of-Scrapy+MySQL+PHP+Swift.html
 http://blog.coderharry.com/2015/08/02/prepare-my-own-vps2.html
