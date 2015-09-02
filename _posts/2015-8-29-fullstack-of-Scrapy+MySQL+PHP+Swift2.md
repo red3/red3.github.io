@@ -69,10 +69,10 @@ tags:
 
 下面分别解释下各个文件：
 
-`items.py` - item相当于是mvc中的model，在items里我们定义了自己需要的模型
-`piplines.py` - pipline俗称管道，这个文件主要用来把我们获取的item类型存入MySQL
-`settings.py` -  在这个文件里面配置整个工程的一些设置。例如MySQL的数据库名，数据库地址和数据库端口号等等。
-`spiders` - 这个文件夹存放爬虫文件。
+- `items.py` - item相当于是mvc中的model，在items里我们定义了自己需要的模型
+- `piplines.py` - pipline俗称管道，这个文件主要用来把我们获取的item类型存入MySQL
+- `settings.py` -  在这个文件里面配置整个工程的一些设置。例如MySQL的数据库名，数据库地址和数据库端口号等等。
+- `spiders` - 这个文件夹存放爬虫文件。
 
 至此，我们就可以正式开始我们的编码工作了。
 
