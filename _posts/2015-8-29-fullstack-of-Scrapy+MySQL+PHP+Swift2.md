@@ -49,9 +49,9 @@ tags:
 
 如果以上方法不能失效，请参考[这个链接](http://stackoverflow.com/questions/30964836/scrapy-throws-importerror-cannot-import-name-xmlrpc-client)
 
-##开始爬虫
+## 创建爬虫项目
 
-通过下面这个命令生成一个爬虫工程：
+通过下面这个命令生成一个爬虫项目：
 
 	scrapy startproject dbmeizi
 	
@@ -76,7 +76,7 @@ tags:
 
 至此，我们就可以正式开始我们的编码工作了。
 
-## 定义Model层
+## 定义Model层（Item）
 
 首先我们想确定一个网站上的图片包含哪些信息，要解决这个问题，就需要打开这个网页使用`开发者工具`(快捷键`option+command+i`), 使用`页面选择器`(开发者工作左上角的放大镜图标)选择一张图片，效果如下:
 
@@ -87,19 +87,27 @@ tags:
 
 所以item.py里面是这个样子：
 
-	from scrapy.item import Item, Field
-
-	class MeiziItem(Item):
+	// 需要注意的是这个文件的默认模板样式可能根据scrapy版本不同略有不同，依照默认模板样式加入我们的自定义字段就可
 	
-		imgsrc = Field()
-    	title = Field()
-    	topic_link = Field()
-    	star_count = Field()
-    	update_time = Field()
+	import scrapy
+
+	class DbmeiziItem(scrapy.Item):
+    	# define the fields for your item here like:
+    	# name = scrapy.Field()
+    	imgsrc = scrapy.Field()
+    	title = scrapy.Field()
+    	topic_link = scrapy.Field()
+    	star_count = scrapy.Field()
+    	update_time = scrapy.Field()
+    	pass
     	
 相当于我们继承自类Item创建了我们自己的MeiziItem，然后我们的自定义类有5个属性，`star_count`是设计用来让用户点赞的，最后的`update_time `可以用来记录修改时间。
 
-## 编写爬虫
+## 编写爬虫(Spider)
+
+Spider是我们用于从单个网站(或者一些网站)爬取数据的类。
+
+其中包含了一个用于下载的初始URL，如何跟进网页中的链接以及如何分析页面中的内容， 提取生成`item`的方法。
 
 在`spiders`文件夹下新建`dbmeizi_scrapy.py`文件。
 这个文件里面是这个样子：
@@ -108,7 +116,7 @@ tags:
 
 from scrapy import Spider
 from scrapy.selector import Selector
-from dbmeizi.items import MeiziItem
+from dbmeizi.items import DbmeiziItem
 import time
 
 class dbmeiziSpider(Spider):
@@ -123,7 +131,7 @@ class dbmeiziSpider(Spider):
     def parse(self, response):
         divResults = Selector(response).xpath('//div[@class="img_single"]')
         for div in divResults:
-            item = MeiziItem()
+            item = DbmeiziItem()
             href = div.xpath('.//a')[0]
             img = div.xpath('.//img')[0]
             item['topic_link'] = href.xpath('@href').extract()[0]
@@ -138,50 +146,28 @@ class dbmeiziSpider(Spider):
 需要解释的几点概念：
 
 - `allowed_domin ` - 指定在哪个网站爬东西
-- `start_urls` - 需要爬取哪些页面
-- `parse `方法 - 继承自父类，可以想象成这个方法一开始拿到的数据就是整个网页的html代码，我们要通过各种过滤，拿到最终我们感兴趣的内容。
+- `start_urls` - 包含了Spider在启动时进行爬取的url列表。因此，第一个被获取到的页面将是其中之一。后续的URL则从初始的URL获取到的数据中提取。
+- `parse `方法 - 继承自父类，每个初始URL完成下载后生成的`Response`对象将会作为唯一的参数传递给该函数。该方法负责解析返回的数据(response data)，提取数据(生成`item`)以及生成需要进一步处理的URL的`Request`对象。可以想象成这个方法一开始拿到的数据就是整个网页的html代码，我们要通过各种过滤，拿到最终我们感兴趣的内容。
 
-最终，爬虫通过上面的代码爬到我们感兴趣的内容了，通过这些内容为`item`赋值，`item`会通过管道文件输出，所以接下来我们要创建管道文件。
 
-## 定义管道文件
+最终，爬虫通过上面的代码爬到我们感兴趣的内容了，通过这些内容为`item`赋值。
 
-打开`pipelines.py`，这个文件应该是这个样子：
 
-{% highlight python %}
-
-from scrapy.conf import settings
-from scrapy.exceptions import DropItem
-from scrapy import log
-
-class PrintPipeline(object):
-    """just prit the item"""
-    def __init__(self):
-        
-    def process_item(self, item, spider):
-        print """
-                meizi(title, imgsrc, topic_link, star_count, update_time) 
-                values(%s, %s, %s, %s, %s)
-            """, (item['title'], item['imgsrc'], item['topic_link'], item['star_count'], item['update_time'])
-        return item
-
-{% endhighlight %}
-
-`process_item`这个方法中我们暂时只是将item打印输出，看是不是符合我们的数据要求。
-
-然后到`setting.py`这个文件里面加上这么一行
-	
-	ITEM_PIPELINES = ['dbmeizi.pipelines.PrintPipeline',] 
-
-是指定爬虫爬取后通过`PrintPipeline`这个管道输出内容。所以这两个名字要写一致。
 
 ## 运行爬虫
 到现在为止，这个爬虫就可以正常工作了。在工程的根目录下执行如下命令：
 
 	scrapy crawl dbmeiziSpider
 
+不出意外的话，会看见下面的画面：
 
+![](http://redharry.b0.upaiyun.com/pic/spider_show01.gif)
 
 大功告成。
+
+刚才提到不出意外的情况，那么出意味的情况是什么呢，当然就是这个网站把我们屏蔽了，我们爬不到他的数据了。针对这种情况，会在系列（四）中给出解决方案。
+
+
 
 ## 最后
 
