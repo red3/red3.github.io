@@ -53,16 +53,19 @@ tags:
 
 通过下面这个命令生成一个爬虫工程：
 
-	scrapy startproject spiders
+	scrapy startproject dbmeizi
 	
 然后我们会看到`scrapy`已经为我们生成了一个工程。这个工程大概是这个结构
 	
 	dbmeizi
-	|__ __init__.py
-	|__ items.py
-	|__ pipelines.py
-	|__ settings.py
-	|__ spiders
+	|__ scrapy.cfg
+	|
+	|__	 dbmeizi
+		 |__ __init__.py
+		 |__ items.py
+		 |__ pipelines.py
+		 |__ settings.py
+		 |__ spiders
 
 下面分别解释下各个文件：
 
