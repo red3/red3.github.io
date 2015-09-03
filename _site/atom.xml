@@ -4,7 +4,7 @@
  <title>red3 harry</title>
  <link href="/atom.xml" rel="self"/>
  <link href=""/>
- <updated>2015-09-01T16:17:13+08:00</updated>
+ <updated>2015-09-03T15:26:27+08:00</updated>
  <id>/</id>
  <author>
    <name>Harry</name>
@@ -50,7 +50,7 @@ itms-services://?action=download-manifest&amp;amp;url=https://yourdomain.com/app
 
 &lt;p&gt;假设现在我们有一个名为&lt;code&gt;bucket&lt;/code&gt;的空间，并且为这个空间授权了一个名为&lt;code&gt;user&lt;/code&gt;的操作员。那么：&lt;/p&gt;
 
-&lt;ul&gt;
+&lt;ol&gt;
   &lt;li&gt;
     &lt;p&gt;关于FTP的配置&lt;/p&gt;
 
@@ -73,7 +73,7 @@ itms-services://?action=download-manifest&amp;amp;url=https://yourdomain.com/app
       &lt;li&gt;如果绑定了自己的域名，只需将默认域名替换为自己的域名就可以了&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;
+&lt;/ol&gt;
 
 &lt;p&gt;如果是使用客户端的话，推荐使用&lt;a href=&quot;&quot;&gt;FileZilla&lt;/a&gt;这个软件，不要再提Finder的远程连接服务器了，功能弱爆了。&lt;/p&gt;
 
@@ -98,6 +98,68 @@ get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;至此，就可以通过&lt;code&gt;https://bucket.b0.upaiyun.com/plist/abc.plist&lt;/code&gt;这个外链来访问plist文件了。&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Scrapy+MySQL+PHP+Swift开发攻略系列（三）数据库MySQL篇</title>
+   <link href="/2015/08/29/fullstack-of-Scrapy+MySQL+PHP+Swift3.html"/>
+   <updated>2015-08-29T17:09:09+08:00</updated>
+   <id>/2015/08/29/fullstack-of-Scrapy+MySQL+PHP+Swift3</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;系列目录&lt;/h2&gt;
+
+&lt;p&gt;你可以从这个地方做一个快速跳转。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;定义管道文件&lt;/h2&gt;
+
+&lt;p&gt;打开&lt;code&gt;pipelines.py&lt;/code&gt;，这个文件应该是这个样子：&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.conf&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.exceptions&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DropItem&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PrintPipeline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;sd&quot;&gt;&amp;quot;&amp;quot;&amp;quot;just prit the item&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process_item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                meizi(title, imgsrc, topic_link, star_count, update_time) &lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                values(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;            &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;imgsrc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;topic_link&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;star_count&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;update_time&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;process_item&lt;/code&gt;这个方法中我们暂时只是将item打印输出，看是不是符合我们的数据要求。&lt;/p&gt;
+
+&lt;p&gt;然后到&lt;code&gt;setting.py&lt;/code&gt;这个文件里面加上这么一行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ITEM_PIPELINES = [&#39;dbmeizi.pipelines.PrintPipeline&#39;,] 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;是指定爬虫爬取后通过&lt;code&gt;PrintPipeline&lt;/code&gt;这个管道输出内容。所以这两个名字要写一致。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;运行爬虫&lt;/h2&gt;
+&lt;p&gt;到现在为止，这个爬虫就可以正常工作了。在工程的根目录下执行如下命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;scrapy crawl dbmeiziSpider
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;大功告成。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;最后&lt;/h2&gt;
+
+&lt;p&gt;按照惯例，放上源码地址：&lt;/p&gt;
 
 </content>
  </entry>
@@ -136,33 +198,55 @@ get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本
 &lt;pre&gt;&lt;code&gt;sudo pip install scrapy
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&quot;section-1&quot;&gt;开始爬虫&lt;/h2&gt;
+&lt;p&gt;如果你安装成功，请直接跳到下一节。我在公司电脑的环境（OS X 10.10 Python2.7.10）以及家里的电脑的环境（OS X 10.11 Python2.7.10）下安装会因为类似&lt;code&gt;libxml not found&lt;/code&gt;的原因失败，通过以下方式解决：&lt;/p&gt;
 
-&lt;p&gt;通过下面这个命令生成一个爬虫工程：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;brew install libxml2
+brew install libxslt
+brew link libxml2 --force
+brew link libxslt --force
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;scrapy startproject spiders
+&lt;p&gt;安装成功以后，如果&lt;code&gt;scrapy startproject xxx&lt;/code&gt;报类似的错&lt;code&gt;ImportError: cannot import name xmlrpc_client&lt;/code&gt;，通过以下方式解决：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo rm -rf /Library/Python/2.7/site-packages/six*
+sudo rm -rf /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/six*
+sudo pip install six
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果以上方法不能失效，请参考&lt;a href=&quot;http://stackoverflow.com/questions/30964836/scrapy-throws-importerror-cannot-import-name-xmlrpc-client&quot;&gt;这个链接&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;创建爬虫项目&lt;/h2&gt;
+
+&lt;p&gt;通过下面这个命令生成一个爬虫项目：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;scrapy startproject dbmeizi
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;然后我们会看到&lt;code&gt;scrapy&lt;/code&gt;已经为我们生成了一个工程。这个工程大概是这个结构&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;dbmeizi
-|__ __init__.py
-|__ items.py
-|__ pipelines.py
-|__ settings.py
-|__ spiders
+|__ scrapy.cfg
+|
+|__	 dbmeizi
+	 |__ __init__.py
+	 |__ items.py
+	 |__ pipelines.py
+	 |__ settings.py
+	 |__ spiders
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;下面分别解释下各个文件：&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;items.py&lt;/code&gt; - item相当于是mvc中的model，在items里我们定义了自己需要的模型
-&lt;code&gt;piplines.py&lt;/code&gt; - pipline俗称管道，这个文件主要用来把我们获取的item类型存入MySQL
-&lt;code&gt;settings.py&lt;/code&gt; -  在这个文件里面配置整个工程的一些设置。例如MySQL的数据库名，数据库地址和数据库端口号等等。
-&lt;code&gt;spiders&lt;/code&gt; - 这个文件夹存放爬虫文件。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;items.py&lt;/code&gt; - item相当于是mvc中的model，在items里我们定义了自己需要的模型&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;piplines.py&lt;/code&gt; - pipline俗称管道，这个文件主要用来把我们获取的item类型存入MySQL&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;settings.py&lt;/code&gt; -  在这个文件里面配置整个工程的一些设置。例如MySQL的数据库名，数据库地址和数据库端口号等等。&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;spiders&lt;/code&gt; - 这个文件夹存放爬虫文件。&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;至此，我们就可以正式开始我们的编码工作了。&lt;/p&gt;
 
-&lt;h2 id=&quot;model&quot;&gt;定义Model层&lt;/h2&gt;
+&lt;h2 id=&quot;modelitem&quot;&gt;定义Model层（Item）&lt;/h2&gt;
 
 &lt;p&gt;首先我们想确定一个网站上的图片包含哪些信息，要解决这个问题，就需要打开这个网页使用&lt;code&gt;开发者工具&lt;/code&gt;(快捷键&lt;code&gt;option+command+i&lt;/code&gt;), 使用&lt;code&gt;页面选择器&lt;/code&gt;(开发者工作左上角的放大镜图标)选择一张图片，效果如下:&lt;/p&gt;
 
@@ -172,27 +256,35 @@ get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本
 
 &lt;p&gt;所以item.py里面是这个样子：&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;from scrapy.item import Item, Field
+&lt;pre&gt;&lt;code&gt;// 需要注意的是这个文件的默认模板样式可能根据scrapy版本不同略有不同，依照默认模板样式加入我们的自定义字段就可
 
-class MeiziItem(Item):
+import scrapy
 
-	imgsrc = Field()
-	title = Field()
-	topic_link = Field()
-	star_count = Field()
-	update_time = Field()
+class DbmeiziItem(scrapy.Item):
+	# define the fields for your item here like:
+	# name = scrapy.Field()
+	imgsrc = scrapy.Field()
+	title = scrapy.Field()
+	topic_link = scrapy.Field()
+	star_count = scrapy.Field()
+	update_time = scrapy.Field()
+	pass
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;相当于我们继承自类Item创建了我们自己的MeiziItem，然后我们的自定义类有5个属性，&lt;code&gt;star_count&lt;/code&gt;是设计用来让用户点赞的，最后的&lt;code&gt;update_time &lt;/code&gt;可以用来记录修改时间。&lt;/p&gt;
 
-&lt;h2 id=&quot;section-2&quot;&gt;编写爬虫&lt;/h2&gt;
+&lt;h2 id=&quot;spider&quot;&gt;编写爬虫(Spider)&lt;/h2&gt;
+
+&lt;p&gt;Spider是我们用于从单个网站(或者一些网站)爬取数据的类。&lt;/p&gt;
+
+&lt;p&gt;其中包含了一个用于下载的初始URL，如何跟进网页中的链接以及如何分析页面中的内容， 提取生成&lt;code&gt;item&lt;/code&gt;的方法。&lt;/p&gt;
 
 &lt;p&gt;在&lt;code&gt;spiders&lt;/code&gt;文件夹下新建&lt;code&gt;dbmeizi_scrapy.py&lt;/code&gt;文件。
 这个文件里面是这个样子：&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Spider&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.selector&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Selector&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dbmeizi.items&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MeiziItem&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dbmeizi.items&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DbmeiziItem&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;time&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;dbmeiziSpider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
@@ -207,7 +299,7 @@ class MeiziItem(Item):
     &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;divResults&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;//div[@class=&amp;quot;img_single&amp;quot;]&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;divResults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MeiziItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DbmeiziItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;href&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;.//a&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;.//img&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;topic_link&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;@href&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
@@ -221,49 +313,28 @@ class MeiziItem(Item):
 
 &lt;ul&gt;
   &lt;li&gt;&lt;code&gt;allowed_domin &lt;/code&gt; - 指定在哪个网站爬东西&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;start_urls&lt;/code&gt; - 需要爬取哪些页面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;parse &lt;/code&gt;方法 - 继承自父类，可以想象成这个方法一开始拿到的数据就是整个网页的html代码，我们要通过各种过滤，拿到最终我们感兴趣的内容。&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;start_urls&lt;/code&gt; - 包含了Spider在启动时进行爬取的url列表。因此，第一个被获取到的页面将是其中之一。后续的URL则从初始的URL获取到的数据中提取&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;parse &lt;/code&gt;方法 - 继承自父类，每个初始URL完成下载后生成的&lt;code&gt;Response&lt;/code&gt;对象将会作为唯一的参数传递给该函数。该方法负责解析返回的数据(response data)，提取数据(生成&lt;code&gt;item&lt;/code&gt;)以及生成需要进一步处理的URL的&lt;code&gt;Request&lt;/code&gt;对象。可以想象成这个方法一开始拿到的数据就是整个网页的html代码，我们要通过各种过滤，拿到最终我们感兴趣的内容&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;xpath&lt;/code&gt; - 解析数据的时候我们用到这个东西，关于它的详细用法，移步这个&lt;a href=&quot;http://www.w3school.com.cn/xpath/index.asp&quot;&gt;网址&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;最终，爬虫通过上面的代码爬到我们感兴趣的内容了，通过这些内容为&lt;code&gt;item&lt;/code&gt;赋值，&lt;code&gt;item&lt;/code&gt;会通过管道文件输出，所以接下来我们要创建管道文件。&lt;/p&gt;
+&lt;p&gt;最终，爬虫通过上面的代码爬到我们感兴趣的内容了，通过这些内容为&lt;code&gt;item&lt;/code&gt;赋值。&lt;/p&gt;
 
-&lt;h2 id=&quot;section-3&quot;&gt;定义管道文件&lt;/h2&gt;
-
-&lt;p&gt;打开&lt;code&gt;pipelines.py&lt;/code&gt;，这个文件应该是这个样子：&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.conf&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.exceptions&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DropItem&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PrintPipeline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;sd&quot;&gt;&amp;quot;&amp;quot;&amp;quot;just prit the item&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process_item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;                meizi(title, imgsrc, topic_link, star_count, update_time) &lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;                values(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;            &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;imgsrc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;topic_link&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;star_count&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;update_time&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code&gt;process_item&lt;/code&gt;这个方法中我们暂时只是将item打印输出，看是不是符合我们的数据要求。&lt;/p&gt;
-
-&lt;p&gt;然后到&lt;code&gt;setting.py&lt;/code&gt;这个文件里面加上这么一行&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ITEM_PIPELINES = [&#39;dbmeizi.pipelines.PrintPipeline&#39;,] 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;是指定爬虫爬取后通过&lt;code&gt;PrintPipeline&lt;/code&gt;这个管道输出内容。所以这两个名字要写一致。&lt;/p&gt;
-
-&lt;h2 id=&quot;section-4&quot;&gt;运行爬虫&lt;/h2&gt;
+&lt;h2 id=&quot;section-2&quot;&gt;运行爬虫&lt;/h2&gt;
 &lt;p&gt;到现在为止，这个爬虫就可以正常工作了。在工程的根目录下执行如下命令：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;scrapy crawl dbmeiziSpider
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;不出意外的话，会看见下面的画面：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://redharry.b0.upaiyun.com/pic/spider_show01.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;大功告成。&lt;/p&gt;
 
-&lt;h2 id=&quot;section-5&quot;&gt;最后&lt;/h2&gt;
+&lt;p&gt;刚才提到不出意外的情况，那么出意味的情况是什么呢，当然就是这个网站把我们屏蔽了，我们爬不到他的数据了。针对这种情况，会在系列（四）中给出解决方案。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;最后&lt;/h2&gt;
 
 &lt;p&gt;按照惯例，放上源码地址：&lt;/p&gt;
 
@@ -717,40 +788,6 @@ Glance和Notification Interface稍微还要费电周折，分别讲一下：&lt;
   &lt;li&gt;GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET请求会在浏览器地址栏暴漏网址，然而在客户端不存在这个问题，所以可能有人觉得用不用GET都无所谓，现在知道GET请求会出现在服务器的access log，这是相当危险的。&lt;/li&gt;
   &lt;li&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>iOS数据持久化的思考</title>
-   <link href="/2015/06/25/iOS-save-local-data.html"/>
-   <updated>2015-06-25T06:19:36+08:00</updated>
-   <id>/2015/06/25/iOS-save-local-data</id>
-   <content type="html">&lt;h3 id=&quot;section&quot;&gt;缘由&lt;/h3&gt;
-
-&lt;p&gt;之前做佳缘一对一iOS App的时候，需要解决网络数据做离线缓存，现在红娘经纪人项目考虑用数据库作为缓存解决方案。后来觉得有必要思考下数据持久化该采取的方案。&lt;/p&gt;
-
-&lt;h3 id=&quot;section-1&quot;&gt;说到数据持久化，到底有哪些方案可以采取&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;NSUserDefault&lt;/li&gt;
-  &lt;li&gt;NSKeyedArchive&lt;/li&gt;
-  &lt;li&gt;Write To File (NSString, NSArray, NSData, NSDictionary)&lt;/li&gt;
-  &lt;li&gt;数据库
-当数据有本地存取的需求的时候，如何保证数据在本地的合理安排？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;section-2&quot;&gt;应该采取哪种方案&lt;/h3&gt;
-
-&lt;h3 id=&quot;section-3&quot;&gt;业界是怎么做的&lt;/h3&gt;
-
-&lt;p&gt;-&lt;a href=&quot;https://github.com/yuantiku/YTKKeyValueStore&quot;&gt;YTKKeyValueStore&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;www.devtang.com&quot;&gt;唐巧&lt;/a&gt;开源的基于sqlite的Key-Value式的存储，猿题库的项目采用该方案。&lt;/p&gt;
-
-&lt;p&gt;-&lt;a href=&quot;https://github.com/casatwy/SQLiteManager4iOS&quot;&gt;SQLiteManager4iOS&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://casatwy.com/&quot;&gt;casatwy&lt;/a&gt;基于SQLiteMananger这个repo做的迁移方案，解决版本迁移问题。&lt;/p&gt;
-
 </content>
  </entry>
  

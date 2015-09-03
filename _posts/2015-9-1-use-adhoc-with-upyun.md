@@ -35,7 +35,7 @@ categories: jekyll update
 
 假设现在我们有一个名为`bucket`的空间，并且为这个空间授权了一个名为`user`的操作员。那么：
 
-- 关于FTP的配置
+1. 关于FTP的配置
 
 	- 主机：v1.ftp.upyun.com (电信) v2.ftp.upyun.com (联通网通) v3.ftp.upyun.com (移动铁通) v0.ftp.upyun.com (自动判断
 	- 用户：操作员的用户名/空间名（对应我们的空间应该是`user/bucket`）
@@ -43,14 +43,13 @@ categories: jekyll update
 	- 端口：21
 	- 文件传输协议：FTP
 
-- 关于外链的配置
+2. 关于外链的配置
 
 	- 默认域名：bucket.b0.upaiyun.com （bucket是空间名）
 	- 文件访问方式：http://默认域名/文件路径
 （例如：文件路径/dir/pic.jpg 该图片对外访问地址为：http://bucket.b0.upaiyun.com/dir/pic.jpg）
 	- ssl方式只需将http替换为https
 	- 如果绑定了自己的域名，只需将默认域名替换为自己的域名就可以了
-
 
 
 如果是使用客户端的话，推荐使用[FileZilla]()这个软件，不要再提Finder的远程连接服务器了，功能弱爆了。

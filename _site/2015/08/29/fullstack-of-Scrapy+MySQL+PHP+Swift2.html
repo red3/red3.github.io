@@ -101,33 +101,55 @@
 <pre><code>sudo pip install scrapy
 </code></pre>
 
-<h2 id="section-1">开始爬虫</h2>
+<p>如果你安装成功，请直接跳到下一节。我在公司电脑的环境（OS X 10.10 Python2.7.10）以及家里的电脑的环境（OS X 10.11 Python2.7.10）下安装会因为类似<code>libxml not found</code>的原因失败，通过以下方式解决：</p>
 
-<p>通过下面这个命令生成一个爬虫工程：</p>
+<pre><code>brew install libxml2
+brew install libxslt
+brew link libxml2 --force
+brew link libxslt --force
+</code></pre>
 
-<pre><code>scrapy startproject spiders
+<p>安装成功以后，如果<code>scrapy startproject xxx</code>报类似的错<code>ImportError: cannot import name xmlrpc_client</code>，通过以下方式解决：</p>
+
+<pre><code>sudo rm -rf /Library/Python/2.7/site-packages/six*
+sudo rm -rf /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/six*
+sudo pip install six
+</code></pre>
+
+<p>如果以上方法不能失效，请参考<a href="http://stackoverflow.com/questions/30964836/scrapy-throws-importerror-cannot-import-name-xmlrpc-client">这个链接</a></p>
+
+<h2 id="section-1">创建爬虫项目</h2>
+
+<p>通过下面这个命令生成一个爬虫项目：</p>
+
+<pre><code>scrapy startproject dbmeizi
 </code></pre>
 
 <p>然后我们会看到<code>scrapy</code>已经为我们生成了一个工程。这个工程大概是这个结构</p>
 
 <pre><code>dbmeizi
-|__ __init__.py
-|__ items.py
-|__ pipelines.py
-|__ settings.py
-|__ spiders
+|__ scrapy.cfg
+|
+|__	 dbmeizi
+	 |__ __init__.py
+	 |__ items.py
+	 |__ pipelines.py
+	 |__ settings.py
+	 |__ spiders
 </code></pre>
 
 <p>下面分别解释下各个文件：</p>
 
-<p><code>items.py</code> - item相当于是mvc中的model，在items里我们定义了自己需要的模型
-<code>piplines.py</code> - pipline俗称管道，这个文件主要用来把我们获取的item类型存入MySQL
-<code>settings.py</code> -  在这个文件里面配置整个工程的一些设置。例如MySQL的数据库名，数据库地址和数据库端口号等等。
-<code>spiders</code> - 这个文件夹存放爬虫文件。</p>
+<ul>
+  <li><code>items.py</code> - item相当于是mvc中的model，在items里我们定义了自己需要的模型</li>
+  <li><code>piplines.py</code> - pipline俗称管道，这个文件主要用来把我们获取的item类型存入MySQL</li>
+  <li><code>settings.py</code> -  在这个文件里面配置整个工程的一些设置。例如MySQL的数据库名，数据库地址和数据库端口号等等。</li>
+  <li><code>spiders</code> - 这个文件夹存放爬虫文件。</li>
+</ul>
 
 <p>至此，我们就可以正式开始我们的编码工作了。</p>
 
-<h2 id="model">定义Model层</h2>
+<h2 id="modelitem">定义Model层（Item）</h2>
 
 <p>首先我们想确定一个网站上的图片包含哪些信息，要解决这个问题，就需要打开这个网页使用<code>开发者工具</code>(快捷键<code>option+command+i</code>), 使用<code>页面选择器</code>(开发者工作左上角的放大镜图标)选择一张图片，效果如下:</p>
 
@@ -137,27 +159,35 @@
 
 <p>所以item.py里面是这个样子：</p>
 
-<pre><code>from scrapy.item import Item, Field
+<pre><code>// 需要注意的是这个文件的默认模板样式可能根据scrapy版本不同略有不同，依照默认模板样式加入我们的自定义字段就可
 
-class MeiziItem(Item):
+import scrapy
 
-	imgsrc = Field()
-	title = Field()
-	topic_link = Field()
-	star_count = Field()
-	update_time = Field()
+class DbmeiziItem(scrapy.Item):
+	# define the fields for your item here like:
+	# name = scrapy.Field()
+	imgsrc = scrapy.Field()
+	title = scrapy.Field()
+	topic_link = scrapy.Field()
+	star_count = scrapy.Field()
+	update_time = scrapy.Field()
+	pass
 </code></pre>
 
 <p>相当于我们继承自类Item创建了我们自己的MeiziItem，然后我们的自定义类有5个属性，<code>star_count</code>是设计用来让用户点赞的，最后的<code>update_time </code>可以用来记录修改时间。</p>
 
-<h2 id="section-2">编写爬虫</h2>
+<h2 id="spider">编写爬虫(Spider)</h2>
+
+<p>Spider是我们用于从单个网站(或者一些网站)爬取数据的类。</p>
+
+<p>其中包含了一个用于下载的初始URL，如何跟进网页中的链接以及如何分析页面中的内容， 提取生成<code>item</code>的方法。</p>
 
 <p>在<code>spiders</code>文件夹下新建<code>dbmeizi_scrapy.py</code>文件。
 这个文件里面是这个样子：</p>
 
 <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">scrapy</span> <span class="kn">import</span> <span class="n">Spider</span>
 <span class="kn">from</span> <span class="nn">scrapy.selector</span> <span class="kn">import</span> <span class="n">Selector</span>
-<span class="kn">from</span> <span class="nn">dbmeizi.items</span> <span class="kn">import</span> <span class="n">MeiziItem</span>
+<span class="kn">from</span> <span class="nn">dbmeizi.items</span> <span class="kn">import</span> <span class="n">DbmeiziItem</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="k">class</span> <span class="nc">dbmeiziSpider</span><span class="p">(</span><span class="n">Spider</span><span class="p">):</span>
@@ -172,7 +202,7 @@ class MeiziItem(Item):
     <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="n">divResults</span> <span class="o">=</span> <span class="n">Selector</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;//div[@class=&quot;img_single&quot;]&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">div</span> <span class="ow">in</span> <span class="n">divResults</span><span class="p">:</span>
-            <span class="n">item</span> <span class="o">=</span> <span class="n">MeiziItem</span><span class="p">()</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">DbmeiziItem</span><span class="p">()</span>
             <span class="n">href</span> <span class="o">=</span> <span class="n">div</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;.//a&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">img</span> <span class="o">=</span> <span class="n">div</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;.//img&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">item</span><span class="p">[</span><span class="s">&#39;topic_link&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">href</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;@href&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
@@ -186,49 +216,28 @@ class MeiziItem(Item):
 
 <ul>
   <li><code>allowed_domin </code> - 指定在哪个网站爬东西</li>
-  <li><code>start_urls</code> - 需要爬取哪些页面</li>
-  <li><code>parse </code>方法 - 继承自父类，可以想象成这个方法一开始拿到的数据就是整个网页的html代码，我们要通过各种过滤，拿到最终我们感兴趣的内容。</li>
+  <li><code>start_urls</code> - 包含了Spider在启动时进行爬取的url列表。因此，第一个被获取到的页面将是其中之一。后续的URL则从初始的URL获取到的数据中提取</li>
+  <li><code>parse </code>方法 - 继承自父类，每个初始URL完成下载后生成的<code>Response</code>对象将会作为唯一的参数传递给该函数。该方法负责解析返回的数据(response data)，提取数据(生成<code>item</code>)以及生成需要进一步处理的URL的<code>Request</code>对象。可以想象成这个方法一开始拿到的数据就是整个网页的html代码，我们要通过各种过滤，拿到最终我们感兴趣的内容</li>
+  <li><code>xpath</code> - 解析数据的时候我们用到这个东西，关于它的详细用法，移步这个<a href="http://www.w3school.com.cn/xpath/index.asp">网址</a></li>
 </ul>
 
-<p>最终，爬虫通过上面的代码爬到我们感兴趣的内容了，通过这些内容为<code>item</code>赋值，<code>item</code>会通过管道文件输出，所以接下来我们要创建管道文件。</p>
+<p>最终，爬虫通过上面的代码爬到我们感兴趣的内容了，通过这些内容为<code>item</code>赋值。</p>
 
-<h2 id="section-3">定义管道文件</h2>
-
-<p>打开<code>pipelines.py</code>，这个文件应该是这个样子：</p>
-
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">scrapy.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">scrapy.exceptions</span> <span class="kn">import</span> <span class="n">DropItem</span>
-<span class="kn">from</span> <span class="nn">scrapy</span> <span class="kn">import</span> <span class="n">log</span>
-
-<span class="k">class</span> <span class="nc">PrintPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;just prit the item&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        
-    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>
-        <span class="k">print</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">                meizi(title, imgsrc, topic_link, star_count, update_time) </span>
-<span class="s">                values(</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">)</span>
-<span class="s">            &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;imgsrc&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;topic_link&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;star_count&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;update_time&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">item</span></code></pre></div>
-
-<p><code>process_item</code>这个方法中我们暂时只是将item打印输出，看是不是符合我们的数据要求。</p>
-
-<p>然后到<code>setting.py</code>这个文件里面加上这么一行</p>
-
-<pre><code>ITEM_PIPELINES = ['dbmeizi.pipelines.PrintPipeline',] 
-</code></pre>
-
-<p>是指定爬虫爬取后通过<code>PrintPipeline</code>这个管道输出内容。所以这两个名字要写一致。</p>
-
-<h2 id="section-4">运行爬虫</h2>
+<h2 id="section-2">运行爬虫</h2>
 <p>到现在为止，这个爬虫就可以正常工作了。在工程的根目录下执行如下命令：</p>
 
 <pre><code>scrapy crawl dbmeiziSpider
 </code></pre>
 
+<p>不出意外的话，会看见下面的画面：</p>
+
+<p><img src="http://redharry.b0.upaiyun.com/pic/spider_show01.gif" alt="" /></p>
+
 <p>大功告成。</p>
 
-<h2 id="section-5">最后</h2>
+<p>刚才提到不出意外的情况，那么出意味的情况是什么呢，当然就是这个网站把我们屏蔽了，我们爬不到他的数据了。针对这种情况，会在系列（四）中给出解决方案。</p>
+
+<h2 id="section-3">最后</h2>
 
 <p>按照惯例，放上源码地址：</p>
 
