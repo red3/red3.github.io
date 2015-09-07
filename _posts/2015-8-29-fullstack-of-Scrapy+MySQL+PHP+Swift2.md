@@ -168,6 +168,11 @@ class dbmeiziSpider(Spider):
 
 刚才提到不出意外的情况，那么出意味的情况是什么呢，当然就是这个网站把我们屏蔽了，我们爬不到他的数据了。针对这种情况，会在系列（四）中给出解决方案。
 
+还有一种意外情况，就是我们要爬取的网站会检查请求的`User-Agent`，如果不设置`User-Agent`，网站可能就会拒绝我们的请求。针对这种情况，在`settings.py`这个文件里面加上下面一行代码：
+	
+	USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20'
+
+然后重新执行`scrapy crawl dbmeiziSpider`.
 
 
 ## 最后
