@@ -4,12 +4,544 @@
  <title>red3 harry</title>
  <link href="/atom.xml" rel="self"/>
  <link href=""/>
- <updated>2015-09-03T15:26:27+08:00</updated>
+ <updated>2015-09-09T20:24:13+08:00</updated>
  <id>/</id>
  <author>
    <name>Harry</name>
  </author>
 
+ 
+ <entry>
+   <title>Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇</title>
+   <link href="/2015/09/09/fullstack-of-Scrapy+MySQL+PHP+Swift5.html"/>
+   <updated>2015-09-09T23:30:00+08:00</updated>
+   <id>/2015/09/09/fullstack-of-Scrapy+MySQL+PHP+Swift5</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;系列目录&lt;/h2&gt;
+
+&lt;p&gt;你可以从这个地方做一个快速跳转。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift1.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift2.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;温故知新&lt;/h2&gt;
+
+&lt;p&gt;在前面的系列中，我们编写了爬虫，并且设置爬虫在每天的固定时间运行，对于频繁的爬虫请求，设置了随机的&lt;code&gt;User-Agent&lt;/code&gt;，到现在为止，我们的数据库中应该已经存储了大量的数据，如图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2015/fullstack_api01.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;此次系列我们要编写&lt;code&gt;PHP&lt;/code&gt;程序，提供客户端跟后台通信的接口。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;准备工作&lt;/h2&gt;
+
+&lt;p&gt;开始之前，确保机器上已经装有Apache、MySQL和PHP。好在Mac上已经自带Apache和PHP了，之前的系列中我们也在机器上安装了MySQL。要启用Apache，在终端执行下面的命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apachectl start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Mac上的Apache默认WWW目录是在&lt;code&gt;/Library/WebServer/Documents&lt;/code&gt;，如果有需要，可以把默认WWW目录改成其他目录。&lt;/p&gt;
+
+&lt;p&gt;Apache默认是没有启用PHP支持的，要开启的话，应该这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo vi /etc/apache2/httpd.conf
+// 找到下面这行，将前面的#去掉
+# LoadModule php5_module libexec/apache2/libphp5.so
+// 重启Apache
+sudo apachectl start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;php&quot;&gt;创建PHP工程&lt;/h2&gt;
+
+&lt;p&gt;环境搭好以后，我们需要测试一下是否服务器可以正常工作。在WWW目录下新建一个名为&lt;code&gt;test.php&lt;/code&gt;的文件，写入下面的测试代码。然后通过在浏览器中访问&lt;code&gt;http://localhost//test.php&lt;/code&gt;可以在窗口中看到”Hello, World”说明正常工作了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// test.php
+&amp;lt;?php
+	echo &quot;Hello, World&quot;;
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;phpmysql&quot;&gt;通过PHP连接MySQL&lt;/h2&gt;
+
+&lt;p&gt;现在需要一个PHP类来连接MySQL，这个类的主要目的就是打开或者关闭一个连接到数据库的连接。所以创建两个文件：config.db.php 和 database.class.php.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;config.db.php : 配置数据库连接的用户名、密码、端口等。&lt;/li&gt;
+  &lt;li&gt;database.class.php : 创建一个到数据库的连接&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;以下为这两个文件的代码&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;config.db.php&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span class=&quot;x&quot;&gt;config.db.php&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+ 
+&lt;span class=&quot;cm&quot;&gt;/*&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * All database connection variables&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+ 
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;DB_USERNAME&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;root&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// User&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;DB_PASSWORD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Passwd&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;DB_DATABASE&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;dbmeizi&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Database&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;DB_HOST&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;127.0.0.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Server&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;DB_PORT&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3307&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Port&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;database.class.php&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span class=&quot;x&quot;&gt;database.class.php&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+ 
+&lt;span class=&quot;sd&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt; * A class file to connect to database&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DbConnect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;// constructor&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__construct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;// destructor&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__destruct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+ 
+    &lt;span class=&quot;sd&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;     * Function to connect with database&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// import database connection variables&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;require_once&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;__DIR__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/config.db.php&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+ 
+        &lt;span class=&quot;c1&quot;&gt;// Connecting to mysql database&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;conn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mysqli&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;DB_HOST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;DB_USERNAME&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;DB_PASSWORD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;DB_DATABASE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;DB_PORT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+ 
+        &lt;span class=&quot;c1&quot;&gt;// Check for database connection error&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;mysqli_connect_errno&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Failed to connect to MySQL: &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mysqli_connect_error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;SET NAMES utf8&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; 
+        &lt;span class=&quot;c1&quot;&gt;// returing connection resource&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+ 
+&lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;说明：在接下来的工程中，当我们需要使用数据库连接的时候，可以使用下面的代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$db = new DbConnect(); 
+$conn = $db-&amp;gt;connect();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;phpmysql-crud&quot;&gt;通过PHP进行基本的MySQL CRUD操作&lt;/h2&gt;
+
+&lt;p&gt;接下来进行通过PHP操作数据库，CRUD代表Create, Read, Update, Delete&lt;/p&gt;
+
+&lt;h3 id=&quot;reading-all-rows-from-mysql&quot;&gt;1.Reading All Rows from MySQL&lt;/h3&gt;
+
+&lt;p&gt;要读取数据库中我们抓取的meizi的列表，创建一个文件 &lt;strong&gt;girllist.php&lt;/strong&gt; ，写入下面的代码&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+ 
+&lt;span class=&quot;cm&quot;&gt;/*&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * get girl list &lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+ 
+&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+ 
+&lt;span class=&quot;k&quot;&gt;require_once&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;__DIR__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/include/database.class.php&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
+ 
+&lt;span class=&quot;c1&quot;&gt;// connecting to db&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;DbConnect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$conn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+
+&lt;span class=&quot;c1&quot;&gt;// 默认页数&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;p&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;is_numeric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;intval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;// get girl list from table&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// new girl&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$sql&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;SELECT * FROM meizi WHERE 1 = 1 ORDER BY id DESC LIMIT &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$start&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$size&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$sql&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fetch_all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MYSQLI_ASSOC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// check for empty result&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// success&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;code&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;msg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;success&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;list&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;json_encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// no girl found&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;code&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;msg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;No girl found&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;list&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;json_encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+&lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;在浏览器访问这个文件，成功获取列表的时候：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+	code: 1,
+	msg: &quot;success&quot;,
+	list: [
+		{
+			id: &quot;160&quot;,
+			title: &quot;睡不着 秒回么？&quot;,
+			imgsrc: &quot;http://ww2.sinaimg.cn/bmiddle/0060lm7Tgw1evush3zicwj30dw0iu41b.jpg&quot;,
+			topic_link: &quot;http://www.dbmeinv.com/dbgroup/417098&quot;,
+			star_count: &quot;0&quot;,
+			update_time: &quot;1441697041&quot;
+		},
+		{
+			id: &quot;159&quot;,
+			title: &quot;【晒】&quot;,
+			imgsrc: &quot;http://ww2.sinaimg.cn/bmiddle/0060lm7Tgw1evusfx74ipj30dw0iitbl.jpg&quot;,
+			topic_link: &quot;http://www.dbmeinv.com/dbgroup/417122&quot;,
+			star_count: &quot;0&quot;,
+			update_time: &quot;1441697041&quot;
+		}
+	]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;updating-a-row-in-mysql&quot;&gt;2.Updating a Row in MySQL&lt;/h3&gt;
+
+&lt;p&gt;之前的系列中提到过，用户可以给某个meizi点赞，实现这个功能创建一个文件 &lt;strong&gt;likegirl.php&lt;/strong&gt; ，写入下面的代码&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+ 
+&lt;span class=&quot;cm&quot;&gt;/*&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * like a girl &lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;// array for JSON response&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+ 
+&lt;span class=&quot;c1&quot;&gt;// include db connect class&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;require_once&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;__DIR__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/include/database.class.php&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
+ 
+&lt;span class=&quot;c1&quot;&gt;// connecting to db&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;DbConnect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$conn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+ 
+
+&lt;span class=&quot;c1&quot;&gt;// id of the girl&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$girlid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;girlid&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$girlid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;is_numeric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$girlid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;code&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;msg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;oops, you need to tell me the girl&amp;#39;s id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;k&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;json_encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// let the girl&amp;#39;s startcount + 1&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;UPDATE meizi set star_count = star_count + 1 WHERE id = &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$girlid&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// check for empty result&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// success&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;code&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;msg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;success&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;json_encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// no girl found&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;code&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;msg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;failed&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;json_encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;在浏览器中访问这个文件，注意要拼接上&lt;code&gt;girlid&lt;/code&gt;参数和对应的值。成功点赞的时候：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+	code: 1,
+	msg: &quot;success&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;至此，我们已经实现了跟客户端通信的一套基本框架，其他功能都可以在这个基础上拓展。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;最后&lt;/h2&gt;
+
+&lt;p&gt;按照惯例，放上源码地址：&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇</title>
+   <link href="/2015/09/08/fullstack-of-Scrapy+MySQL+PHP+Swift4.html"/>
+   <updated>2015-09-08T19:11:11+08:00</updated>
+   <id>/2015/09/08/fullstack-of-Scrapy+MySQL+PHP+Swift4</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;系列目录&lt;/h2&gt;
+
+&lt;p&gt;你可以从这个地方做一个快速跳转。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift1.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift2.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;防止爬虫被封&lt;/h2&gt;
+
+&lt;p&gt;系列（二）中提到过，对于一个网络请求，网站后台可能会检查其&lt;code&gt;User-Agent&lt;/code&gt;，所以一个防止爬虫可行的做法就是设置请求的&lt;code&gt;User-Agent&lt;/code&gt;。对于频繁的请求，还要对&lt;code&gt;User-Agent&lt;/code&gt;做随机变换。&lt;/p&gt;
+
+&lt;p&gt;可以通过&lt;code&gt;Downloader Middleware&lt;/code&gt;来修改爬虫的request和respons。&lt;/p&gt;
+
+&lt;h3 id=&quot;downloader-middleware&quot;&gt;使用下载器中间件(Downloader Middleware)&lt;/h3&gt;
+
+&lt;p&gt;要激活下载器中间件组件，需要将其加入到&lt;code&gt;DOWNLOADER_MIDDLEWARES&lt;/code&gt;设置中。 该设置是一个字典(dict)，键为中间件类的路径，值为其中间件的顺序(order)。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;DOWNLOADER_MIDDLEWARES = {
+&#39;dbmeizi.middlewares.RandomUserAgent&#39;: 1
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为要使用随机的&lt;code&gt;User-Agent&lt;/code&gt;，所以在设置中，顺便加上随机&lt;code&gt;User-Agent&lt;/code&gt;的配置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;USER_AGENTS = [
+&quot;Mozilla/5.0 (X11; Linux i686; U;) Gecko/20070322 Kazehakase/0.4.5&quot;,
+&quot;Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko Fedora/1.9.0.8-1.fc10 Kazehakase/0.5.6&quot;,
+&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20&quot;,
+&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36&quot;,
+&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12&quot;,
+]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;编写下载器中间件&lt;/h3&gt;
+
+&lt;p&gt;创建一个中间件文件&lt;code&gt;middlewares.py&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;base64&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RandomUserAgent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;agents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agents&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;agents&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@classmethod&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;from_crawler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;crawler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;crawler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getlist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;USER_AGENTS&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process_request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setdefault&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;User-Agent&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;choice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;自动运行&lt;/h2&gt;
+
+&lt;p&gt;为了源源不断获取数据，要每天都运行爬虫抓取数据，显然每次都人为发起爬虫是不切实际的。&lt;/p&gt;
+
+&lt;p&gt;在Mac上可以通过&lt;code&gt;crontab&lt;/code&gt;让爬虫定时自动执行。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 为当前用户新增任务
+crontab -e
+// 增加如下记录 注意替换自己的爬虫目录 由于环境变量的原因，scrapy要给出全路径
+0 10 * * * cd /Users/herui/Sites/dbmeizi &amp;amp;&amp;amp; /usr/local/bin/scrapy crawl dbmeiziSpider
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如上，添加了一个任务，这个任务会每天早上10：00启动，这个任务要做得就是进入爬虫目录，并启动爬虫。&lt;/p&gt;
+
+&lt;p&gt;不过查了下，Mac上目前好像不太推荐用&lt;code&gt;crontab&lt;/code&gt;了，推荐使用&lt;code&gt;launchd&lt;/code&gt;. 有机会可以了解下。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;最后&lt;/h2&gt;
+
+&lt;p&gt;按照惯例，放上源码地址：&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Scrapy+MySQL+PHP+Swift开发攻略系列（三）数据库MySQL篇</title>
+   <link href="/2015/09/03/fullstack-of-Scrapy+MySQL+PHP+Swift3.html"/>
+   <updated>2015-09-03T17:09:09+08:00</updated>
+   <id>/2015/09/03/fullstack-of-Scrapy+MySQL+PHP+Swift3</id>
+   <content type="html">&lt;h2 id=&quot;section&quot;&gt;系列目录&lt;/h2&gt;
+
+&lt;p&gt;你可以从这个地方做一个快速跳转。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift1.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift2.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;温故而知新&lt;/h2&gt;
+
+&lt;p&gt;上个系列中，&lt;code&gt;spider&lt;/code&gt;已经爬取到我们感兴趣的&lt;code&gt;item&lt;/code&gt;了。这个系列我们主要实现怎么把抓取到的&lt;code&gt;item&lt;/code&gt;保存到&lt;code&gt;MySQL&lt;/code&gt;数据库中。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqldb&quot;&gt;安装MySQLdb&lt;/h2&gt;
+
+&lt;p&gt;安装&lt;code&gt;MySQLdb&lt;/code&gt;从这个&lt;a href=&quot;https://pypi.python.org/pypi/MySQL-python/1.2.5#downloads&quot;&gt;网站&lt;/a&gt;采用源码安装。&lt;/p&gt;
+
+&lt;p&gt;安装过程中这些情况你可能需要参考：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;修改&lt;code&gt;site.cfg&lt;/code&gt;这个文件：&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  // 将下面这行代码的注释打开，并将后面的路径修改成本地mysql路径
+  mysql_config.path = &quot;/usr/local/mysql/bin/mysql_config&quot;
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;安装完成后&lt;code&gt;import MySQLdb&lt;/code&gt;报错提示：&lt;code&gt;Library not loaded: libmysqlclient.18.dylib	&lt;/code&gt;：&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  // 这种情况需要把mysql的该动态库链接到用户库目录中去
+  sudo ln -s /usr/local/mysql/lib/libmysqlclient.18.dylib /usr/lib/libmysqlclient.18.dylib
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;mysql&quot;&gt;配置MySQL&lt;/h2&gt;
+
+&lt;p&gt;在&lt;code&gt;settings.py&lt;/code&gt;配置文件中加入数据库的配置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# start MySQL database configure setting
+MYSQL_HOST = &#39;localhost&#39;
+MYSQL_DBNAME = &#39;dbmeizi&#39;
+MYSQL_USER = &#39;root&#39;
+MYSQL_PASSWD = &#39;hali&#39;
+MYSQL_PORT = 3306
+# end of MySQL database configure setting
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要注意检查端口要跟实际的数据库服务的端口相一致。&lt;/p&gt;
+
+&lt;p&gt;通过&lt;code&gt;phpMyAdmin&lt;/code&gt;连接数据库创建一个&lt;code&gt;dbmeizi&lt;/code&gt;数据库，一个&lt;code&gt;meizi&lt;/code&gt;表，用来保存爬虫数据：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 创建数据库
+create database dbmeizi;
+// 创建表
+drop table if exists `meizi`;
+create table `meizi` (
+`id` int(11) unsigned not null auto_increment comment &#39;id&#39;,
+`title` varchar(100) not null comment &#39;标题&#39;,
+`imgsrc` varchar(200) not null comment &#39;图片链接&#39;,
+`topic_link` varchar(100) not null comment &#39;主题链接&#39;,
+`star_count` int(11)  not null  comment &#39;点赞数&#39;,
+`update_time` int(11) not null comment &#39;状态更新时间&#39;,
+primary key (`id`)
+) engine = innodb default charset = utf8 comment = &#39;豆瓣妹子表&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;why-use-item-pipeline&quot;&gt;Why use Item Pipeline&lt;/h2&gt;
+
+&lt;p&gt;当得到&lt;code&gt;item&lt;/code&gt;的时候，我们需要验证&lt;code&gt;item&lt;/code&gt;中的某些字段是否合法，是否存在重复的&lt;code&gt;item&lt;/code&gt;，然后才将合格的&lt;code&gt;item&lt;/code&gt;保存到数据库。&lt;/p&gt;
+
+&lt;p&gt;这就是&lt;code&gt;item pipeline&lt;/code&gt;的典型使用场景。&lt;/p&gt;
+
+&lt;p&gt;当&lt;code&gt;item&lt;/code&gt;在&lt;code&gt;Spider&lt;/code&gt;中被收集之后，将会被传递到&lt;code&gt;item pipeline&lt;/code&gt;，每个&lt;code&gt;item pipeline&lt;/code&gt;组件是实现了简单方法的Python类。他们接收到Item并通过它执行上面提到的典型行为。&lt;/p&gt;
+
+&lt;h2 id=&quot;item-pipeline&quot;&gt;编写我们的 Item Pipeline&lt;/h2&gt;
+
+&lt;p&gt;每个&lt;code&gt;item pipeline&lt;/code&gt;组件是一个独立的Python类，必须实现以下方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;process_item(self, item, spider)
+每个item pipeline组件都需要调用该方法，这个方法必须返回一个 Item (或任何继承类)对象， 或是抛出 DropItem 异常，被丢弃的item将不会被之后的pipeline组件所处理。
+
+参数:	
+item (Item 对象) – 被爬取的item
+spider (Spider 对象) – 爬取该item的spider
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;打开&lt;code&gt;pipelines.py&lt;/code&gt;，这个文件应该是这个样子：&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;MySQLdb&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;MySQLdb.cursors&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;twisted.enterprise&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;adbapi&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DbmeiziPipeline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbpool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+	   &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbpool&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbpool&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@classmethod&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;from_settings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+	   &lt;span class=&quot;n&quot;&gt;dbargs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+		  &lt;span class=&quot;n&quot;&gt;host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;MYSQL_HOST&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		  &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;MYSQL_DBNAME&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		  &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;MYSQL_PORT&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		  &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;MYSQL_USER&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		  &lt;span class=&quot;n&quot;&gt;passwd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;MYSQL_PASSWD&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+		  &lt;span class=&quot;n&quot;&gt;charset&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;utf8&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		  &lt;span class=&quot;n&quot;&gt;cursorclass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MySQLdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cursors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DictCursor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		  &lt;span class=&quot;n&quot;&gt;use_unicode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	   &lt;span class=&quot;n&quot;&gt;dbpool&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;adbapi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConnectionPool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;MySQLdb&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbpool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;#pipeline默认调用&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process_item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbpool&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;runInteraction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_do_upinsert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  
+    	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;#将每行更新或写入数据库中&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;_do_upinsert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;                 
+
+    	&lt;span class=&quot;n&quot;&gt;valid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+    	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    		&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    			&lt;span class=&quot;n&quot;&gt;valid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+    			&lt;span class=&quot;c&quot;&gt;# raise DropItem(&amp;quot;Missing {0}!&amp;quot;.format(data))&lt;/span&gt;
+    			&lt;span class=&quot;c&quot;&gt;# print &amp;quot;Missing data&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;valid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                insert into meizi(title, imgsrc, topic_link, star_count, update_time) &lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                values(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;                &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;imgsrc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;topic_link&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;star_count&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;update_time&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;added a girl into db&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;failed insert into meizi&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;from_settings&lt;/code&gt;这个方法中我们创建了数据库连接，&lt;code&gt;process_item &lt;/code&gt;方法里面将每一个item存入数据库。主要是常用数据库的操作，不细说了。&lt;/p&gt;
+
+&lt;h2 id=&quot;item-pipeline-1&quot;&gt;启用一个Item Pipeline组件&lt;/h2&gt;
+
+&lt;p&gt;为了启用一个&lt;code&gt;Item Pipeline&lt;/code&gt;组件，必须将它的类添加到&lt;code&gt;ITEM_PIPELINES&lt;/code&gt;配置，具体就是到&lt;code&gt;setting.py&lt;/code&gt;这个文件里面加上这么一行：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ITEM_PIPELINES = [&#39;dbmeizi.pipelines. DbmeiziPipeline&#39;,] 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;是指定爬虫爬取后通过哪个管道输出内容。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;运行爬虫&lt;/h2&gt;
+&lt;p&gt;到现在为止，这个爬虫就可以将数据保存到数据库了。在工程的根目录下执行如下命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;scrapy crawl dbmeiziSpider
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;大功告成。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;最后&lt;/h2&gt;
+
+&lt;p&gt;按照惯例，放上源码地址：&lt;/p&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>通过upyun解决iOS7.1后使用AdHoc下载的问题</title>
@@ -98,68 +630,6 @@ get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;至此，就可以通过&lt;code&gt;https://bucket.b0.upaiyun.com/plist/abc.plist&lt;/code&gt;这个外链来访问plist文件了。&lt;/p&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>Scrapy+MySQL+PHP+Swift开发攻略系列（三）数据库MySQL篇</title>
-   <link href="/2015/08/29/fullstack-of-Scrapy+MySQL+PHP+Swift3.html"/>
-   <updated>2015-08-29T17:09:09+08:00</updated>
-   <id>/2015/08/29/fullstack-of-Scrapy+MySQL+PHP+Swift3</id>
-   <content type="html">&lt;h2 id=&quot;section&quot;&gt;系列目录&lt;/h2&gt;
-
-&lt;p&gt;你可以从这个地方做一个快速跳转。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift.html&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;定义管道文件&lt;/h2&gt;
-
-&lt;p&gt;打开&lt;code&gt;pipelines.py&lt;/code&gt;，这个文件应该是这个样子：&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.conf&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy.exceptions&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DropItem&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PrintPipeline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;sd&quot;&gt;&amp;quot;&amp;quot;&amp;quot;just prit the item&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process_item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;                meizi(title, imgsrc, topic_link, star_count, update_time) &lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;                values(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;            &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;imgsrc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;topic_link&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;star_count&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;update_time&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code&gt;process_item&lt;/code&gt;这个方法中我们暂时只是将item打印输出，看是不是符合我们的数据要求。&lt;/p&gt;
-
-&lt;p&gt;然后到&lt;code&gt;setting.py&lt;/code&gt;这个文件里面加上这么一行&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ITEM_PIPELINES = [&#39;dbmeizi.pipelines.PrintPipeline&#39;,] 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;是指定爬虫爬取后通过&lt;code&gt;PrintPipeline&lt;/code&gt;这个管道输出内容。所以这两个名字要写一致。&lt;/p&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;运行爬虫&lt;/h2&gt;
-&lt;p&gt;到现在为止，这个爬虫就可以正常工作了。在工程的根目录下执行如下命令：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;scrapy crawl dbmeiziSpider
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;大功告成。&lt;/p&gt;
-
-&lt;h2 id=&quot;section-3&quot;&gt;最后&lt;/h2&gt;
-
-&lt;p&gt;按照惯例，放上源码地址：&lt;/p&gt;
 
 </content>
  </entry>
@@ -333,6 +803,13 @@ class DbmeiziItem(scrapy.Item):
 &lt;p&gt;大功告成。&lt;/p&gt;
 
 &lt;p&gt;刚才提到不出意外的情况，那么出意味的情况是什么呢，当然就是这个网站把我们屏蔽了，我们爬不到他的数据了。针对这种情况，会在系列（四）中给出解决方案。&lt;/p&gt;
+
+&lt;p&gt;还有一种意外情况，就是我们要爬取的网站会检查请求的&lt;code&gt;User-Agent&lt;/code&gt;，如果不设置&lt;code&gt;User-Agent&lt;/code&gt;，网站可能就会拒绝我们的请求。针对这种情况，在&lt;code&gt;settings.py&lt;/code&gt;这个文件里面加上下面一行代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;USER_AGENT = &#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后重新执行&lt;code&gt;scrapy crawl dbmeiziSpider&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;section-3&quot;&gt;最后&lt;/h2&gt;
 
@@ -722,72 +1199,6 @@ Glance和Notification Interface稍微还要费电周折，分别讲一下：&lt;
 
 &lt;p&gt;所以我想我们在开发中不要总是一味去照搬以前的方式去蛮干，而要思考，有没有更好的方式。经常的，还要回过头来看看自己写的代码，到底设计得是不是够好，够规范，够易维护。这样才能有所积累。&lt;/p&gt;
 
-</content>
- </entry>
- 
- <entry>
-   <title>WWDC2015 Session笔记-App Thinning</title>
-   <link href="/2015/07/05/WWDC-2015-APP-Thinning.html"/>
-   <updated>2015-07-05T06:45:36+08:00</updated>
-   <id>/2015/07/05/WWDC-2015-APP-Thinning</id>
-   <content type="html">&lt;p&gt;本文是我依据 WWDC15 Session Video 写的一篇笔记，涉及的 Session 有&lt;/p&gt;
-
-&lt;p&gt;-&lt;a href=&quot;https://developer.apple.com/videos/wwdc/2015/?id=404&quot;&gt;App Thinning in Xcode&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;重要&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;苹果指出，使用App-Thinning的前提是使用Asset Catalog管理资源文件&lt;/li&gt;
-  &lt;li&gt;在苹果的演示中，一个约74M的应用程序经过Thinning后变为约22M，效果还是很惊人的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;我们需要了解的&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;如何使应用程序的体积变得越小&lt;/li&gt;
-  &lt;li&gt;开发和提交应用程序的时候需要做些什么以使App-Thinning生效&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;work-flow&quot;&gt;Work Flow&lt;/h2&gt;
-
-&lt;h3 id=&quot;section-2&quot;&gt;创建&lt;/h3&gt;
-
-&lt;p&gt;苹果说明必须使用Asset Catalog管理资源文件才可以使App-Thinning生效，Xcode7.0以前新建的默认工程里面有Images.xcassets这个文件夹是管理图片资源的，Xcode7.0以后默认生成Assets.xcassets文件夹，用来管理Image Set、Data Set以及Sprite Atlas，看来以前使用自己创建的文件夹方式管理图片的同学要尽快迁移到Assets下，迁移的方式也很简单，
-选中工程中的Images.xcassets文件夹，然后选中文件目录树下方的”+”，然后选择”Import From Project”，这是Xcode已经自动把工程中的全部图片选中。&lt;/p&gt;
-
-&lt;h3 id=&quot;section-3&quot;&gt;编译&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Xcode在编译运行的时候能够自动根据当前选中设备（模拟器或者真机都可以）选择适合设备的资源&lt;/li&gt;
-  &lt;li&gt;如果不想使用App-Thinning，可以在build setting中Asset Catalog Compiler中更改Enable_Building_Only_Active_Resources这个选项，默认设置是YES&lt;/li&gt;
-  &lt;li&gt;速度提升，因为运行的时候，只会把适合当前设备的资源文件进行拷贝，以前是一股脑的都拷贝了&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;section-4&quot;&gt;提交&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;如果是提交到AppStore，和以往一样提交就行&lt;/li&gt;
-  &lt;li&gt;Ad-hoc/Enterprise Distribution可以根据设备导出对应的ipa文件&lt;/li&gt;
-  &lt;li&gt;企业证书通过Over-the-Air安装，也就是采用itms-service协议直接通过浏览器安装的时候，需要勾选”Include manifest for over-the-air installation”选项，这样不同的设备会自动对应到适应的安装包&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2015/ad-hoc-app-thinning.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;section-5&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;应该说给App瘦身这件事是近几年呼声挺高的一件事，而今年在Xcode7上苹果加入了这个功能，并且可以让开发者以极其小的付出就可以拥抱这次变化，可谓大快人心！&lt;/p&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>iOS进阶读书笔记</title>
-   <link href="/2015/07/03/readNotes-about-iOSPro.html"/>
-   <updated>2015-07-03T06:45:36+08:00</updated>
-   <id>/2015/07/03/readNotes-about-iOSPro</id>
-   <content type="html">&lt;p&gt;最近读了下&lt;a href=&quot;www.devtang.com&quot;&gt;唐巧&lt;/a&gt;写的《iOS进阶》， 补全了很多iOS开发的盲点，总结下自己在开发过程中认知不足的地方。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET请求会在浏览器地址栏暴漏网址，然而在客户端不存在这个问题，所以可能有人觉得用不用GET都无所谓，现在知道GET请求会出现在服务器的access log，这是相当危险的。&lt;/li&gt;
-  &lt;li&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
  </entry>
  

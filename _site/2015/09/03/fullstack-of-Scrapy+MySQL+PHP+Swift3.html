@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Harry" />
+    
+    <title>Scrapy+MySQL+PHP+Swift开发攻略系列（三）数据库MySQL篇</title>
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="/atom.xml" rel="alternate" title="red3 harry" type="application/atom+xml" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/media/css/style.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/retina.js/1.3.0/retina.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script type="text/javascript"> hljs.initHighlightingOnLoad(); </script>
+  </head>
+  <body>
+      <div id="main" role="main">
+        <header>
+          <div id="header">
+            <h1><a title="red3 harry" class="" href="/">red3 harry</a></h1>
+          </div>
+          <nav>
+            
+            <span><a title="Archive" href="/archive.html"><i class="fa fa-list-ul"></i></a></span>
+            
+            <span><a title="Tags" href="/tags.html"><i class="fa fa-tags"></i></a></span>
+            
+            <span><a title="About" href="/about.html"><i class="fa fa-user"></i></a></span>
+            
+            <span><a title="Gallery" href="http://redthree.lofter.com"><i class="fa fa-film"></i></a></span>
+            
+            <span><a title="Subscribe" href="/atom.xml"><i class="fa fa-rss"></i></a></span>
+            
+          </nav>
+        </header>
+        <div id="content">
+        <article>
+  <section class="title">
+    <h2>Scrapy+MySQL+PHP+Swift开发攻略系列（三）数据库MySQL篇 </h2>
+  </section>
+  <section class="meta">
+  <span class="time">
+    <time datetime="2015-09-03">2015-09-03</time>
+  </span>
+  
+  <span class="tags">
+    
+    <a href="/tags.html#Linux" title="Linux">#Linux</a>
+    
+    <a href="/tags.html#Scrapy" title="Scrapy">#Scrapy</a>
+    
+    <a href="/tags.html#Swift" title="Swift">#Swift</a>
+    
+  </span>
+  <!-- BEGIN this would not work on any other domain -->
+  <span
+    class           = "like-wrapper"
+    like-shortname  = 'gopherwood'
+    like-identifier = ''
+    like-name       = 'Scrapy+MySQL+PHP+Swift开发攻略系列（三）数据库MySQL篇'
+    like-btn        = '&#xf087;'
+    like-link       = '/2015/09/03/fullstack-of-Scrapy+MySQL+PHP+Swift3.html'
+    ></span>
+  <script type="text/javascript">
+    var l = document.createElement('script');
+    l.type = 'text/javascript'; l.async = true; l.src = 'http://www.like-btn.com/javascript/widget.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(l);
+  </script>
+  <!-- END this would not work on any other domain -->
+  
+  </section>
+  <section class="post">
+  <h2 id="section">系列目录</h2>
+
+<p>你可以从这个地方做一个快速跳转。</p>
+
+<ul>
+  <li><a href="http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift1.html">Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇</a></li>
+  <li><a href="http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift2.html">Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇</a></li>
+  <li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇</a></li>
+  <li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇</a></li>
+  <li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇</a></li>
+  <li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇</a></li>
+  <li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇</a></li>
+</ul>
+
+<h2 id="section-1">温故而知新</h2>
+
+<p>上个系列中，<code>spider</code>已经爬取到我们感兴趣的<code>item</code>了。这个系列我们主要实现怎么把抓取到的<code>item</code>保存到<code>MySQL</code>数据库中。</p>
+
+<h2 id="mysqldb">安装MySQLdb</h2>
+
+<p>安装<code>MySQLdb</code>从这个<a href="https://pypi.python.org/pypi/MySQL-python/1.2.5#downloads">网站</a>采用源码安装。</p>
+
+<p>安装过程中这些情况你可能需要参考：</p>
+
+<ul>
+  <li>
+    <p>修改<code>site.cfg</code>这个文件：</p>
+
+    <pre><code>  // 将下面这行代码的注释打开，并将后面的路径修改成本地mysql路径
+  mysql_config.path = "/usr/local/mysql/bin/mysql_config"
+</code></pre>
+  </li>
+  <li>
+    <p>安装完成后<code>import MySQLdb</code>报错提示：<code>Library not loaded: libmysqlclient.18.dylib	</code>：</p>
+
+    <pre><code>  // 这种情况需要把mysql的该动态库链接到用户库目录中去
+  sudo ln -s /usr/local/mysql/lib/libmysqlclient.18.dylib /usr/lib/libmysqlclient.18.dylib
+</code></pre>
+  </li>
+</ul>
+
+<h2 id="mysql">配置MySQL</h2>
+
+<p>在<code>settings.py</code>配置文件中加入数据库的配置：</p>
+
+<pre><code># start MySQL database configure setting
+MYSQL_HOST = 'localhost'
+MYSQL_DBNAME = 'dbmeizi'
+MYSQL_USER = 'root'
+MYSQL_PASSWD = 'hali'
+MYSQL_PORT = 3306
+# end of MySQL database configure setting
+</code></pre>
+
+<p>需要注意检查端口要跟实际的数据库服务的端口相一致。</p>
+
+<p>通过<code>phpMyAdmin</code>连接数据库创建一个<code>dbmeizi</code>数据库，一个<code>meizi</code>表，用来保存爬虫数据：</p>
+
+<pre><code>// 创建数据库
+create database dbmeizi;
+// 创建表
+drop table if exists `meizi`;
+create table `meizi` (
+`id` int(11) unsigned not null auto_increment comment 'id',
+`title` varchar(100) not null comment '标题',
+`imgsrc` varchar(200) not null comment '图片链接',
+`topic_link` varchar(100) not null comment '主题链接',
+`star_count` int(11)  not null  comment '点赞数',
+`update_time` int(11) not null comment '状态更新时间',
+primary key (`id`)
+) engine = innodb default charset = utf8 comment = '豆瓣妹子表';
+</code></pre>
+
+<h2 id="why-use-item-pipeline">Why use Item Pipeline</h2>
+
+<p>当得到<code>item</code>的时候，我们需要验证<code>item</code>中的某些字段是否合法，是否存在重复的<code>item</code>，然后才将合格的<code>item</code>保存到数据库。</p>
+
+<p>这就是<code>item pipeline</code>的典型使用场景。</p>
+
+<p>当<code>item</code>在<code>Spider</code>中被收集之后，将会被传递到<code>item pipeline</code>，每个<code>item pipeline</code>组件是实现了简单方法的Python类。他们接收到Item并通过它执行上面提到的典型行为。</p>
+
+<h2 id="item-pipeline">编写我们的 Item Pipeline</h2>
+
+<p>每个<code>item pipeline</code>组件是一个独立的Python类，必须实现以下方法:</p>
+
+<pre><code>process_item(self, item, spider)
+每个item pipeline组件都需要调用该方法，这个方法必须返回一个 Item (或任何继承类)对象， 或是抛出 DropItem 异常，被丢弃的item将不会被之后的pipeline组件所处理。
+
+参数:	
+item (Item 对象) – 被爬取的item
+spider (Spider 对象) – 爬取该item的spider
+</code></pre>
+
+<p>打开<code>pipelines.py</code>，这个文件应该是这个样子：</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">scrapy</span>
+<span class="kn">import</span> <span class="nn">MySQLdb</span>
+<span class="kn">import</span> <span class="nn">MySQLdb.cursors</span>
+<span class="kn">from</span> <span class="nn">twisted.enterprise</span> <span class="kn">import</span> <span class="n">adbapi</span>
+
+<span class="k">class</span> <span class="nc">DbmeiziPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbpool</span><span class="p">):</span>
+	   <span class="bp">self</span><span class="o">.</span><span class="n">dbpool</span> <span class="o">=</span> <span class="n">dbpool</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_settings</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+	   <span class="n">dbargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+		  <span class="n">host</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;MYSQL_HOST&#39;</span><span class="p">],</span>
+		  <span class="n">db</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;MYSQL_DBNAME&#39;</span><span class="p">],</span>
+		  <span class="n">port</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;MYSQL_PORT&#39;</span><span class="p">],</span>
+		  <span class="n">user</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;MYSQL_USER&#39;</span><span class="p">],</span>
+		  <span class="n">passwd</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;MYSQL_PASSWD&#39;</span><span class="p">],</span>
+		  <span class="n">charset</span> <span class="o">=</span> <span class="s">&#39;utf8&#39;</span><span class="p">,</span>
+		  <span class="n">cursorclass</span> <span class="o">=</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">DictCursor</span><span class="p">,</span>
+		  <span class="n">use_unicode</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+		<span class="p">)</span>
+	   <span class="n">dbpool</span> <span class="o">=</span> <span class="n">adbapi</span><span class="o">.</span><span class="n">ConnectionPool</span><span class="p">(</span><span class="s">&#39;MySQLdb&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">dbargs</span><span class="p">)</span>
+	   <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">dbpool</span><span class="p">)</span>
+
+    <span class="c">#pipeline默认调用</span>
+    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbpool</span><span class="o">.</span><span class="n">runInteraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_do_upinsert</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">spider</span><span class="p">)</span>  
+    	<span class="k">return</span> <span class="n">item</span>
+    <span class="c">#将每行更新或写入数据库中</span>
+    <span class="k">def</span> <span class="nf">_do_upinsert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">spider</span><span class="p">):</span>                 
+
+    	<span class="n">valid</span> <span class="o">=</span> <span class="bp">True</span>
+    	<span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+    		<span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+    			<span class="n">valid</span> <span class="o">=</span> <span class="bp">False</span>
+    			<span class="c"># raise DropItem(&quot;Missing {0}!&quot;.format(data))</span>
+    			<span class="c"># print &quot;Missing data&quot;</span>
+        <span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">                insert into meizi(title, imgsrc, topic_link, star_count, update_time) </span>
+<span class="s">                values(</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">)</span>
+<span class="s">                &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;imgsrc&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;topic_link&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;star_count&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;update_time&#39;</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;added a girl into db&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;failed insert into meizi&quot;</span></code></pre></div>
+
+<p><code>from_settings</code>这个方法中我们创建了数据库连接，<code>process_item </code>方法里面将每一个item存入数据库。主要是常用数据库的操作，不细说了。</p>
+
+<h2 id="item-pipeline-1">启用一个Item Pipeline组件</h2>
+
+<p>为了启用一个<code>Item Pipeline</code>组件，必须将它的类添加到<code>ITEM_PIPELINES</code>配置，具体就是到<code>setting.py</code>这个文件里面加上这么一行：</p>
+
+<pre><code>ITEM_PIPELINES = ['dbmeizi.pipelines. DbmeiziPipeline',] 
+</code></pre>
+
+<p>是指定爬虫爬取后通过哪个管道输出内容。</p>
+
+<h2 id="section-2">运行爬虫</h2>
+<p>到现在为止，这个爬虫就可以将数据保存到数据库了。在工程的根目录下执行如下命令：</p>
+
+<pre><code>scrapy crawl dbmeiziSpider
+</code></pre>
+
+<p>大功告成。</p>
+
+<h2 id="section-3">最后</h2>
+
+<p>按照惯例，放上源码地址：</p>
+
+
+  </section>
+  
+</article>
+
+        </div>
+        <footer>
+          <div>
+            
+            &copy; 2015 ~ 2015 Harry | powered by jekyll | themed by <a href="http://lhzhang.com" title="sext vi">sext vi</a> | fork <a href="https://github.com/red3" title="fork me">me</a>
+          </div>
+        </footer>
+      </div> <!-- main -->
+  </body>
+</html>

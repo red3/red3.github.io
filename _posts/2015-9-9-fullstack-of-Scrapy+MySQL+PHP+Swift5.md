@@ -137,7 +137,7 @@ class DbConnect {
 ### 1.Reading All Rows from MySQL
 
 要读取数据库中我们抓取的meizi的列表，创建一个文件 __girllist.php__ ，写入下面的代码
-{% highligth php %}
+{% highlight php %}
 <?php
  
 /*
@@ -184,7 +184,7 @@ if (!empty($result)) {
 }
     
 ?>
-{% endhighligth %}
+{% endhighlight %}
 
 在浏览器访问这个文件，成功获取列表的时候：
 	
@@ -215,7 +215,7 @@ if (!empty($result)) {
 
 之前的系列中提到过，用户可以给某个meizi点赞，实现这个功能创建一个文件 __likegirl.php__ ，写入下面的代码
 
-{% highligth php %}
+{% highlight php %}
 <?php
  
 /*
@@ -257,7 +257,7 @@ if ($result) {
 }
 
 ?>
-{% endhighligth %}
+{% endhighlight %}
 
 在浏览器中访问这个文件，注意要拼接上`girlid`参数和对应的值。成功点赞的时候：
 
