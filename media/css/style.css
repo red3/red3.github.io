@@ -196,7 +196,7 @@ footer {
   font-size: 13px;
   line-height: 1.6; }
 
-.like-wrapper {
+/*.like-wrapper {
   color: #999; }
   .like-wrapper .like-button, .like-wrapper .unlike-button {
     font-family: "FontAwesome";
@@ -204,4 +204,4 @@ footer {
   .like-wrapper .like-button:hover {
     color: #dd1144; }
   .like-wrapper .like-button.liked:hover {
-    color: #999; }
+    color: #999; }*/
