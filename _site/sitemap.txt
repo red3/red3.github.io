@@ -7,6 +7,7 @@ http://blog.coderharry.com/index.html
 http://blog.coderharry.com/sitemap.txt
 http://blog.coderharry.com/tags.html
 
+http://blog.coderharry.com/2015/09/10/fullstack-of-Scrapy+MySQL+PHP+Swift6.html
 http://blog.coderharry.com/2015/09/09/fullstack-of-Scrapy+MySQL+PHP+Swift5.html
 http://blog.coderharry.com/2015/09/08/fullstack-of-Scrapy+MySQL+PHP+Swift4.html
 http://blog.coderharry.com/2015/09/03/fullstack-of-Scrapy+MySQL+PHP+Swift3.html
