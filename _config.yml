@@ -72,8 +72,10 @@ theme: next
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy: 
-  type: git
+- type: git
   repo: git@github.com:red3/red3.github.io.git
+- type: git
+  repo: git@gitcafe.com:red3/red3.git
 
 # Social links
 social:
@@ -83,3 +85,6 @@ social:
   lofter: http://www.lofter.com/
 # duoshuo
 duoshuo_shortname: red3
+
+# analytics
+google_analytics: UA-66016948-1
