@@ -2,7 +2,6 @@
 layout: post
 title:  "折腾自己的服务器系列（一）之配置服务器"
 date:   2015-07-26 11:13:36
-categories: jekyll update
 tags:
   - Linux
 ---
@@ -17,7 +16,8 @@ So，这个系列大概要做这些事情：
 今天这个系列主要就是记录写如何配置刚购买的服务器。
 这里需要说明的是，以下的操作都是基于CentOS6.4版本。
 
-##安装基本的软件服务
+## 安装基本的软件服务
+
 首先通过远程登录，连接到服务器，因为我用的是Mac，所以直接用ssh命令登录：
 
 	ssh ip地址 -l root 
@@ -36,7 +36,8 @@ CentOS下推荐适用yum安装软件，故通过下列命令安装我们所需�
 	
 至此，基本的服务都已安装，不得不感叹Linux作为服务器来说，确实比MAC和Windows有优势，安装太方便了。接下来的就是配置下这些服务，让他们运行起来。
 
-##配置Apache
+## 配置Apache
+
 我们需要修改两个地方，修改配置文件以及在网站根目录创建index.html.
 	
 	// 下面这个目录是配置文件所在目录
@@ -70,7 +71,8 @@ CentOS下推荐适用yum安装软件，故通过下列命令安装我们所需�
 
 至此，Apache的设置就完成了。
 
-##配置SFTP
+## 配置SFTP
+
 默认的，和Apache一样，sftp的配置文件在这个目录`/etc//vsftpd/`下。sftp默认是不允许root用户登录的，因为是我自己的服务器，并不需要别人参与开发，所以就简单的设置下如何配置root用户可以登录（需要说明的是开启root用户会很不安全，因为root用户的权限太大）：
 
 	// ftpusers中的用户是黑名单用户是不允许从sftp登录的 
@@ -81,7 +83,8 @@ CentOS下推荐适用yum安装软件，故通过下列命令安装我们所需�
 	
 现在尝试在客户端通过sftp连接服务器吧。对于Mac电脑，推荐这个软件[Filezilla](https://filezilla-project.org/download.php?type=client)，或者给Sublime装个插件，都可以连上服务器了。
 
-##配置MySQL
+## 配置MySQL
+
 之前的这个步骤`yum install -y mysql-server mysql`已经安装了MySQL所需的软件服务。要运行MySQL服务，需要这些命令：
 	
 	// 启动mysqld服务 要关闭的话将start替换成stop

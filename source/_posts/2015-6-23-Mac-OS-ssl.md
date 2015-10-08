@@ -2,7 +2,6 @@
 layout: post
 title:  "Mac OS X 中为Apache开启ssl"
 date:   2015-06-23 22:19:36
-categories: jekyll update
 ---
 
 最近由于工作需要，需要给Mac本地的Apache配置ssl环境，折腾了一下午，终于解决了，把过程记录下来，留给有需要的人。
@@ -41,6 +40,7 @@ LoadModule ssl_module libexec/apache2/mod_ssl.so
 LoadModule socache_shmcb_module libexec/apache2/mod_socache_shmcb.so
 Include /private/etc/apache2/extra/httpd-ssl.conf
 Include /private/etc/apache2/extra/httpd-vhosts.conf
+
 ``` 
 
 2. 编辑httpd-ssl.conf文件

@@ -2,7 +2,6 @@
 layout: post
 title:  "iOS进阶读书笔记"
 date:   2015-07-02 22:45:36
-categories: jekyll update
 ---
 
 最近读了下[唐巧](www.devtang.com)写的《iOS进阶》， 补全了很多iOS开发的盲点，总结下自己在开发过程中认知不足的地方。

@@ -2,7 +2,6 @@
 layout: post
 title:  "Apple Watch开发系列（一）"
 date:   2015-07-16 22:52:36
-categories: jekyll update
 tags:
   - Apple Watch
   - WWDC
@@ -18,9 +17,10 @@ tags:
 
 另外需要说明的是本Demo是基于Watch OS 2.0开发的，因为我开始学的时候已经是2.0了，哈哈。在该系列的每篇文章末尾会有一个链接地址，指向这个Demo。
 
-#前言
+# 前言
 当然，首先我们要有一个iOS app，因为WatchKit app的bundle是集成与iOS app中的，安装Watch app的时候会把WatchKit app的bundle从iPhone中传输到Watch上。而对于Watch app来说，分为两个部分：WatchKit app(运行在Apple Watch)以及WatchKit extension(运行在iPhone上)。WatchKit app只包含程序UI相关的storyboards和资源文件（比如图片等），而WatchKit extension包含管理和响应UI的代码。
-#添加Watch app Target
+
+# 添加Watch app Target
 
 和添加一个iOS app target一样的步骤，如果我要添加了一个名为“Watch”的Target，顺序是下面这样的：
 ![](/assets/2015/img-watchdemo-1.png)
@@ -38,9 +38,13 @@ tags:
 图中的Main interface就是Watchkit app的主界面了，Glance Interface是速览界面，剩下的Static Interface和Dynamic Interface是连着一起的，可以这样解释：当Watch上收到iPhone的通知的时候，首先会调起程序对应的Static Interface，当用户对通知表示有兴趣，也就是说抬起了手腕想看这条通知的时候，会切换到对应的Dynamic Interface上。
 
 此次，我们的任务就是把这几个Interface都运行起来，在Watch上看到效果。
-#添加界面元素
+
+# 添加界面元素
+
 暂时，我们可以先在各个界面上拖上一些简单的元素。这里需要注意的是Glance Interface上是不允许可交互元素（比如button，switch等）的存在的。
-#编译运行
+
+# 编译运行
+
 到现在为止，查看Scheme menu可以看到，Xcode已经为我们生成了调试不同界面的Scheme了。要编译运行main Interface我们选中Watch Scheme，就可以在模拟器上看到我们的main Interface了。
 Glance和Notification Interface稍微还要费电周折，分别讲一下：
 
@@ -79,7 +83,9 @@ Glance和Notification Interface稍微还要费电周折，分别讲一下：
 	completionHandler(WKUserNotificationInterfaceTypeDefault);
 
 
-#下期预告
+
+# 下期预告
+
 今天的系列就先到这里，下一系列讲讲怎么创建一个功能栏，就是抬腕可以在表盘上看见的那个东西。
 
 - 惯例：[点击这里下载Demo](https://github.com/red3/WatchDemo/archive/master.zip)

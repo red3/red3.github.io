@@ -2,7 +2,6 @@
 layout: post
 title:  "iOS数据持久化的思考"
 date:   2015-06-24 22:19:36
-categories: jekyll update
 ---
 ### 缘由
 
