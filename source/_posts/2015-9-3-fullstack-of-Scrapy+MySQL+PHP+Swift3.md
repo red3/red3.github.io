@@ -14,7 +14,7 @@ tags:
 
 - [Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇](http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift1.html)
 - [Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇](http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift2.html)
-- [Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇]()
+- [Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇]({{ page.prev_link }})
 - [Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇]()
 - [Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇]()
 - [Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇]()
