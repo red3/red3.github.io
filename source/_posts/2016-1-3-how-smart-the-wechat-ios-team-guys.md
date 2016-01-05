@@ -28,8 +28,7 @@ date:   2016-1-3 12:40:00
 
 可不可以验证下，微信是怎么处理的，当然可以！
 
-越狱了一台iPad，用`Reveal`检查微信的视图层级后发现聊天列表顶部
-只有一个孤零零的UIImageview，所以可以肯定的是微信团队并没有按照上文那样用一个View去实现，就是简单的调用了一行代码：
+越狱了一台iPad，用`Reveal`检查微信的视图层级后发现聊天列表顶部只有一个孤零零的UIImageview，所以可以肯定的是微信团队并没有按照上文那样用一个View去实现，就是简单的调用了一行代码：
 
 ```objective-c
 [self.tableView addSubView:imageView];
@@ -41,15 +40,16 @@ date:   2016-1-3 12:40:00
 
 那列表底部拉出的白色背景的问题是怎么处理的呢？
 
-![]()
+![](http://photo-coder.b0.upaiyun.com/img/inspect-the-view-hierarchy-of-wechat02.png)
 
 可以从上面的图片中看到，第一个UIimageview就是微信logo图片，那么底部的问题应该就出在选中的UIView这一块，从frame属性中查看，发现高度是748，什么样的View竟然需要这么高的高度？相信你已经猜到什么了。
 
 暴力一点，直接把这个View的高度改为10pt，背景色改为红色，然后效果是这样的：
 
-![]()
+![](http://photo-coder.b0.upaiyun.com/img/inspect-the-view-hierarchy-of-wechat03.png)
 
-Bingo, 果然就是在footerView上加了个背景为白色的很高的一个View。
+Bingo, 现在很明显看到红色View下面是灰色的TableView的背景灰了，果然就是在footerView上加了个背景为白色的很高的一个View。
+
 如果你还有疑问，为什么这个高度是748，而不是848或者别的数字呢，如果你知道iPad横屏模式下高度为768pt，再减去状态栏的高度20pt，就是这个高度，意味着无论你怎么用力滑，都是滑不出这个高度的，真是机智啊！
 
 这个时候有人不禁会问，真把footerView设置这么高，实际上是可以多滑动出一个footerView的高度的距离的。因此只能把footerView的高度设置为0，然后在上面添加子View，让子View的高度为748，就是上图中的那个结构。
