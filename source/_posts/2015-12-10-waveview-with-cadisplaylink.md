@@ -105,7 +105,7 @@ CGPathRelease(path);
 然后我们可以看见效果是这样的：
 
 
-<p align="left" >	<img style='display:inline-block;' src="http://photo-coder.b0.upaiyun.com/img/waveview-with-cadisplaylink01.png" width="320" height="568"/>	<img style='display:inline-block;'  src="http://photo-coder.b0.upaiyun.com/img/waveview-with-cadisplaylink02.png"/></p>
+![](http://photo-coder.b0.upaiyun.com/img/waveview-with-cadisplaylink07.png)
 
 从图中可以看出，相同参数下的正弦曲线和余弦曲线并不能很好的合成一个对称的曲线，我们想要的效果是正弦曲线的波峰对应余弦曲线的波谷，所以需要将余弦函数的水平便宜做一个调整。
 

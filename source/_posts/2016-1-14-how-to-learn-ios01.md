@@ -5,6 +5,16 @@ title:  "iOS学习沙龙系列（一）：开篇"
 date:   2016-1-14 09:00:00
 ---
 
+## 更新日志
+
+### 2016.01.20 补充
+
+* OS X使用指南中两个窗口并排显示的支持
+* 学习iOS经典书籍补充，补充禅与Objective-C编程艺术
+* iOS社区博客推荐
+* iOS社区公众号推荐
+
+
 
 ## 前言
 
@@ -114,6 +124,7 @@ lrwxr-xr-x  1 root admin     11 Nov  8  2013 var -> private/var
 	* Shell：是Linux/Unix系统的一个外壳，可以理解成衣服，负责外界与Linux内核的交互，接受用户或其他应用程序的命令，然后把这些命令转化成内核能理解的语言，内核是真正干活的，干完活以后返回结果
 
 	* 关于触控板，默认没有打开的选项：1. 双指轻拍代替右键 2. 触发角，右下角回到桌面 3. 三指滑动选择
+	* OS X两个窗口并排显示的支持：点击并按住一个窗口的全屏按钮，随后软件建议将相关应用显示在另一侧
 
 3. 软件推荐：（几乎每天都会使用的，带来无数便捷，节省无数时间的）
 
@@ -139,6 +150,9 @@ lrwxr-xr-x  1 root admin     11 Nov  8  2013 var -> private/var
 	* 苹果官方Library[链接](https://developer.apple.com/library/ios/navigation/)
 	* 从零基础到App Store上架[链接](https://book.douban.com/subject/26372385/)
 	* MacTalk 人生元编程 [链接](https://book.douban.com/subject/25826578/)
+	* [Zen and the Art of the Objective-C Craftsmanship](https://www.gitbook.com/book/yourtion/objc-zen-book/details) : Objective-C style 代码该怎么写，代码指南，如何设计和构建优秀的代码
+
+    * [禅与Objective-C编程艺术](https://www.gitbook.com/book/yourtion/objc-zen-book-cn/details) : 上面这本书的中文翻译版本，Objective-C style 代码该怎么写，代码指南，如何设计和构建优秀的代码
 
 
 3. 掌握基础，持续练习（每天花费数小时）
@@ -147,8 +161,17 @@ lrwxr-xr-x  1 root admin     11 Nov  8  2013 var -> private/var
 	* 技术问答社区：[stack over flow](http://stackoverflow.com/)
 	* 开源项目社区：[github](https://github.com/)
 	* Google: 关于google搜索技巧：
-	* 优秀的个人博客（待增加）
-	* 优秀的公众号（待增加）
+	* 优秀的个人博客（持续更新）
+		 * [OneV's Den](http://onevcat.com/#blog) ： 王巍 (@onevcat)，一名来自中国的 iOS / Unity 开发者。现居日本，就职于 LINE。正在修行，探求创意之源，并且有在维护一个Swift使用技巧的网站
+
+    	* [唐巧的技术博客](http://devtang.com/) ： InfoQ编辑, 《iOS开发进阶》作者, 在猿题库创业
+
+    	* [sunnyxx](http://blog.sunnyxx.com/)  ：90后非主流iOS程序猿，现负责百度知道iOS团队。视代码为颜值，待节操为路人，追寻最佳实践，爱刨根问底
+    
+	* 优秀的公众号（持续更新）
+		 * InfoQ ：有内容的技术社区媒体，微信号：infoqchina
+   		 * iOS开发 ： 唐巧维护，微信号：iosDevTips 
+		
 6. 学习环境（逃离舒适区）找到组织，这个也是我成立这个iOS学习沙龙的初衷之一
 
 
