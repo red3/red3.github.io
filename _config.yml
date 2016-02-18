@@ -72,9 +72,9 @@ theme: next
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy: 
-#- type: git
-  # repo: git@github.com:red3/red3.github.io.git
-  # repo: https://github.com/red3/red3.github.io.git
+- type: git
+# repo: git@github.com:red3/red3.github.io.git
+  repo: https://github.com/red3/red3.github.io.git
 - type: git
   repo: git@gitcafe.com:red3/red3.git
 
