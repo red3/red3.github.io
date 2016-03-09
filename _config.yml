@@ -76,7 +76,7 @@ deploy:
 # repo: git@github.com:red3/red3.github.io.git
   repo: https://github.com/red3/red3.github.io.git
 - type: git
-  repo: git@gitcafe.com:red3/red3.git
+  repo: https://git.coding.net/red3/red3.git
 
 # Social links
 social:
