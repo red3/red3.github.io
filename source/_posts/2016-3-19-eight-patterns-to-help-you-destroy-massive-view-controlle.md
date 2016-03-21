@@ -4,12 +4,10 @@ title:  "8种方案帮助你摆脱笨重的ViewController"
 date:   2016-3-19 20:30:00
 ---
 
+本文译自：[http://khanlou.com/2014/09/8-patterns-to-help-you-destroy-massive-view-controller/](http://khanlou.com/2014/09/8-patterns-to-help-you-destroy-massive-view-controller/). 版权属于原作者。
+关于作者：Soroush Khanlou，在博客写一些编程相关的文章，主要为Objective-C，也在学习Ruby和Haskell. 关于编程的问题可以联系他，Twitter：@khanlou，Email：soroush@khanlou.com
 
-I am Soroush Khanlou, and this is my blog. I write about programming, primarily Objective-C and learning what I can from other languages, like Ruby and Haskell. You can catch me talking about photography, politics, eating, and fonts.
-
-Get in touch via Twitter @khanlou or email soroush@khanlou.com.
-
-
+以下为正文。
 
 View controllers 变得臃肿因为他们要处理太多的事情。管理键盘，用户输入，数据转换，创建view - 这些事情真的是view controller的负责范围吗？这里面的哪些是可以委托个其他的对象的？在这篇文章，我们将探索依据这些事情各自的职责来分离到他们应该属于的对象里面去。这样做会帮助我们隔离大量**复杂**的代码，并且也使我们的代码更具有可读性。
 
@@ -17,7 +15,7 @@ View controllers 变得臃肿因为他们要处理太多的事情。管理键盘
 
 ## Data Source
 
-**Data Source 设计模式**是隔离业务逻辑与？？？？应用在复杂的table ivews的时候，可以用来从view controller移除诸如"在当前坐标下哪些cell是可见的"等逻辑问题。如果你需要经常写一些判断table view的行或组的代码，设计一个数据源对象是合适的。
+**数据源设计模式**是解耦类本身与业务方业务逻辑的一种方式。特使是当应用在复杂的table ivews的时候，可以用来从view controller移除诸如"在当前坐标下哪些cell是可见的"等逻辑问题。如果你需要经常写一些判断table view的行或组的代码，设计一个数据源对象是合适的。
 
 这个数据源对象可以只遵守 `UITableViewDataSource` 协议，因为我发现配置cell对应的model对象跟管理cell的index path是不同的分工，所以我喜欢把这两个职责分离开来。
 
@@ -58,7 +56,7 @@ View controllers 变得臃肿因为他们要处理太多的事情。管理键盘
 
 这一设计模式同样可以应用在拉取数据逻辑上，数据源可以拉取一组对象从远程接口。`UIViewController`是UI对象，所以这么做是很好的方式将网络请求的代码从控制器从分离了出去。
 
-如果你的所有的数据源对象的接口是固定的（比如说通过protocol来声明），那么你可以构建一个特殊的数据源对象？？？
+如果你的所有的数据源对象的接口是固定的（比如说通过protocol来声明），那么你可以构建一个特殊的数据源对象来任意组合其他的数据源。每个子数据源处理自己的section逻辑。用这种方式来合并数据源对象可以避免写一些丑陋的比较index的代码，因为数据源已经替你处理好了这一切。
 
 ## Standard Composition
 
@@ -207,7 +205,7 @@ View controllers 变得臃肿因为他们要处理太多的事情。管理键盘
 
 ## Binding patter
 
-在方法列表中，这种设计模式？？？？？。当模型数据发生变化时，绑定者负责更新视图。在Cocoa中可以很自然的使用这种方式，因为可以使用KVO来观察模型，使用KVC来获取模型数据并给视图赋值。[Cocoa Bindings](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CocoaBindings/CocoaBindings.html) 是AppKit中对该设计模式的实现。第三方类库例如[Reactive Cocoa](https://github.com/ReactiveCocoa/ReactiveCocoa)事实上也是利用这种技术，只不过更为复杂些。
+绑定模式一般可能会以这样的方法来体现其作用：`-configureView`。当模型数据发生变化时，绑定者负责更新视图。在Cocoa中可以很自然的使用这种方式，因为可以使用KVO来观察模型，使用KVC来获取模型数据并给视图赋值。[Cocoa Bindings](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CocoaBindings/CocoaBindings.html) 是AppKit中对该设计模式的实现。第三方类库例如[Reactive Cocoa](https://github.com/ReactiveCocoa/ReactiveCocoa)事实上也是利用这种技术，只不过更为复杂些。
 
 这种方式结合上面提到的Presenter模式一起使用效果更佳，通过一个类来转换数据，另一个类来把这些转换过的数据传递给视图。
 
@@ -293,9 +291,10 @@ View controllers 变得臃肿因为他们要处理太多的事情。管理键盘
 @end
 ```
 iOS8以前通过代理工作的alertView 和 actionSheetView 使用这种设计模式会比较有利，当然，该设计模式也同样支持iOS8以后的UIAlertController的接口。
+
 ## Keyboard Manager
 
-在键盘状态变更后更新视图是视图控制器中典型的是另一个？？？？？？？，但是这些逻辑可以轻易的迁移到`键盘管理者`中。[关于开源的实现]()被设计出来用于解决这些问题，但是，如果你觉得它过度设计了，不要害怕去实现你自己的键盘管理类。
+在键盘状态变更后更新视图是视图控制器中典型的是另一个坑，但是这些逻辑可以轻易的迁移到`键盘管理者`中。[关于开源的实现]()被设计出来用于解决这些问题，但是，如果你觉得它过度设计了，不要害怕去实现你自己的键盘管理类。
 
 ```
 @implementation SKNewPostKeyboardManager : NSObject
@@ -332,7 +331,8 @@ iOS8以前通过代理工作的alertView 和 actionSheetView 使用这种设计�
 }
 
 @end
-```		
+
+```
 
 你可以在`-viewDidAppear` 和 `-viewWillDisappear`中分别调用`-beginObservingKeyboard` 和 `-endObservingKeyboard` 或者其他可以的地方。
 
@@ -376,12 +376,13 @@ iOS8以前通过代理工作的alertView 和 actionSheetView 使用这种设计�
     self.userViewController.supplementalViewController = followerList;
 }
 @end
+
 ```
 
 这样做凸显了使用多个小部件而不是使用一个大部件的好处，它们可以很快地被修改，重写，或者移除。相比较在视图控制器中写那些丑陋的条件判断代码，你只需要在iPad模式下给`self.navigator`赋值为`[SKiPadUserNavigator new]`就可以了，这个navigator会响应同样的协议方法`-navigateToFollowersForUser:`. [告诉他，而不是问他](https://pragprog.com/articles/tell-dont-ask)
 
 ## Wrapping up
 
-从历史上看，苹果的SDK只包含组件的最低限度，并且这些API导致你写出臃肿的视图控制器。通过细分你的视图控制器的职责，将可以抽象的组分分离出来，来创造出真正的单责任的对象，我们就可以开始管理这些单个的组件，使得视图控制器再次便于维护。
+从历史发展角度看，苹果的SDK只包含组件的最低限度，并且这些API导致你写出臃肿的视图控制器。通过细分你的视图控制器的职责，将可以抽象的组分分离出来，来创造出真正的单责任的对象，我们就可以开始管理这些单个的组件，使得视图控制器再次便于维护。
 
 
