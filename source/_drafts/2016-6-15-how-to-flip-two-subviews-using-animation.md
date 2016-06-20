@@ -1,13 +1,13 @@
-title: 如何在 iOS 中实现翻转动画特效
+title: iOS 中如何实现翻转动画特效
 tags:
 date:   2016-06-15 18:30:00
 ---
 
 先上一个动图，阐述下本文所谓的翻转动画到底是怎样的效果？
 
-![](ht)
+![](http://photo-coder.b0.upaiyun.com/img/how-to-flip-two-subviews-using-animation01.gif)
 
-乍一看很懵逼，翻来翻去的，以前完全没有搞过啊。
+乍一看很懵逼，翻来覆去的，以前完全没有搞过这种动画啊。
 
 那我们就先复习下，我们可以搞定的动画在 iOS 中一般是怎样实现的：
 
@@ -40,4 +40,29 @@ block版本的api 感觉比较方便，其实 uikit 内部还是用 事务实现
 + (void)transitionWithView:(UIView *)view duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^ __nullable)(void))animations completion:(void (^ __nullable)(BOOL finished))completion NS_AVAILABLE_IOS(4_0);
 
 ```
-并且这种方式也是苹果推荐的。
+并且在 iOS4.0 后苹果更加推荐用这种方式来做类似的动画效果。
+
+目前来看，这个动画效果基本实现了。那么，有没有其他方式来实现同样的效果？
+
+当然是有的，先看看代码：
+
+```
+CATransition *animation = [CATransition animation];
+animation.delegate = self;
+animation.duration = 3.0f;
+animation.timingFunction = UIViewAnimationCurveEaseInOut;
+animation.type = @"oglFlip";
+animation.subtype = kCATransitionFromLeft;
+// Perform some change of the view 
+
+
+
+
+[self.view.layer addAnimation:animation forKey:@"flip"];
+    
+```
+
+在上面的代码中，我们用到了 `CATransition` 类，是 Core Animation 框架中用于做视图转换的子类，苹果为该类提供了预先定义的多种转换行为，出现在开发文档中的仅仅只是是 Fade, MoveIn, Push, Reveal, 其余的动画效果可以从[这个链接](http://iphonedevwiki.net/index.php/CATransition)中了解。  
+
+我们的动画效果属于 `oglFlip `, 所以我们直接用这个字符串来赋值 CATransition 实例的 type 属性。
+
