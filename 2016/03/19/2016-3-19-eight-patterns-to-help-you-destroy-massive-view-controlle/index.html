@@ -1,0 +1,674 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="iOS Notes" />
+
+
+
+  <meta name="keywords" content="iOS,Swift,PHP,Python,Mac" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="本文译自：http://khanlou.com/2014/09/8-patterns-to-help-you-destroy-massive-view-controller/. 版权属于原作者。关于作者：Soroush Khanlou，在博客写一些编程相关的文章，主要为Objective-C，也在学习Ruby和Haskell. 关于编程的问题可以联系他，Twitter：@khanlou，Email">
+<meta property="og:type" content="article">
+<meta property="og:title" content="8种方案帮助你摆脱笨重的ViewController">
+<meta property="og:url" content="http://blog.coderhr.com/2016/03/19/2016-3-19-eight-patterns-to-help-you-destroy-massive-view-controlle/index.html">
+<meta property="og:site_name" content="red3">
+<meta property="og:description" content="本文译自：http://khanlou.com/2014/09/8-patterns-to-help-you-destroy-massive-view-controller/. 版权属于原作者。关于作者：Soroush Khanlou，在博客写一些编程相关的文章，主要为Objective-C，也在学习Ruby和Haskell. 关于编程的问题可以联系他，Twitter：@khanlou，Email">
+<meta property="og:updated_time" content="2016-03-21T06:37:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="8种方案帮助你摆脱笨重的ViewController">
+<meta name="twitter:description" content="本文译自：http://khanlou.com/2014/09/8-patterns-to-help-you-destroy-massive-view-controller/. 版权属于原作者。关于作者：Soroush Khanlou，在博客写一些编程相关的文章，主要为Objective-C，也在学习Ruby和Haskell. 关于编程的问题可以联系他，Twitter：@khanlou，Email">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 8种方案帮助你摆脱笨重的ViewController | red3 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-66016948-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">red3</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              8种方案帮助你摆脱笨重的ViewController
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-03-19T20:30:00+08:00" content="2016-03-19">
+            2016-03-19
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/03/19/2016-3-19-eight-patterns-to-help-you-destroy-massive-view-controlle/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/19/2016-3-19-eight-patterns-to-help-you-destroy-massive-view-controlle/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>本文译自：<a href="http://khanlou.com/2014/09/8-patterns-to-help-you-destroy-massive-view-controller/" target="_blank" rel="external">http://khanlou.com/2014/09/8-patterns-to-help-you-destroy-massive-view-controller/</a>. 版权属于原作者。<br>关于作者：Soroush Khanlou，在博客写一些编程相关的文章，主要为Objective-C，也在学习Ruby和Haskell. 关于编程的问题可以联系他，Twitter：@khanlou，Email：soroush@khanlou.com</p>
+<p>以下为正文。</p>
+<p>View controllers 变得臃肿因为他们要处理太多的事情。管理键盘，用户输入，数据转换，创建view - 这些事情真的是view controller的负责范围吗？这里面的哪些是可以委托个其他的对象的？在这篇文章，我们将探索依据这些事情各自的职责来分离到他们应该属于的对象里面去。这样做会帮助我们隔离大量<strong>复杂</strong>的代码，并且也使我们的代码更具有可读性。</p>
+<p>在view controller里面，我们会依据职责用<code>#pragma mark</code>来把代码划分成不同的组。通常，当我们这样做的时候，就是一个很好的时机来思考将这些代码迁移到更小的组件中去。</p>
+<h2 id="Data_Source">Data Source</h2><p><strong>数据源设计模式</strong>是解耦类本身与业务方业务逻辑的一种方式。特使是当应用在复杂的table ivews的时候，可以用来从view controller移除诸如”在当前坐标下哪些cell是可见的”等逻辑问题。如果你需要经常写一些判断table view的行或组的代码，设计一个数据源对象是合适的。</p>
+<p>这个数据源对象可以只遵守 <code>UITableViewDataSource</code> 协议，因为我发现配置cell对应的model对象跟管理cell的index path是不同的分工，所以我喜欢把这两个职责分离开来。</p>
+<p>一个简单的例子，数据源对象的可以处理分组逻辑：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKSectionedDataSource</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (instancetype)initWithObjects:(<span class="built_in">NSArray</span> *)objects sectioningKey:(<span class="built_in">NSString</span> *)sectioningKey &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">self</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line">    [<span class="keyword">self</span> sectionObjects:objects withKey:sectioningKey];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)sectionObjects:(<span class="built_in">NSArray</span> *)objects withKey:(<span class="built_in">NSString</span> *)sectioningKey &#123;</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.sectionedObjects</span> = <span class="comment">//section the objects array</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSUInteger</span>)numberOfSections &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span><span class="variable">.sectionedObjects</span><span class="variable">.count</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSUInteger</span>)numberOfObjectsInSection:(<span class="built_in">NSUInteger</span>)section &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span><span class="variable">.sectionedObjects</span>[section] count];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)objectAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span><span class="variable">.sectionedObjects</span>[indexPath<span class="variable">.section</span>][indexPath<span class="variable">.row</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>尽管这个数据源对象应该要设计成抽象的并且可以复用的，也别怕去构建一个只使用在一个地方的数据源对象。将index path逻辑的管理从view controller中分离出去是我们的目标，尤其是那些不断变化的列表，让某一个对象通知控制器”Hey，在这个index path下有新的对象”是可行的，接下来控制器可以传递这个对象到列表并以动画呈现出来。</p>
+<p>这一设计模式同样可以应用在拉取数据逻辑上，数据源可以拉取一组对象从远程接口。<code>UIViewController</code>是UI对象，所以这么做是很好的方式将网络请求的代码从控制器从分离了出去。</p>
+<p>如果你的所有的数据源对象的接口是固定的（比如说通过protocol来声明），那么你可以构建一个特殊的数据源对象来任意组合其他的数据源。每个子数据源处理自己的section逻辑。用这种方式来合并数据源对象可以避免写一些丑陋的比较index的代码，因为数据源已经替你处理好了这一切。</p>
+<h2 id="Standard_Composition">Standard Composition</h2><p>通过iOS5以后新增的组合控制器接口可以将View controllers组合起来使用。如果你的视图控制器是由几个组分合成的，其中的每个组分都可以是一个单独的视图控制器，就考虑使用组合模式来将他们分离开来。屏幕上有多个table view或者collection views就是最佳实践。</p>
+<p>当屏幕上有一个头部视图和一个网格视图，我们可以使用懒加载这两个视图控制器，然后当系统要绘制他们的时候再正确布局他们：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">- (SKHeaderViewController *)headerViewController &#123;</span><br><span class="line">    <span class="keyword">if</span> (!_headerViewController) &#123;</span><br><span class="line">        SKHeaderViewController *headerViewController = [[SKHeaderViewController alloc] init];</span><br><span class="line"></span><br><span class="line">        [<span class="keyword">self</span> addChildViewController:headerViewController];</span><br><span class="line">        [headerViewController didMoveToParentViewController:<span class="keyword">self</span>];</span><br><span class="line"></span><br><span class="line">        [<span class="keyword">self</span><span class="variable">.view</span> addSubview:headerViewController<span class="variable">.view</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">self</span><span class="variable">.headerViewController</span> = headerViewController;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _headerViewController;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (SKGridViewController *)gridViewController &#123;</span><br><span class="line">    <span class="keyword">if</span> (!_gridViewController) &#123;</span><br><span class="line">        SKGridViewController *gridViewController = [[SKGridViewController alloc] init];</span><br><span class="line"></span><br><span class="line">        [<span class="keyword">self</span> addChildViewController:gridViewController];</span><br><span class="line">        [gridViewController didMoveToParentViewController:<span class="keyword">self</span>];</span><br><span class="line"></span><br><span class="line">        [<span class="keyword">self</span><span class="variable">.view</span> addSubview:gridViewController<span class="variable">.view</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">self</span><span class="variable">.gridViewController</span> = gridViewController;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _gridViewController;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLayoutSubviews &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLayoutSubviews];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">CGRect</span> workingRect = <span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">CGRect</span> headerRect = <span class="built_in">CGRectZero</span>, gridRect = <span class="built_in">CGRectZero</span>;</span><br><span class="line">    <span class="built_in">CGRectDivide</span>(workingRect, &amp;headerRect, &amp;gridRect, <span class="number">44</span>, <span class="built_in">CGRectMinYEdge</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span><span class="variable">.headerViewController</span><span class="variable">.view</span><span class="variable">.frame</span> = tagHeaderRect;</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.gridViewController</span><span class="variable">.view</span><span class="variable">.frame</span> = hotSongsGridRect;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样使得每个子视图控制器中的collection视图可以处理一种类型的数据，也因此更容易维护和更改。</p>
+<h2 id="Smarter_Views">Smarter Views</h2><p>如果你在视图控制器里面构建你的所有的子视图的话，你可能需要考虑<code>Smarter View</code>.</p>
+<p><code>UIViewController</code>默认使用<code>UIView</code>来作为自己的view属性，但是你可以用你自己的view来重写这个属性。你可以通过<code>-loadView</code> 来达到目的，只要你在这个方法里面给<code>self.view</code>赋值。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKProfileViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)loadView &#123;</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.view</span> = [SKProfileView new];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKProfileView</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">UILabel</span> *)nameLabel &#123;</span><br><span class="line">    <span class="keyword">if</span> (!_nameLabel) &#123;</span><br><span class="line">        <span class="built_in">UILabel</span> *nameLabel = [<span class="built_in">UILabel</span> new];</span><br><span class="line">        <span class="comment">//configure font, color, etc</span></span><br><span class="line">        [<span class="keyword">self</span> addSubview:nameLabel];</span><br><span class="line">        <span class="keyword">self</span><span class="variable">.nameLabel</span> = nameLabel;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _nameLabel;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">UIImageView</span> *)avatarImageView &#123;</span><br><span class="line">    <span class="keyword">if</span> (!_avatarImageView) &#123;</span><br><span class="line">        <span class="built_in">UIImageView</span> * avatarImageView = [<span class="built_in">UIImageView</span> new];</span><br><span class="line">        [<span class="keyword">self</span> addSubview:avatarImageView];</span><br><span class="line">        <span class="keyword">self</span><span class="variable">.avatarImageView</span> = avatarImageView;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _avatarImageView</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)layoutSubviews &#123;</span><br><span class="line">    <span class="comment">//perform layout</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>你只需要重新声明view属性<code>@property (nonatomic) SKProfileView *view</code>，并且因为这个新的属性的比UIView更明确，编译器会作正确的识别并辨别出<code>self.view</code>是<code>SKProfileView</code>类型的。这种<a href="https://en.wikipedia.org/wiki/Covariant_return_type" target="_blank" rel="external">改变返回值类型</a>的方法在这种设计模式中非常有用。（编译器需要知道你的这个类是继承于UIView，因此确保导入这个类的头文件而不是仅仅用<code>@class</code>声明类。在Xcode6.3以后，你还需要声明这个属性是dynamic的，即在实现区域加入这行代码<code>@dynamic view;</code>）</p>
+<h2 id="Presenter">Presenter</h2><p><code>Presenter</code>对象接受一个模型对象，然后依据视图上的显示转换它的属性，再将转换过的这些属性暴漏出去（供视图控制器调用）。这种方式同样被用在<a href="http://martinfowler.com/eaaDev/PresentationModel.html" target="_blank" rel="external">Presentation Model</a>，<a href="http://objectsonrails.com/#sec-12_1" target="_blank" rel="external">the Exhibit pattern</a>，<a href="http://msdn.microsoft.com/en-us/magazine/dd419663.aspx" target="_blank" rel="external">ViewModel</a>。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKUserPresenter</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (instancetype)initWithUser:(SKUser *)user &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">self</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    _user = user;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span><span class="variable">.user</span><span class="variable">.name</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)followerCountString &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span><span class="variable">.user</span><span class="variable">.followerCount</span> == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">@""</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%@ followers"</span>, [<span class="built_in">NSNumberFormatter</span> localizedStringFromNumber:@(_user<span class="variable">.followerCount</span>) numberStyle:<span class="built_in">NSNumberFormatterDecimalStyle</span>]];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)followersString &#123;</span><br><span class="line">    <span class="built_in">NSMutableString</span> *followersString = [<span class="string">@"Followed by "</span> mutableCopy];</span><br><span class="line">    [followersString appendString:[<span class="keyword">self</span><span class="variable">.class</span><span class="variable">.arrayFormatter</span> stringFromArray:[<span class="keyword">self</span><span class="variable">.user</span><span class="variable">.topFollowers</span> valueForKey:<span class="string">@"name"</span>]];</span><br><span class="line">    <span class="keyword">return</span> followersString;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (TTTArrayFormatter*) arrayFormatter &#123;</span><br><span class="line">    <span class="keyword">static</span> TTTArrayFormatter *_arrayFormatter;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        _arrayFormatter = [[TTTArrayFormatter alloc] init];</span><br><span class="line">        _arrayFormatter<span class="variable">.usesAbbreviatedConjunction</span> = <span class="literal">YES</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> _arrayFormatter;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>需要注意的是，模型对象本身并不会暴漏出去（译者注：模型是依赖注入的），Presenter好比模型对象的看门人。这样可以确保视图控制器在不借助persenter对象的情况下不能直接访问到模型对象。类似这样的结构模型会帮你限制依赖关系，因为<code>SKUser</code>对象只向很少的类暴漏，修改它会将影响降到最低。</p>
+<h2 id="Binding_patter">Binding patter</h2><p>绑定模式一般可能会以这样的方法来体现其作用：<code>-configureView</code>。当模型数据发生变化时，绑定者负责更新视图。在Cocoa中可以很自然的使用这种方式，因为可以使用KVO来观察模型，使用KVC来获取模型数据并给视图赋值。<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CocoaBindings/CocoaBindings.html" target="_blank" rel="external">Cocoa Bindings</a> 是AppKit中对该设计模式的实现。第三方类库例如<a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank" rel="external">Reactive Cocoa</a>事实上也是利用这种技术，只不过更为复杂些。</p>
+<p>这种方式结合上面提到的Presenter模式一起使用效果更佳，通过一个类来转换数据，另一个类来把这些转换过的数据传递给视图。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKProfileBinding</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (instancetype)initWithView:(SKProfileView *)view presenter:(SKUserPresenter *)presenter &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">self</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    _view = view;</span><br><span class="line">    _presenter = presenter;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSDictionary</span> *)bindings &#123;</span><br><span class="line">    <span class="keyword">return</span> @&#123;</span><br><span class="line">              <span class="string">@"name"</span>: <span class="string">@"nameLabel.text"</span>,</span><br><span class="line">              <span class="string">@"followerCountString"</span>: <span class="string">@"followerCountLabel.text"</span>,</span><br><span class="line">            &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)updateView &#123;</span><br><span class="line">    [<span class="keyword">self</span><span class="variable">.bindings</span> enumerateKeysAndObjectsUsingBlock:^(<span class="keyword">id</span> presenterKeyPath, <span class="keyword">id</span> viewKeyPath, <span class="built_in">BOOL</span> *stop) &#123;</span><br><span class="line">        <span class="keyword">id</span> newValue = [<span class="keyword">self</span><span class="variable">.presenter</span> valueForKeyPath:presenterKeyPath];</span><br><span class="line">        [<span class="keyword">self</span><span class="variable">.view</span> setObject:newvalue forKeyPath:viewKeyPath];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>(需要注意的是上面例子中的Presenter类并不支持KVO，但是是可以做的支持KVO的)</p>
+<p>当你第一次尝试使用这种模式的时候，没有一开始致力于设计出完美的抽象模式。不要害怕这个类只会在特定的情形下工作，我们的目标不是说不考虑代码的可复用性，而是让代码更简单，因此这些我们的类就更容易维护，更容易理解。</p>
+<h2 id="Interaction_pattern">Interaction pattern</h2><p>类似这样的代码<code>actionSheet.delegate = self</code>也是让视图控制器变得臃肿的原因。细分来讲，视图控制器的全部职责是接受用户的输入并更新view和model。如今，软件中的交互变得更加复杂，并且这些交互导致视图控制器中出现了臃肿的代码。</p>
+<p>当交互包含一个最初的输入（比如轻触按钮），然后弹窗询问用户一个可选的输入（”你确定要X吗？”），然后才产生一个活动，例如网络请求或者状态变更。这个交互的全部过程可以封装到一个<em>Interaction</em>类中。下面的示例在按钮点击的时候创建了一个交互类来处理交互，但是通过类似这种<code>[button addTarget:self.followUserInteraction action:@selector(follow)]</code>把这个交互类作为按钮动作的target也是可行的。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKProfileViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)followButtonTapped:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.followUserInteraction</span> = [[SKFollowUserInteraction alloc] initWithUserToFollow:<span class="keyword">self</span><span class="variable">.user</span> delegate:<span class="keyword">self</span>];</span><br><span class="line">    [<span class="keyword">self</span><span class="variable">.followUserInteraction</span> follow];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)interactionCompleted:(SKFollowUserInteraction *)interaction &#123;</span><br><span class="line">    [<span class="keyword">self</span><span class="variable">.binding</span> updateView];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKFollowUserInteraction</span> : <span class="title">NSObject</span> &lt;<span class="title">UIAlertViewDelegate</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (instancetype)initWithUserToFollow:user delegate:(<span class="keyword">id</span>&lt;InteractionDelegate&gt;)delegate &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> !(<span class="keyword">self</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    _user = user;</span><br><span class="line">    _delegate = delegate;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>)follow &#123;</span><br><span class="line">    [[[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="literal">nil</span></span><br><span class="line">                                message:<span class="string">@"Are you sure you want to follow this user?"</span></span><br><span class="line">                               delegate:<span class="keyword">self</span></span><br><span class="line">                      cancelButtonTitle:<span class="string">@"Cancel"</span></span><br><span class="line">                      otherButtonTitles:<span class="string">@"Follow"</span>, <span class="literal">nil</span>] show];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</span><br><span class="line">    <span class="keyword">if</span>  ([alertView buttonTitleAtIndex:buttonIndex] isEqual:<span class="string">@"Follow"</span>]) &#123;</span><br><span class="line">        [<span class="keyword">self</span><span class="variable">.user</span><span class="variable">.APIGateway</span> followWithCompletionBlock:^&#123;</span><br><span class="line">            [<span class="keyword">self</span><span class="variable">.delegate</span> interactionCompleted:<span class="keyword">self</span>];</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>iOS8以前通过代理工作的alertView 和 actionSheetView 使用这种设计模式会比较有利，当然，该设计模式也同样支持iOS8以后的UIAlertController的接口。</p>
+<h2 id="Keyboard_Manager">Keyboard Manager</h2><p>在键盘状态变更后更新视图是视图控制器中典型的是另一个坑，但是这些逻辑可以轻易的迁移到<code>键盘管理者</code>中。<a href="">关于开源的实现</a>被设计出来用于解决这些问题，但是，如果你觉得它过度设计了，不要害怕去实现你自己的键盘管理类。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKNewPostKeyboardManager</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (instancetype)initWithTableView:(<span class="built_in">UITableView</span> *)tableView &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">self</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    _tableView = tableView;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)beginObservingKeyboard &#123;</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(keyboardDidHide:) name:<span class="built_in">UIKeyboardDidHideNotification</span> object:<span class="literal">nil</span>];</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(keyboardWillShow:) name:<span class="built_in">UIKeyboardWillShowNotification</span> object:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)endObservingKeyboard &#123;</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span> name:<span class="built_in">UIKeyboardDidHideNotification</span> object:<span class="literal">nil</span>];</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span> name:<span class="built_in">UIKeyboardWillShowNotification</span> object:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)keyboardWillShow:(<span class="built_in">NSNotification</span> *)note &#123;</span><br><span class="line">    <span class="built_in">CGRect</span> keyboardRect = [[note<span class="variable">.userInfo</span> objectForKey:<span class="built_in">UIKeyboardFrameEndUserInfoKey</span>] <span class="built_in">CGRectValue</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UIEdgeInsets</span> contentInsets = <span class="built_in">UIEdgeInsetsMake</span>(<span class="keyword">self</span><span class="variable">.tableView</span><span class="variable">.contentInset</span><span class="variable">.top</span>, <span class="number">0.0</span>f, <span class="built_in">CGRectGetHeight</span>(keyboardRect), <span class="number">0.0</span>f);</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.tableView</span><span class="variable">.contentInset</span> = contentInsets;</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.tableView</span><span class="variable">.scrollIndicatorInsets</span> = contentInsets;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)keyboardDidHide:(<span class="built_in">NSNotification</span> *)note &#123;</span><br><span class="line">    <span class="built_in">UIEdgeInsets</span> contentInset = <span class="built_in">UIEdgeInsetsMake</span>(<span class="keyword">self</span><span class="variable">.tableView</span><span class="variable">.contentInset</span><span class="variable">.top</span>, <span class="number">0.0</span>f, <span class="keyword">self</span><span class="variable">.oldBottomContentInset</span>, <span class="number">0.0</span>f);</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.tableView</span><span class="variable">.contentInset</span> = contentInset;</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.tableView</span><span class="variable">.scrollIndicatorInsets</span> = contentInset;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>你可以在<code>-viewDidAppear</code> 和 <code>-viewWillDisappear</code>中分别调用<code>-beginObservingKeyboard</code> 和 <code>-endObservingKeyboard</code> 或者其他可以的地方。</p>
+<h2 id="Navigator">Navigator</h2><p>平时我们通过调用<code>-pushViewController:animated:</code>方法来实现不同场景间的导航切换。当页面之间的切换开始变得复杂的时候，可以将这些工作代理给<em>Navigator</em>对象。当你在开发iPhone/iPad混合应用时，这种方法尤其有用，导航方式需要根据屏幕尺寸的变化来切换：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">SKUserNavigator</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)navigateToFollowersForUser:(SKUser *)user;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKiPhoneUserNavigator</span> : <span class="title">NSObject</span>&lt;<span class="title">SKUserNavigator</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (instancetype)initWithNavigationController:(<span class="built_in">UINavigationController</span> *)navigationController &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">self</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    _navigationController = navigationController;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)navigateToFollowersForUser:(SKUser *)user &#123;</span><br><span class="line">    SKFollowerListViewController *followerList = [[SKFollowerListViewController alloc] initWithUser:user];</span><br><span class="line">    [<span class="keyword">self</span><span class="variable">.navigationController</span> pushViewController:followerList animated:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SKiPadUserNavigator</span> : <span class="title">NSObject</span>&lt;<span class="title">SKUserNavigator</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (instancetype)initWithUserViewController:(SKUserViewController *)userViewController &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">self</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    _userViewController = userViewController;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)navigateToFollowersForUser:(SKUser *)user &#123;</span><br><span class="line">    SKFollowerListViewController *followerList = [[SKFollowerListViewController alloc] initWithUser:user];</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.userViewController</span><span class="variable">.supplementalViewController</span> = followerList;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>这样做凸显了使用多个小部件而不是使用一个大部件的好处，它们可以很快地被修改，重写，或者移除。相比较在视图控制器中写那些丑陋的条件判断代码，你只需要在iPad模式下给<code>self.navigator</code>赋值为<code>[SKiPadUserNavigator new]</code>就可以了，这个navigator会响应同样的协议方法<code>-navigateToFollowersForUser:</code>. <a href="https://pragprog.com/articles/tell-dont-ask" target="_blank" rel="external">告诉他，而不是问他</a></p>
+<h2 id="Wrapping_up">Wrapping up</h2><p>从历史发展角度看，苹果的SDK只包含组件的最低限度，并且这些API导致你写出臃肿的视图控制器。通过细分你的视图控制器的职责，将可以抽象的组分分离出来，来创造出真正的单责任的对象，我们就可以开始管理这些单个的组件，使得视图控制器再次便于维护。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/22/2016-5-18-use-surge-to-proxy-http-request/" rel="prev">iOS 开发神器：利用 Surge 访问内网接口</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/09/2016-3-9-how-to-learn-ios07/" rel="next">iOS学习沙龙系列（七）：iOS中网络请求的正确姿势</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/03/19/2016-3-19-eight-patterns-to-help-you-destroy-massive-view-controlle/"
+                   data-title="8种方案帮助你摆脱笨重的ViewController" data-url="http://blog.coderhr.com/2016/03/19/2016-3-19-eight-patterns-to-help-you-destroy-massive-view-controlle/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="red3" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">red3</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">iOS Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/red3" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/your-user-name" target="_blank">douban</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lofter.com/" target="_blank">lofter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Data_Source"><span class="nav-number">1.</span> <span class="nav-text">Data Source</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Standard_Composition"><span class="nav-number">2.</span> <span class="nav-text">Standard Composition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Smarter_Views"><span class="nav-number">3.</span> <span class="nav-text">Smarter Views</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Presenter"><span class="nav-number">4.</span> <span class="nav-text">Presenter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Binding_patter"><span class="nav-number">5.</span> <span class="nav-text">Binding patter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interaction_pattern"><span class="nav-number">6.</span> <span class="nav-text">Interaction pattern</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Keyboard_Manager"><span class="nav-number">7.</span> <span class="nav-text">Keyboard Manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Navigator"><span class="nav-number">8.</span> <span class="nav-text">Navigator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wrapping_up"><span class="nav-number">9.</span> <span class="nav-text">Wrapping up</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">red3</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<div class="cdn-info">
+  <a href="https://www.upyun.com"><img src="/assets/images/upyun_logo_90x45.png"><img></a>
+</div>
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"red3"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

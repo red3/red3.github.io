@@ -1,0 +1,766 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="iOS Notes" />
+
+
+
+  <meta name="keywords" content="iOS,Swift,PHP,Python,Mac" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="UITableView计算高度的那些事怎么计算高度UITableView 是个 UIScrollView，就像平时使用 UIScrollView 一样，加载时需要指定 contentSize 后它才能根据自己的 bounds、contentInset、contentOffset 等属性共同决定是否可以滑动以及滚动条的长度。而 UITableView 在一开始并不知道自己会被填充多少内容，于是询问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS学习沙龙系列（五）：UITableView计算高度的那些事以及内存管理">
+<meta property="og:url" content="http://blog.coderhr.com/2016/02/22/2016-2-22-how-to-learn-ios05/index.html">
+<meta property="og:site_name" content="red3">
+<meta property="og:description" content="UITableView计算高度的那些事怎么计算高度UITableView 是个 UIScrollView，就像平时使用 UIScrollView 一样，加载时需要指定 contentSize 后它才能根据自己的 bounds、contentInset、contentOffset 等属性共同决定是否可以滑动以及滚动条的长度。而 UITableView 在一开始并不知道自己会被填充多少内容，于是询问">
+<meta property="og:updated_time" content="2016-02-24T09:34:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS学习沙龙系列（五）：UITableView计算高度的那些事以及内存管理">
+<meta name="twitter:description" content="UITableView计算高度的那些事怎么计算高度UITableView 是个 UIScrollView，就像平时使用 UIScrollView 一样，加载时需要指定 contentSize 后它才能根据自己的 bounds、contentInset、contentOffset 等属性共同决定是否可以滑动以及滚动条的长度。而 UITableView 在一开始并不知道自己会被填充多少内容，于是询问">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> iOS学习沙龙系列（五）：UITableView计算高度的那些事以及内存管理 | red3 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-66016948-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">red3</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              iOS学习沙龙系列（五）：UITableView计算高度的那些事以及内存管理
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-22T20:28:00+08:00" content="2016-02-22">
+            2016-02-22
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/22/2016-2-22-how-to-learn-ios05/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/22/2016-2-22-how-to-learn-ios05/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="UITableView计算高度的那些事">UITableView计算高度的那些事</h2><h3 id="怎么计算高度">怎么计算高度</h3><p>UITableView 是个 UIScrollView，就像平时使用 UIScrollView 一样，加载时需要指定 contentSize 后它才能根据自己的 bounds、contentInset、contentOffset 等属性共同决定是否可以滑动以及滚动条的长度。而 UITableView 在一开始并不知道自己会被填充多少内容，于是询问 data source 个数和创建 cell，同时询问 delegate 这些 cell 应该显示的高度，这就造成它在加载的时候浪费了多余的计算在<strong>屏幕外边</strong>的 cell 上。所以该小节内容主要围绕UITableViewCell的高度计算以及计算高度机制所带来的性能问题来讨论下业界的一些解决方案。</p>
+<ul>
+<li>定高的解决方案-rowHeight</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// will return the default value if unset&#10;@property (nonatomic) CGFloat rowHeight;</span><br></pre></td></tr></table></figure>
+<p>指定cell高度有两种方式：rowHeight以及代理方法<code>-tableView: heightForRowAtIndexPath:</code>方法</p>
+<p>定高cell需求推荐使用rowHeight属性，代理方法计算高度使用在动态高度的cell中。</p>
+<ul>
+<li>不定高，手动计算高度的方案：</li>
+</ul>
+<p>通过NSString的分类方法，来计算多行文本的高度</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@interface NSString (NSExtendedStringDrawing)&#10;- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options attributes:(nullable NSDictionary&#60;NSString *, id&#62; *)attributes context:(nullable NSStringDrawingContext *)context NS_AVAILABLE(10_11, 7_0);&#10;@end</span><br></pre></td></tr></table></figure>
+<p>使用起来是这个样子的：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;NSDictionary *attribute = @&#123;NSFontAttributeName: xxx&#125;;&#10;size = [text boundingRectWithSize: xxx&#10;&#9;&#9;&#9;   options: NSStringDrawingTruncatesLastVisibleLine | &#9;&#9;&#9;&#9;&#9;     NSStringDrawingUsesLineFragmentOrigin | &#9;&#9;&#9;&#9;&#9;     NSStringDrawingUsesFontLeading&#10;             attributes:attribute&#10;             context:nil].size;</span><br></pre></td></tr></table></figure>
+<p>使用这个API，需要预先向字符串指定要显示的UILabel的宽度以及字号等信息，从设计模式的角度理解，感觉接口设计的比较丑陋。</p>
+<ul>
+<li>不定高，iOS6以后Auto layout的解决方案</li>
+</ul>
+<p>从iOS6开始，可以使用Autolayout来计算cell高度：</p>
+<pre><code><span class="tag">-</span> (<span class="tag">CGSize</span>)<span class="rule"><span class="attribute">systemLayoutSizeFittingSize</span>:<span class="value">(CGSize)targetSize</span></span>;
+</code></pre><p>通过cell的实例自己去计算当前cell的约束去适应cell中文本、图片等信息后应该呈现的高度。缺点是计算速度肯定没有手算快，而且这是个实例方法，需要维护专门为计算高度而生的 template layout cell，它还要求使用者对约束设置的比较熟练，要保证 contentView 内部上下左右所有方向都有约束支撑，设置不合理的话计算的高度就成了0。</p>
+<ul>
+<li>不定高，iOS8时代 self-sizing cell</li>
+</ul>
+<p>旨在让 cell 自己负责自己的高度计算，使用 frame layout 和 auto layout 都可以享受到。但是只在ios8之后才可用。</p>
+<h3 id="计算高度带来的性能问题">计算高度带来的性能问题</h3><ul>
+<li>估算高度-estimatedHeight</li>
+</ul>
+<p>段首提到，UITableView在加载的时候浪费了多余的计算在屏幕外边的 cell 上，在存在大量cell的时候，或者cell布局复杂的时候，这个计算时间要耗费大量时间。所以iOS7以后应运而生这个属性，旨在让UITableView加载的时候通过这个估算高度来计算自身的contentSize.</p>
+<p>contentSize.height 根据“cell估算值 x cell个数”计算</p>
+<p>但是这个解决方案也存在问题：</p>
+<ul>
+<li><p>设置估算高度后，contentSize.height 根据“cell估算值 x cell个数”计算，这就导致滚动条的大小处于不稳定的状态，contentSize 会随着滚动从估算高度慢慢替换成真实高度，肉眼可见滚动条突然变化甚至“跳跃”。</p>
+</li>
+<li><p>若是有设计不好的下拉刷新或上拉加载控件，或是 KVO 了 contentSize 或 contentOffset 属性，有可能使表格滑动时跳动。</p>
+</li>
+<li><p>估算高度设计初衷是好的，让加载速度更快，那凭啥要去侵害滑动的流畅性呢，用户可能对进入页面时多零点几秒加载时间感觉不大，但是滑动时实时计算高度带来的卡顿是明显能体验到的，个人觉得还不如一开始都算好了呢（iOS8更过分，即使都算好了也会边划边计算）</p>
+</li>
+</ul>
+<ul>
+<li>iOS8时代开始的坑爹的算高机制</li>
+</ul>
+<p>iOS7时代，当cell的高度计算出来以后，继续滑动，是不会重复计算cell的高度的，而在iOS8时代，继续滑动仍然会重复调用算高函数，这样做的原因是cell被认为可以随时变化高度的，比如在设置里面调节了系统的字号，所以每次滑动都要重新计算cell高度。因此，iOS8时代，算高函数大量调用，极其影响性能。</p>
+<h3 id="解决方案">解决方案</h3><p>鉴于上述，我们想有一个省去算高麻烦，又能保证顺畅的滑动，还能支持 iOS6+ 的解决方案：</p>
+<p><a href="https://github.com/forkingdog/UITableView-FDTemplateLayoutCell" target="_blank" rel="external">UITableView+FDTemplateLayoutCell</a></p>
+<p>百度知道团队开源的这个解决方案通过UITableview的拓展，从设计模式层面上，ViewController为了计算高度而产生的模板cell被迁移到了UITableview层， 通过autolayout 约束自动计算高度，并且计算出的cell的高度也由UITableview缓存了起来。</p>
+<h2 id="内存管理">内存管理</h2><p>Objective-C通过自动引用计数的方式来管理内存，自动引用计数（ARC，Automatic Reference Counting）是指内存管理中对引用采取自动计数的计数。</p>
+<blockquote>
+<p>在LLVM编译器中设置ARC为有效状态，就无需再次键入retain或者是release代码了。</p>
+</blockquote>
+<p>需要指出的是，在Xcode4.2或之后才可以使用自动引用计数的技术，而在之前需要程序员需要手动管理内存。</p>
+<p>而自动内存管理也是可以关闭的：</p>
+<p>1.针对整个工程build setting 搜<code>gar</code> 将<strong>Objective-C Automatic Reference Counting</strong> 这个属性值 改为YES<br>2.针对单一文件build phases-compile sources中定位相应的文件设置其compiler flag为 <code>-fno-objc-arc</code> (相反，要指定该文件生效-fobjc-arc)</p>
+<h3 id="引用计数">引用计数</h3><p>Objective-C的引用计数，可以用开关房间的灯为例来说明这个机制。</p>
+<p>上班进入办公室的人需要照明，所以把灯打开，下班离开的人，不需要照明了，所以把等关掉。多人上班的时候需要使办公室在至少还有1人的情况下保持开灯，无人时保持关灯，判断是否有人在办公室，通过计数功能来计算”需要照明的人数”。也就是说：</p>
+<ol>
+<li>第一个人进入办公室，”需要照明的人数”加1，计数值从0变为1，要开灯</li>
+<li>之后每次有人进入，”需要照明的人数”就加1。如计数值从1变为2</li>
+<li>每当有人离开办公室，”需要照明的人数”就减1，如计数值从2变为1</li>
+<li>最后的人离开，”需要照明的人数”减1，计数值从1变为0，因此关灯。</li>
+</ol>
+<p>在Objective-C中，对象相当于办公室的照明设备，通过类似这种管理照明设备的方式，管理内存。</p>
+<h4 id="内存管理的思考方式">内存管理的思考方式</h4><p>关于引用计数这个名词，我们应该采用的客观的、正确的思考方式是：</p>
+<ul>
+<li>自己生产的对象，自己持有</li>
+<li>非自己生成的对象，自己也能持有</li>
+<li>不再需要自己持有的对象时释放</li>
+<li>非自己持有的对象无法释放</li>
+</ul>
+<h5 id="自己生成的对象，自己持有">自己生成的对象，自己持有</h5><p>使用一下名称开头的方法名意味着自己(自己是指对象的使用环境，也可以理解为程序员自身)生成的对象只有自己持有：</p>
+<ul>
+<li>alloc</li>
+<li>new</li>
+<li>copy：通过copyWithZone方法生成并持有对象的副本</li>
+<li>mutableCopy：类比copy方法，生成的是可变更的对象</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#33258;&#24049;&#21019;&#24314;&#30340;&#23545;&#35937;&#65292;&#33258;&#24049;&#25345;&#26377;&#10;id obj = [[NSObject alloc] init];</span><br></pre></td></tr></table></figure>
+<h5 id="非自己生成的对象，自己也能持有">非自己生成的对象，自己也能持有</h5><p>采用上述方法alloc/new/copy/mutableCopy之外取得的对象，因为非自己生成并持有，所以自己不是该对象的持有者，需要通过<code>retain</code>方法，获得对象的持有权。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#23545;&#35937;&#23384;&#22312;&#65292;&#33258;&#24049;&#19981;&#25345;&#26377;&#10;id obj = [NSMutableArray array];&#10;// &#38656;&#35201;&#25345;&#26377;&#23545;&#35937;&#30340;&#35805;&#65292;retain&#23427;&#10;[obj retain];</span><br></pre></td></tr></table></figure>
+<h5 id="不再持有对象时释放对象">不再持有对象时释放对象</h5><p>自己持有的对象，一旦不需要的时候，持有者有义务释放该对象。释放对象使用release方法。对象一经释放不可再次访问。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#33258;&#24049;&#21019;&#24314;&#30340;&#23545;&#35937;&#65292;&#33258;&#24049;&#25345;&#26377;&#10;id obj = [[NSObject alloc] init];&#10;// &#19981;&#20877;&#38656;&#35201;&#23545;&#35937;&#30340;&#26102;&#20505;&#65292;&#37322;&#25918;&#23545;&#35937;&#10;[obj release];</span><br></pre></td></tr></table></figure>
+<h5 id="无法释放非自己持有的对象">无法释放非自己持有的对象</h5><p>释放非自己持有的对象会造成程序崩溃</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#33258;&#24049;&#21019;&#24314;&#30340;&#23545;&#35937;&#65292;&#33258;&#24049;&#25345;&#26377;&#10;id obj = [[NSObject alloc] init];&#10;// &#19981;&#20877;&#38656;&#35201;&#23545;&#35937;&#30340;&#26102;&#20505;&#65292;&#37322;&#25918;&#23545;&#35937;&#10;[obj release];&#10;// &#33258;&#24049;&#19981;&#20877;&#25345;&#26377;&#23545;&#35937;&#65292;&#20877;&#27425;&#37322;&#25918;&#23545;&#35937;&#20250;&#36896;&#25104;&#23849;&#28291;&#10;[obj release];</span><br></pre></td></tr></table></figure>
+<h4 id="通过实现dealloc来释放持有的对象">通过实现dealloc来释放持有的对象</h4><p>NSObject 类 提供了dealloc方法，这个方法会在对象的引用计数为0的时候自动调用（这个方法不能主动调用），可以在这个方法里面释放该类持有的一些对象。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@interface Person : NSObject&#10;@property (retain) NSString *firstName;&#10;@property (retain) NSString *lastName;&#10;@property (assign, readonly) NSString *fullName;&#10;@end&#10; &#10;@implementation Person&#10;- (void)dealloc&#10;    [_firstName release];&#10;    [_lastName release];&#10;    // &#27880;&#24847;&#26368;&#21518;&#24517;&#39035;&#35843;&#29992;&#29238;&#31867;&#30340;dealloc&#26041;&#27861;&#10;    [super dealloc];&#10;&#125;&#10;@end</span><br></pre></td></tr></table></figure>
+<p>ARC中，编译器会自动实现类的dealloc方法，在这个方法里面释放强引用的变量引用，程序员不能显式调用dealloc方法，但是可以实现dealloc方法以作取消注册通知等操作。</p>
+<h4 id="autorelease以及NSAutoreleasePool的一点说明">autorelease以及NSAutoreleasePool的一点说明</h4><p>前面提到[NSMutableArray array]这个方法返回的对象自己不持有，那么这个方法内部是怎么创建的对象？</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (NSMutableArray *)array &#123;&#10;&#9;// &#33258;&#24049;&#21019;&#24314;&#24182;&#25345;&#26377;&#23545;&#35937;&#10;&#9;NSMutableArray *array = [[NSMutableArray alloc] init];&#10;&#9;// &#22312;&#20989;&#25968;&#36820;&#22238;&#20043;&#21069;&#65292;&#38656;&#35201;&#25226;&#33258;&#24049;&#21019;&#24314;&#30340;&#23545;&#35937;&#37322;&#25918;&#10;&#9;// &#20294;&#26159;&#38382;&#39064;&#26159;&#37322;&#25918;&#20197;&#21518;&#65292;&#35843;&#29992;&#32773;&#23601;&#26080;&#27861;&#20351;&#29992;&#36825;&#20010;&#23545;&#35937;&#20102;&#10;&#9;// &#25152;&#20197;&#36825;&#31181;&#24773;&#20917;&#19979;&#38656;&#35201;&#20351;&#29992;autorelease&#26469;&#31649;&#29702;&#20869;&#23384;&#10;&#9;[array autorelease];&#10;&#9;return array;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>从上例可以看到，用autorelease，可以使得对象存在，但自己不持有对象。autorelease提供这样的功能，使对象在超出指定的生存范围时能够自动并正确地释放，也就是延迟释放的功能。</p>
+<p>这个正确的释放时机，通过自动释放池（autoreleasepool）来完成，注册在这个池子里的对象，会在自动释放池结束的时候去释放池子里的资源。</p>
+<p>在ARC中，也是通过autoreleasepool来管理内存的，编译器会在函数的作用域中<strong>自动插入</strong>自动释放池代码块，位于这个代码块中的对象，在释放池末尾的时候，会自动对对象发送autorelease</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@autoreleasepool &#123;&#10;        // ...&#10;    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ARC规则">ARC规则</h2><p>引用计数式的内存管理的思考方式同样适用思考ARC所引起的变化。</p>
+<ul>
+<li>自己生产的对象，自己持有</li>
+<li>非自己生成的对象，自己也能持有</li>
+<li>不再需要自己持有的对象时释放</li>
+<li>非自己持有的对象无法释放</li>
+</ul>
+<p>这种方式在ARC有效时也是可行的，只是在编写代码的时候记述方法会有所不同。</p>
+<h3 id="所有权修饰符">所有权修饰符</h3><ul>
+<li>__strong</li>
+<li>__weak</li>
+</ul>
+<h4 id="__strong修饰符">__strong修饰符</h4><p>__strong修饰符是id类型和对象的默认修饰符</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id obj = [[NSObject alloc] init];&#10;// &#36825;&#34892;&#20195;&#30721;&#30456;&#24403;&#20110;&#10;id __strong obj = [[NSObject alloc] init];</span><br></pre></td></tr></table></figure>
+<p>__strong修饰符表示”强引用”关系。持有强引用的变量在超出其作用域的时候被废弃，废弃的方式是通过Xcode自动在其作用域结束的时候加上release代码。</p>
+<h4 id="__weak修饰符">__weak修饰符</h4><p>__weak修饰符设计出来解决一些循环引用的问题。</p>
+<ul>
+<li>对象A强引用了对象B</li>
+<li>对象B也强引用了对象A</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@interface TestWeekObj : NSObject&#10;&#123;&#10;    id __strong _obj;&#10;&#125;&#10;&#10;- (void)setObject:(id __strong)obj;&#10;&#10;@end&#10;&#10;@implementation TestWeekObj&#10;&#10;- (void)setObject:(id __strong)obj &#123;&#10;    _obj = obj;&#10;&#125;&#10;&#10;- (void)test &#123;&#10;    // test0&#25345;&#26377;&#23545;&#35937;A&#30340;&#24378;&#24341;&#29992;&#10;    TestWeekObj *test0 = [[TestWeekObj alloc] init]; // &#23545;&#35937;A&#10;    // test1&#25345;&#26377;&#23545;&#35937;B&#30340;&#24378;&#24341;&#29992;&#10;    TestWeekObj *test1 = [[TestWeekObj alloc] init]; // &#23545;&#35937;B&#10;    &#10;    [test0 setObject:test1];&#10;    [test1 setObject:test0];&#10;    // &#25130;&#27490;&#29616;&#22312;&#10;    // &#23545;&#35937;A&#30340;&#24378;&#24341;&#29992;&#21464;&#37327;&#20026;test0 &#20197;&#21450;&#23545;&#35937;B&#30340;_obj&#10;    // &#23545;&#35937;B&#30340;&#24378;&#24341;&#29992;&#21464;&#37327;&#20026;test1 &#20197;&#21450;&#23545;&#35937;A&#30340;_obj&#10;    //&#10;    /*&#10;     * &#36229;&#20986;&#20316;&#29992;&#22495;&#65292;&#24378;&#24341;&#29992;&#22833;&#25928;&#65292;&#37322;&#25918;&#21464;&#37327;&#10;     * &#21464;&#37327;test0 &#36229;&#20986;&#20316;&#29992;&#22495;&#65292;&#37322;&#25918;&#23545;&#35937;A&#10;     * &#21464;&#37327;test1 &#36229;&#20986;&#20316;&#29992;&#22495;&#65292;&#37322;&#25918;&#23545;&#35937;B&#10;     * &#20294;&#26159;&#23545;&#35937;B&#30340;_obj&#21464;&#37327;&#36824;&#24378;&#24341;&#29992;&#23545;&#35937;A&#65292;&#25925;&#23545;&#35937;A&#26080;&#27861;&#37322;&#25918;&#10;     * &#20294;&#26159;&#23545;&#35937;A&#30340;_obj&#21464;&#37327;&#36824;&#24378;&#24341;&#29992;&#23545;&#35937;B&#65292;&#25925;&#23545;&#35937;B&#26080;&#27861;&#37322;&#25918;&#10;     */&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>weak修饰与</strong>strong修饰符相反，提供弱引用。弱引用不持有对象实例。<br>上面的例子中，只要把成员变量_obj的修饰符换成__weak，即可打破循环引用。</p>
+<h3 id="代码规则">代码规则</h3><ul>
+<li>不可使用retain/release/autorelease</li>
+<li>遵守内存管理的方法命名规则</li>
+<li>不可显示调用dealloc</li>
+</ul>
+<p>属性中的修饰规则，下面是一些示例</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#22312;ARC&#20013;&#10;@property (nonatomic, copy) NSString *name;&#10;@property (nonatomic, strong) NSArray *array;&#10;@property (nonatomic, weak) id delegate;&#10;@property (nonatomic) CGFloat height;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// ARC&#31105;&#29992;&#30340;&#26102;&#20505;&#10;@property (nonatomic, copy) NSString *name;&#10;@property (nonatomic, retain) NSArray *array;&#10;@property (nonatomic, assign) id delegate;&#10;@property (nonatomic) CGFloat height;</span><br></pre></td></tr></table></figure>
+<h2 id="附件下载及参考资料">附件下载及参考资料</h2><ul>
+<li><p>附件01: <a href="https://redharry.b0.upaiyun.com/download/AboutMemoryMgmt.zip" target="_blank" rel="external">内存管理Demo</a></p>
+</li>
+<li><p>推荐书籍：<a href="http://item.jd.com/11258970.html" target="_blank" rel="external">iOS与OS X多线程和内存管理</a></p>
+</li>
+<li>推荐阅读：<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html" target="_blank" rel="external">内存管理官方文档</a></li>
+</ul>
+<h2 id="下次课程概要">下次课程概要</h2><p>iOS中常用的设计模式（MVC，代理，单例）以及使用Block块进行对象间的通讯</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/02/2016-3-2-how-to-learn-ios06/" rel="prev">iOS学习沙龙系列（六）：iOS中常见的设计模式</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/18/2016-2-18-how-to-learn-ios04/" rel="next">iOS学习沙龙系列（四）：一些疑难问题的解答</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/22/2016-2-22-how-to-learn-ios05/"
+                   data-title="iOS学习沙龙系列（五）：UITableView计算高度的那些事以及内存管理" data-url="http://blog.coderhr.com/2016/02/22/2016-2-22-how-to-learn-ios05/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="red3" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">red3</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">iOS Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/red3" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/your-user-name" target="_blank">douban</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lofter.com/" target="_blank">lofter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UITableView计算高度的那些事"><span class="nav-number">1.</span> <span class="nav-text">UITableView计算高度的那些事</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么计算高度"><span class="nav-number">1.1.</span> <span class="nav-text">怎么计算高度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计算高度带来的性能问题"><span class="nav-number">1.2.</span> <span class="nav-text">计算高度带来的性能问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">1.3.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存管理"><span class="nav-number">2.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用计数"><span class="nav-number">2.1.</span> <span class="nav-text">引用计数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#内存管理的思考方式"><span class="nav-number">2.1.1.</span> <span class="nav-text">内存管理的思考方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#自己生成的对象，自己持有"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">自己生成的对象，自己持有</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#非自己生成的对象，自己也能持有"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">非自己生成的对象，自己也能持有</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#不再持有对象时释放对象"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">不再持有对象时释放对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#无法释放非自己持有的对象"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">无法释放非自己持有的对象</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过实现dealloc来释放持有的对象"><span class="nav-number">2.1.2.</span> <span class="nav-text">通过实现dealloc来释放持有的对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#autorelease以及NSAutoreleasePool的一点说明"><span class="nav-number">2.1.3.</span> <span class="nav-text">autorelease以及NSAutoreleasePool的一点说明</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARC规则"><span class="nav-number">3.</span> <span class="nav-text">ARC规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#所有权修饰符"><span class="nav-number">3.1.</span> <span class="nav-text">所有权修饰符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#__strong修饰符"><span class="nav-number">3.1.1.</span> <span class="nav-text">__strong修饰符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#__weak修饰符"><span class="nav-number">3.1.2.</span> <span class="nav-text">__weak修饰符</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码规则"><span class="nav-number">3.2.</span> <span class="nav-text">代码规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附件下载及参考资料"><span class="nav-number">4.</span> <span class="nav-text">附件下载及参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下次课程概要"><span class="nav-number">5.</span> <span class="nav-text">下次课程概要</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">red3</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<div class="cdn-info">
+  <a href="https://www.upyun.com"><img src="/assets/images/upyun_logo_90x45.png"><img></a>
+</div>
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"red3"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,687 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="iOS Notes" />
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="生命不息，折腾不止。此次系列主要记录怎么将自己的域名解析到服务器上。当然，首先，你需要一个域名。这里吐槽下阿里云，我是因为买域名送了买服务器的优惠券才选择购买的阿里云，到头来我要将自己的域名解析到阿里云的时候，阿里云又需要备案域名才可以解析，我购买的服务器的期限是1个月，估计备案域名的时间也需要这么长时间，意味着备案成功后，我的服务器也到期了。那我还解析个毛啊，果断退了阿里云服务器，购买了香港的v">
+<meta property="og:type" content="article">
+<meta property="og:title" content="折腾自己的服务器系列（二）之解析域名到服务器">
+<meta property="og:url" content="http://blog.coderhr.com/2015/08/01/2015-7-26-prepare-my-own-vps2/index.html">
+<meta property="og:site_name" content="red3">
+<meta property="og:description" content="生命不息，折腾不止。此次系列主要记录怎么将自己的域名解析到服务器上。当然，首先，你需要一个域名。这里吐槽下阿里云，我是因为买域名送了买服务器的优惠券才选择购买的阿里云，到头来我要将自己的域名解析到阿里云的时候，阿里云又需要备案域名才可以解析，我购买的服务器的期限是1个月，估计备案域名的时间也需要这么长时间，意味着备案成功后，我的服务器也到期了。那我还解析个毛啊，果断退了阿里云服务器，购买了香港的v">
+<meta property="og:image" content="http://blog.coderhr.com/assets/2015/img_prepaer_vps1.png">
+<meta property="og:image" content="http://blog.coderhr.com/assets/2015/img_prepaer_vps2.png">
+<meta property="og:image" content="http://blog.coderhr.com/assets/2015/img_prepaer_vps3.png">
+<meta property="og:image" content="http://blog.coderhr.com/assets/2015/img_prepaer_vps4.png">
+<meta property="og:updated_time" content="2015-10-08T06:07:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="折腾自己的服务器系列（二）之解析域名到服务器">
+<meta name="twitter:description" content="生命不息，折腾不止。此次系列主要记录怎么将自己的域名解析到服务器上。当然，首先，你需要一个域名。这里吐槽下阿里云，我是因为买域名送了买服务器的优惠券才选择购买的阿里云，到头来我要将自己的域名解析到阿里云的时候，阿里云又需要备案域名才可以解析，我购买的服务器的期限是1个月，估计备案域名的时间也需要这么长时间，意味着备案成功后，我的服务器也到期了。那我还解析个毛啊，果断退了阿里云服务器，购买了香港的v">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 折腾自己的服务器系列（二）之解析域名到服务器 | red3 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-66016948-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">red3</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              折腾自己的服务器系列（二）之解析域名到服务器
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-08-01T18:58:33+08:00" content="2015-08-01">
+            2015-08-01
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/08/01/2015-7-26-prepare-my-own-vps2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/01/2015-7-26-prepare-my-own-vps2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>生命不息，折腾不止。此次系列主要记录怎么将自己的域名解析到服务器上。当然，首先，你需要一个域名。这里吐槽下阿里云，我是因为买域名送了买服务器的优惠券才选择购买的阿里云，到头来我要将自己的域名解析到阿里云的时候，阿里云又需要备案域名才可以解析，我购买的服务器的期限是1个月，估计备案域名的时间也需要这么长时间，意味着备案成功后，我的服务器也到期了。那我还解析个毛啊，果断退了阿里云服务器，购买了香港的vps。</p>
+<p>解析域名，当然首推<a href="https://www.dnspod.cn/" target="_blank" rel="external">Dnspod</a>. 注册也挺方便，直接使用QQ扫描登陆授权就可以了。</p>
+<p>首先需要添加一条域名记录，默认新添加一条记录后是这个样子：</p>
+<p><img src="/assets/2015/img_prepaer_vps1.png" alt=""></p>
+<p>需要把红线框住的两条<code>NS记录</code>提交到域名提供商那里。因为我的域名是从万网买的，所以要登陆阿里云，点击“修改DNS”，将DNS记录修改为Dnspod提供的那两条记录</p>
+<p><img src="/assets/2015/img_prepaer_vps2.png" alt=""></p>
+<p>至此，以后所有域名的操作都可以在Dnspod上搞定了，跟阿里云没有关系了。</p>
+<p>接下来就折腾下怎么把主域名解析到服务器www目录，以及解析一个二级域名到服务器自定义的一个目录。</p>
+<h2 id="解析主域名">解析主域名</h2><p>当我们需要将域名解析到我们服务器的公网ip的时候，就需要在Dnspod上添加记录，如图：</p>
+<p><img src="/assets/2015/img_prepaer_vps3.png" alt=""></p>
+<p>可以看出，我们在刚才的基础上添加了两条<code>A记录</code>。A记录的意思是把域名解析到一个ip地址，是符合我们当下的需求的。</p>
+<p>在主机记录栏，分别添加了<code>@</code>和<code>www</code>两条，分别对应的意思是：</p>
+<pre><code><span class="comment">// 假设域名是bbbb</span>
+@ ： 通过浏览器访问 bbbb<span class="class">.com</span> 会跳转到服务器
+www ：通过浏览器访问 www<span class="class">.bbbb</span><span class="class">.com</span> 会跳转到服务器
+</code></pre><p>在记录值栏，要添加成服务器的公网ip，假如你的服务器的公网ip是<code>100.200.160.70</code>, 就填这个地址就可以。</p>
+<p>现在，等dns解析生效，在浏览器中访问自己的域名，应该可以跳转到服务器了。</p>
+<h2 id="解析二级域名">解析二级域名</h2><p>假设主域名是bbbb.com, 二级域名是类似<code>wx.bbbb.com</code>这种。现在的需求是把二级域名也解析到服务器上。还是需要添加记录：</p>
+<p><img src="/assets/2015/img_prepaer_vps4.png" alt=""></p>
+<p>还是一条<code>A记录</code>，因为我们需要先把二级域名解析到服务器上，然后在服务器的Apache设置跳转规则，将二级域名跳转到指定目录。</p>
+<p>在主机记录栏，添加了<code>wx</code>，意思是：</p>
+<pre><code><span class="comment">// 假设域名是bbbb</span>
+wx ： 通过浏览器访问 wx<span class="class">.bbbb</span><span class="class">.com</span> 会跳转到服务器
+</code></pre><p>在记录值那里还是填服务器的公网ip。<br>现在等dns解析生效，访问<code>wx.bbbb.com</code>就会跳转到服务器www目录了。显然这不是我们想要的结果。</p>
+<p>需要指向指定目录，还要更改下Apache的配置：</p>
+<pre><code><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>/httpd.<span class="keyword">conf</span>
+</code></pre><p>在配置文件末尾添加如下代码：</p>
+<pre><code><span class="keyword"><span class="common">RewriteEngine</span></span> <span class="literal">on</span>
+<span class="keyword">RewriteMap</span> lowercase int:tolower
+<span class="keyword">RewriteMap</span> vhost txt:/etc/httpd/conf/vhost.map
+<span class="keyword"><span class="common">RewriteCond</span></span> <span class="cbracket">${lowercase:<span class="cbracket">%{SERVER_NAME}</span>}</span> ^(.+)$
+<span class="keyword"><span class="common">RewriteCond</span></span> <span class="cbracket">${vhost:<span class="number">%1</span>}</span> ^(/.*)$
+<span class="keyword"><span class="common">RewriteRule</span></span> ^/(.*)$ <span class="number">%1</span>/<span class="number">$1</span>
+</code></pre><p>目的是告诉Apache，我们有一个<code>vhost.map</code>文件，通过这个文件来定义连接到服务器的二级域名该跳转到哪个目录。</p>
+<p>接下来创建在<code>/etc/httpd/conf</code>这个目录下创建这个文件：</p>
+<pre><code>vi vhost<span class="class">.map</span>
+<span class="comment">// 这个文件下添加下面的记录</span>
+wx<span class="class">.bbbb</span><span class="class">.com</span> /var/www/html/bbbb.com/wx
+</code></pre><p>通过这个文件，Apache会把<code>wx.bbbb.com</code>这个域名解析到我们设置的那个目录去。以后的二级域名跳转规则都可以添加到这个文件下，并且不需要重启Apache服务就可以使之生效。</p>
+<p>现在，通过浏览器访问<code>wx.bbbb.com</code>就可以跳转到我们刚才设置的那个目录了。</p>
+<h2 id="最后">最后</h2><p>折腾服务器的这个系列就要先告一段落了，因为刚开始接触这些东西，有些东西并不是很深入，人生路漫漫，以后还要接着折腾。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag">#Linux</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/08/2015-8-8-fullstack-of-Scrapy-MySQL-PHP-Swift/" rel="prev">Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/26/2015-7-26-prepare-my-own-vps1/" rel="next">折腾自己的服务器系列（一）之配置服务器</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/08/01/2015-7-26-prepare-my-own-vps2/"
+                   data-title="折腾自己的服务器系列（二）之解析域名到服务器" data-url="http://blog.coderhr.com/2015/08/01/2015-7-26-prepare-my-own-vps2/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="red3" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">red3</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">iOS Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/red3" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/your-user-name" target="_blank">douban</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lofter.com/" target="_blank">lofter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#解析主域名"><span class="nav-number">1.</span> <span class="nav-text">解析主域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析二级域名"><span class="nav-number">2.</span> <span class="nav-text">解析二级域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">3.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">red3</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<div class="cdn-info">
+  <a href="https://www.upyun.com"><img src="/assets/images/upyun_logo_90x45.png"><img></a>
+</div>
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"red3"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

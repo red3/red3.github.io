@@ -1,0 +1,676 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="iOS Notes" />
+
+
+
+  <meta name="keywords" content="iOS,Swift,PHP,Python,Mac" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="2015年的秋季新品发布会上苹果在新一代的iPhone6S上增加了名为3DTouch新一代交互方式。通过3DTouch，屏幕可以感知手指触摸在屏幕上的力度，用于解决手机平台长期缺乏类似PC上”右键”功能。
+而对于开发者来说，苹果公开了3个新的接口，允许开发者在自己的应用程序中加入这个革命性的交互方式。苹果在Apple Watch上加入Force Touch，一如其名，即设备可以感知用户拇指触压的力">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于3DTouch开发者需要了解的事情">
+<meta property="og:url" content="http://blog.coderhr.com/2015/10/06/learning-the-3D-touch/index.html">
+<meta property="og:site_name" content="red3">
+<meta property="og:description" content="2015年的秋季新品发布会上苹果在新一代的iPhone6S上增加了名为3DTouch新一代交互方式。通过3DTouch，屏幕可以感知手指触摸在屏幕上的力度，用于解决手机平台长期缺乏类似PC上”右键”功能。
+而对于开发者来说，苹果公开了3个新的接口，允许开发者在自己的应用程序中加入这个革命性的交互方式。苹果在Apple Watch上加入Force Touch，一如其名，即设备可以感知用户拇指触压的力">
+<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/img_3D_touch1.png">
+<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/img_3D_touch2.gif">
+<meta property="og:updated_time" content="2015-10-10T01:45:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于3DTouch开发者需要了解的事情">
+<meta name="twitter:description" content="2015年的秋季新品发布会上苹果在新一代的iPhone6S上增加了名为3DTouch新一代交互方式。通过3DTouch，屏幕可以感知手指触摸在屏幕上的力度，用于解决手机平台长期缺乏类似PC上”右键”功能。
+而对于开发者来说，苹果公开了3个新的接口，允许开发者在自己的应用程序中加入这个革命性的交互方式。苹果在Apple Watch上加入Force Touch，一如其名，即设备可以感知用户拇指触压的力">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 关于3DTouch开发者需要了解的事情 | red3 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-66016948-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">red3</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              关于3DTouch开发者需要了解的事情
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-06T14:30:00+08:00" content="2015-10-06">
+            2015-10-06
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/06/learning-the-3D-touch/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/06/learning-the-3D-touch/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>2015年的秋季新品发布会上苹果在新一代的iPhone6S上增加了名为3DTouch新一代交互方式。通过3DTouch，屏幕可以感知手指触摸在屏幕上的力度，用于解决手机平台长期缺乏类似PC上”右键”功能。</p>
+<p>而对于开发者来说，苹果公开了3个新的接口，允许开发者在自己的应用程序中加入这个革命性的交互方式。<br>苹果在Apple Watch上加入Force Touch，一如其名，即设备可以感知用户拇指触压的力度。3D Touch对应在pc平台的操作有点类似于右键。苹果增加了3个api允许开发者在自己的应用中使用这个新的交互，<code>Quick Actions</code>允许在应用程序icon上按压以提供最多为4个的快捷方式；<code>Peek</code>允许在不脱离当前页面内容的情况下提供某一页面的预览视图，<code>Pop</code>则发生在当用户对某一Peek感兴趣时，继续按压，以进入该预览视图。</p>
+<p>本文旨在通过一个Demo程序来说明开发者要响应这个新的交互特性，需要做哪些事情。</p>
+<h2 id="Home_Screen_Quick_Actions">Home Screen Quick Actions</h2><p><code>Quick Actions</code>使得用户可以快速跳转到应用程序的某个地方而省去以往繁琐的步骤。这个地方，对于短信程序来说，可以是一个”新建信息”的快捷方式，对于电话程序来说，可以是一个”拨打某一号码”的快捷方式，可以想象，这些类似的特性是确切地方便了用户的特性，真的可以让用户放声笑，笑出声。</p>
+<p>需要了解的是<code>Quick Actions</code>分为静态类型与动态类型。在该Demo程序中，我添加了4个快捷方式，分别为一个静态的shortcutTitle1，3个动态的new、search、share。</p>
+<p><img src="http://photo-coder.b0.upaiyun.com/img/img_3D_touch1.png" alt=""></p>
+<p>静态类型只需要在Info.plist文件中添加一条key为”UIApplicationShortcutItems”的记录即可。该key对应的记录的格式如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">array</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">dict</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">key</span>&gt;</span>UIApplicationShortcutItemIconType<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">string</span>&gt;</span>UIApplicationShortcutIconTypeSearch<span class="tag">&lt;/<span class="title">string</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">key</span>&gt;</span>UIApplicationShortcutItemSubtitle<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">string</span>&gt;</span>shortcutSubtitle1<span class="tag">&lt;/<span class="title">string</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">key</span>&gt;</span>UIApplicationShortcutItemTitle<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">string</span>&gt;</span>shortcutTitle1<span class="tag">&lt;/<span class="title">string</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">key</span>&gt;</span>UIApplicationShortcutItemType<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">string</span>&gt;</span>First<span class="tag">&lt;/<span class="title">string</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">key</span>&gt;</span>UIApplicationShortcutItemUserInfo<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">dict</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">key</span>&gt;</span>firstShorcutKey1<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">string</span>&gt;</span>firstShortcutKeyValue1<span class="tag">&lt;/<span class="title">string</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">dict</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">array</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>而动态类型需要在Appdelegate中添加，意即<code>application</code>有一个<code>shortcutItems</code>的属性，允许开发者动态该属性中的内容。代码如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (application.shortcutItems == 0) &#123;&#10;        UIMutableApplicationShortcutItem *shortcut2 = [[UIMutableApplicationShortcutItem alloc] initWithType:@&#34;Second&#34; localizedTitle:@&#34;new&#34; localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeAdd] userInfo:nil];&#10;&#10;        UIMutableApplicationShortcutItem *shortcut3 = [[UIMutableApplicationShortcutItem alloc] initWithType:@&#34;Third&#34; localizedTitle:@&#34;search&#34; localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeSearch] userInfo:nil];&#10;        UIMutableApplicationShortcutItem *shortcut4 = [[UIMutableApplicationShortcutItem alloc] initWithType:@&#34;Fourth&#34; localizedTitle:@&#34;share&#34; localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@&#34;icon_share.png&#34;] userInfo:nil];&#10;&#10;        &#10;        application.shortcutItems = @[shortcut2, shortcut3, shortcut4];&#10;    &#125;</span><br></pre></td></tr></table></figure>
+<p>同以往处理远程通知类似，我们通过<code>-application:performActionForShortcutItem:completionHandler:</code>代理方法来处理从快捷方式启动的事件，对于应用程序的首次启动即是通过快捷方式启动的特殊情况，我们需要在<code>-application:didFinishLaunchingWithOptions:</code>方法中返回<code>NO</code>来避免应用程序去调用上面的那个方法。</p>
+<h2 id="Peek_and_Pop">Peek and Pop</h2><p>类似于Mac平台上空格键的预览功能，在手机上可以预览类似图片、视频以及网址等。通过轻按某一条项目，peek可以提供某一条项目的预览以及想关联的一些操作，而不用离开当前页面，手指松开，peek view自动消失。当用户通过预览界面发现是自己感兴趣的内容，可以在peek view上稍重一点的按压，会进入详情页面。</p>
+<p>关于这两个接口需要注意的点：</p>
+<ul>
+<li>通过peek提供实时且内容充足的预览。因为需要给用户提供足够的信息来让其判断是否要继续进入这个页面</li>
+<li>为每一个peek提供一个pop</li>
+<li>当实现了peek的时候就不要提供 Edit menu，因为两种操作方式很相近，容易迷惑用户</li>
+<li>不要把peek作为唯一的交互方式。因为老设备不支持3DTouch</li>
+</ul>
+<p>在最新的开发者文档中可以看到这两个接口有一个名为<code>UIViewControllerPreviewingDelegate</code>代理对象。对于具体的编码工作来说，要将一个需要支持3DTouch的页面视图(UIView)注册成为该接口的代理，当用户触发了3D Touch，该代理会响应到该触摸的位置，即一个处在刚才注册的UIView上的<code>CGPoint</code>，开发者依据改位置，决定是否有一个peek应该呈现。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (nullable UIViewController *)previewingContext:(id &#60;UIViewControllerPreviewing&#62;)previewingContext viewControllerForLocation:(CGPoint)location&#10;&#123;&#10;    // Obtain the index path and the cell that was pressed.&#10;    // guard let indexPath = tableView.indexPathForRowAtPoint(location),&#10;    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];&#10;    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];&#10;    if (!cell) &#123;&#10;        // no peek&#10;        return nil;&#10;    &#125;&#10;    &#10;    // Create a detail view controller and set its properties.&#10;    DetailViewController *detail = [[DetailViewController alloc] init];&#10;    NSDictionary *previewDetail = self.sampleData[indexPath.row];&#10;    detail.previewingTitle = previewDetail[@&#34;title&#34;];&#10;    &#10;    /*&#10;     Set the height of the preview by setting the preferred content size of the detail view controller.&#10;     Width should be zero, because it&#39;s not used in portrait.&#10;     */&#10;    detail.preferredContentSize = CGSizeMake(0, [previewDetail[@&#34;preferredHeight&#34;] doubleValue]);&#10;    // Set the source rect to the cell frame, so surrounding elements are blurred.&#10;    previewingContext.sourceRect = cell.frame;&#10;    return detail;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>具体来说，需要处理这几件事：</p>
+<ul>
+<li>将CGPoint转换成UITableView中的<code>NSIndexPath</code></li>
+<li>依据NSIndexPath找到对应的<code>Cell</code></li>
+<li>创建<code>DetailViewController</code>并复制相关属性</li>
+<li>处理DetailViewController的<code>preferredContentSize</code>属性，该属性的width参数应该设置为0，因为在竖屏模式下该参数并不启用</li>
+</ul>
+<p>当用户决定<code>Pop</code>该预览视图的时候：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)previewingContext:(id &#60;UIViewControllerPreviewing&#62;)previewingContext commitViewController:(UIViewController *)viewControllerToCommit&#10;&#123;&#10;    // Reuse the &#34;Peek&#34; view controller for presentation.&#10;    [self showViewController:viewControllerToCommit sender:self];&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Preivew_Controllers">Preivew Controllers</h2><p>苹果在其开发文档中指出，在上文提到的delegate中返回的UIViewcontroller不具备交互能力，意味着即使你看见这个视图中有button等元素，也不能响应button的点击，也不能在这个视图上添加手势等操作。作为替代方案，苹果提供了<code>UIPreviewActionItem</code>，类似<code>UIAlertController</code>中的Acton的实现。</p>
+<p><img src="http://photo-coder.b0.upaiyun.com/img/img_3D_touch2.gif" alt=""></p>
+<p>要实现这已功能，覆盖<code>-previewActionItems:</code>方法，并返回一个包含<code>UIPreviewAction</code>的数组即可：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (NSArray &#60;id &#60;UIPreviewActionItem&#62;&#62; *)previewActionItems&#10;&#123;&#10;    // set the previewItems&#10;    // avoid the retain cycel&#10;    // __weak MainViewController *weakSelf = self;&#10;    UIPreviewAction *item1 = [UIPreviewAction actionWithTitle:@&#34;Share&#34; style:UIPreviewActionStyleDefault handler:^(UIPreviewAction * _Nonnull action, UIViewController * _Nonnull previewViewController) &#123;&#10;        &#10;    &#125;];&#10;    UIPreviewAction *item2 = [UIPreviewAction actionWithTitle:@&#34;Delete&#34; style:UIPreviewActionStyleDefault handler:^(UIPreviewAction * _Nonnull action, UIViewController * _Nonnull previewViewController) &#123;&#10;        &#10;    &#125;];&#10;    return @[item1, item2];&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="结尾">结尾</h2><p>希望通过本文可以帮助到正在集成3DTouch特性的开发者。</p>
+<p>最后放上github的repo：<a href="https://github.com/red3/3DTouchDemo" target="_blank" rel="external">3DTouchDemo</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/10/how-to-fuck-the-greatfirewall/" rel="prev">论如何科学搭建梯子</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/10/2015-9-10-fullstack-of-Scrapy-MySQL-PHP-Swift6/" rel="next">Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/06/learning-the-3D-touch/"
+                   data-title="关于3DTouch开发者需要了解的事情" data-url="http://blog.coderhr.com/2015/10/06/learning-the-3D-touch/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="red3" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">red3</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">iOS Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/red3" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/your-user-name" target="_blank">douban</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lofter.com/" target="_blank">lofter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Home_Screen_Quick_Actions"><span class="nav-number">1.</span> <span class="nav-text">Home Screen Quick Actions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Peek_and_Pop"><span class="nav-number">2.</span> <span class="nav-text">Peek and Pop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preivew_Controllers"><span class="nav-number">3.</span> <span class="nav-text">Preivew Controllers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">4.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">red3</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<div class="cdn-info">
+  <a href="https://www.upyun.com"><img src="/assets/images/upyun_logo_90x45.png"><img></a>
+</div>
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"red3"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

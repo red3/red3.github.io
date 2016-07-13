@@ -1,0 +1,699 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="iOS Notes" />
+
+
+
+  <meta name="keywords" content="iOS,Swift,PHP,Python,Mac" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。
+对于以往的学习，推荐阅读附件01-iOS学习的路线图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS学习沙龙系列（四）：一些疑难问题的解答">
+<meta property="og:url" content="http://blog.coderhr.com/2016/02/18/2016-2-18-how-to-learn-ios04/index.html">
+<meta property="og:site_name" content="red3">
+<meta property="og:description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。
+对于以往的学习，推荐阅读附件01-iOS学习的路线图">
+<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios4_01.jpeg">
+<meta property="og:updated_time" content="2016-02-24T01:26:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS学习沙龙系列（四）：一些疑难问题的解答">
+<meta name="twitter:description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。
+对于以往的学习，推荐阅读附件01-iOS学习的路线图">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> iOS学习沙龙系列（四）：一些疑难问题的解答 | red3 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-66016948-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">red3</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              iOS学习沙龙系列（四）：一些疑难问题的解答
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-18T11:12:00+08:00" content="2016-02-18">
+            2016-02-18
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/18/2016-2-18-how-to-learn-ios04/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/18/2016-2-18-how-to-learn-ios04/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="学习路线回顾">学习路线回顾</h2><p>回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了<code>UIViewController</code>这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕<code>UIViewController</code>来进行。</p>
+<p>对于以往的学习，推荐阅读附件01-iOS学习的路线图来进行查漏补缺。</p>
+<h2 id="本期纲要">本期纲要</h2><p>本期沙龙由于春节放假原因，部分同事还没有上班，故不进行新的内容讲解，着重解决下学习iOS过程中遇到的问题。</p>
+<h2 id="问题">问题</h2><h3 id="AppDelegate这个文件和UIApplication的关系以及这个文件中能写哪些代码？"><code>AppDelegate</code>这个文件和<code>UIApplication</code>的关系以及这个文件中能写哪些代码？</h3><p><code>UIApplication</code>比作手机中的一个我们编写的app，<code>AppDelegate</code>这个文件（包括.h和.m文件）就是这个app的代理。每一个app都需要一个代理来响应app的状态变化。举例来说，当app首次启动，进入后台，或者再次进入前台的时刻就会通过代理（也就是<code>AppDelegate</code>这个文件）来下发这些状态的变化。远程的消息通知，app之间的信息交换，也是通过这个文件来下发的。Xcode在每次创建新工程的时候其实会自动生成这个代理文件，并把这个代理赋值给app，不需要开发人员去额外操作。</p>
+<p>这个文件中应该写哪些代码：AppDelegate作为程序级状态变化的delegate，应该只做<code>路由</code>和<code>分发</code>的作用，具体逻辑实现代码还是应该在分别的模块中，这个文件应该保持整洁，除了<code>&lt;UIApplicationDelegate&gt;</code>的方法外不应该出现其他方法。</p>
+<h3 id="ViewController中的view属性跟XIB的关系？">ViewController中的<code>view</code>属性跟XIB的关系？</h3><p>由于iOS UI方面编程的特殊性，开发者既可以在Storyboard中编辑UI，也可以在ViewController中手写UI代码。</p>
+<p>对于在Storyboard或者XIB文件中的UI，ViewController会在运行时将Storyboard中承载subViews的rootView赋值给ViewController的view属性；对于没有Storyboard的ViewController，运行时会有ViewController的父类创建一个空白的UIView对象赋值给view属性。</p>
+<h3 id="如何在storyboard中编辑UI">如何在storyboard中编辑UI</h3><p>一般借助Xcode中的<code>inspector</code>区域中的attribute选项卡和size选项卡来编辑UI控件。</p>
+<p>要连接UI控件至对应的ViewController，则需按住<code>control</code>键，然后退拽控件至ViewControl中。</p>
+<h3 id="XIB中的UI控件应该链接在ViewController的哪个地方？">XIB中的UI控件应该链接在ViewController的哪个地方？</h3><p>Xcode中，.h文件是接口文件，一般会看见<code>@interface</code>的声明， 这个文件用于声明对象之间的交流通信的桥梁，一般而言，放在这个地方的属性声明，说明这个属性需要跟其他对象信息。</p>
+<p>.m是实现文件，一般会看见<code>@implementation</code>的声明，这个文件用于实现.h文件中的声明，也包括这个类的一些内部实现。这个文件中一般也会看到<code>@interface 类名()</code>这样的声明，是匿名分类的声明，放在这个地方的属性，其他类也是访问不到的。</p>
+<p>一般而言，XIB中的控件的引用需要拖在<code>@interface</code>中，至于是拖在.h 还是.m中，则根据上述抉择；而XIB中的控件对用的事件方法，则需要拖到<code>@implementation</code>实现中。</p>
+<h3 id="XIB中的UITextField怎么绑定事件方法？">XIB中的UITextField怎么绑定事件方法？</h3><p>与拖UIButton的各种点击事件类似。</p>
+<h3 id="UITableView的工作原理，UITableview中的Cell怎么配置不同高度？">UITableView的工作原理，UITableview中的Cell怎么配置不同高度？</h3><p>这个比较复杂，下节课会重点讲讲这个。</p>
+<h3 id="如何在Xcode中新建不同类型的文件？">如何在Xcode中新建不同类型的文件？</h3><p>首先定位到导航区的工程选项卡下面需要新建文件的目标文件夹-&gt;<code>File-New-File</code> 或者<code>Command+N</code>即出现下图：</p>
+<p><img src="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios4_01.jpeg" alt=""></p>
+<p>分别解释下几个选项：</p>
+<ol>
+<li><p>Source:</p>
+<ul>
+<li>Cocoa Touch Class: 最常用的选择，新建ViewController的子类，或者新建UIView的子类等都从这里开始</li>
+<li>Objective-C File: 可以创建category, protocol文件。</li>
+<li>Head File: 单独创建一个头文件。比如可以单独创建一个头文件来生命一些通知常量</li>
+</ul>
+</li>
+<li><p>User Interface:</p>
+<ul>
+<li>Storyboard: 故事版，在这个文件中编辑UI。多人协作建议创建多个Storyboard文件，避免同时编辑一个Storyboard文件带来版本冲突的问题</li>
+<li>View: XIB文件，带一个空白的UIView</li>
+<li>Launch Screen：iOS8.0以后推荐使用Launch Screen这个XIB文件来制作启动图</li>
+</ul>
+</li>
+<li><p>Resource</p>
+<ul>
+<li>Property List: plist文件。Xcode中用于序列化文本的文件。可以以数组或者字典的形式存储数据。典型的用法有使用plist文件来持久化全国城市列表。</li>
+<li>Strings File: 字符串文件，用于国际化字符串</li>
+</ul>
+</li>
+<li><p>Other</p>
+<ul>
+<li>PCH File: prefix header file, 即预编译文件，在这个文件中导入的头文件，整个工程都可用，其他地方不需重复导入。当然不建议在这个文件中大量导入头文件，应该只导入那些工程中频繁使用的文件</li>
+</ul>
+</li>
+</ol>
+<h3 id="如何Debug">如何Debug</h3><p>详细的Debug教程参考官方的这个<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/debugging_with_xcode/chapters/about_debugging_w_xcode.html" target="_blank" rel="external">教程</a></p>
+<p>进阶的教程参考这个<a href="http://objccn.io/issue-19-2/" target="_blank" rel="external">链接</a></p>
+<h3 id="怎么理解ViewController的生命周期">怎么理解ViewController的生命周期</h3><p>这个会在下节课重点讲，这节课先大致给出点说明，有个大致的了解。</p>
+<p>首先说明一下，在运行时ViewController是怎么动态获取到Storyboard中关于UI的信息的以及跟自身关联起来的</p>
+<ol>
+<li>通过Storyboard或者XIB中的配置信息实例化对应的UI控件</li>
+<li>连接绑定IBOutlet 和 IBAction</li>
+<li>将Storyboard中的rootView赋值给Viewcontroller的<code>view</code>属性</li>
+<li>调用ViewController的<code>awakeFromNib</code>方法</li>
+<li>调用ViewController的<code>viewDidLoad</code>方法</li>
+</ol>
+<p>具体的ViewController之间的转场中，对应的view的生命周期：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;- (void)loadView;&#10;&#10;&#19981;&#29992;&#20027;&#21160;&#37325;&#20889;&#36825;&#20010;&#26041;&#27861;&#12290;view&#36825;&#20010;property&#34987;&#20351;&#29992;&#65292;&#19988;&#36825;&#20010;property&#20540;&#20026;&#31354;&#65292;&#36825;&#20010;&#26041;&#27861;&#23601;&#34987;&#35843;&#29992;&#65292;&#20026;&#30340;&#26159;&#21019;&#24314;&#19968;&#20010;view&#24182;&#25226;&#23427;&#36171;&#20540;&#32473;vc&#30340;view&#23646;&#24615;&#12290;&#10;&#26377;nib&#26102;&#65292;&#20174;nib&#21152;&#36733;&#65292;&#27809;&#26377;nib&#26102;&#65292;&#36825;&#20010;&#26041;&#27861;&#21019;&#24314;&#19968;&#20010;UIView&#23545;&#35937;&#12290;&#10;&#10;&#22914;&#26524;&#29992;nib&#65292;&#27704;&#36828;&#19981;&#35201;&#37325;&#20889;&#36825;&#20010;&#26041;&#27861;&#12290;&#10;&#24819;&#33258;&#23450;&#20041;&#36825;&#20010;view&#23545;&#35937;&#65292;&#21487;&#20197;&#37325;&#20889;&#36825;&#20010;&#26041;&#27861;&#65292;&#20294;&#26159;&#19981;&#35201;&#35843;&#29992; super&#30340;&#23454;&#29616;&#12290;&#10;&#10;- (void)viewDidLoad;&#10;&#10;&#19968;&#33324;&#38656;&#35201;&#37325;&#20889;&#36825;&#20010;&#26041;&#27861;&#65292;&#26469;&#22686;&#21152;&#25110;&#32773;&#31227;&#38500;&#23376;view&#25110;&#32773;&#20462;&#25913;&#20174;nib&#20013;&#21152;&#36733;&#26469;&#30340;&#23376;view&#30340;&#29366;&#24577;&#65292;&#21152;&#36733;&#25968;&#25454;&#65292;&#25110;&#32773;&#21457;&#36865;&#32593;&#32476;&#35831;&#27714;&#10;&#10;- (void)viewWillAppear:(BOOL)animated&#10;&#10;&#21487;&#20197;&#22312;&#36825;&#20010;&#26041;&#27861;&#20013;&#25913;&#21464;&#29366;&#24577;&#26639;&#65292;&#23548;&#33322;&#26639;&#29366;&#24577;&#65292;&#24517;&#39035;&#35843;&#29992;&#29238;&#31867;&#30340;&#23454;&#29616; &#10;&#10;- (void)viewDidAppear:(BOOL)animated&#10;&#10;views&#20986;&#29616;&#22312;&#23631;&#24149;&#19978;&#10;&#10;- (void)viewWillDisappear:(BOOL)animated&#10;&#10;&#21487;&#20197;&#22312;&#36825;&#20010;&#26041;&#27861;&#20013;&#25913;&#21464;&#29366;&#24577;&#26639;&#65292;&#23548;&#33322;&#26639;&#29366;&#24577;&#65292;&#24517;&#39035;&#35843;&#29992;&#29238;&#31867;&#30340;&#23454;&#29616; &#10;&#10;- (void)viewDidDisappear:(BOOL)animated&#10;&#10;views&#28040;&#22833;&#22312;&#23631;&#24149;&#19978;</span><br></pre></td></tr></table></figure>
+<h2 id="附件下载">附件下载</h2><p>附件01：<a href="http://everythingcomputerscience.com/books/RoadMapiOS.pdf" target="_blank" rel="external">roadMapIOS</a></p>
+<h2 id="下次课程概要">下次课程概要</h2><p>内存管理</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/22/2016-2-22-how-to-learn-ios05/" rel="prev">iOS学习沙龙系列（五）：UITableView计算高度的那些事以及内存管理</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/27/2016-1-27-how-to-learn-ios03/" rel="next">iOS学习沙龙系列（三）：ContentView以及ContainerViewController</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/18/2016-2-18-how-to-learn-ios04/"
+                   data-title="iOS学习沙龙系列（四）：一些疑难问题的解答" data-url="http://blog.coderhr.com/2016/02/18/2016-2-18-how-to-learn-ios04/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="red3" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">red3</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">iOS Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/red3" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/your-user-name" target="_blank">douban</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lofter.com/" target="_blank">lofter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#学习路线回顾"><span class="nav-number">1.</span> <span class="nav-text">学习路线回顾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本期纲要"><span class="nav-number">2.</span> <span class="nav-text">本期纲要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">3.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AppDelegate这个文件和UIApplication的关系以及这个文件中能写哪些代码？"><span class="nav-number">3.1.</span> <span class="nav-text">AppDelegate这个文件和UIApplication的关系以及这个文件中能写哪些代码？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ViewController中的view属性跟XIB的关系？"><span class="nav-number">3.2.</span> <span class="nav-text">ViewController中的view属性跟XIB的关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在storyboard中编辑UI"><span class="nav-number">3.3.</span> <span class="nav-text">如何在storyboard中编辑UI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XIB中的UI控件应该链接在ViewController的哪个地方？"><span class="nav-number">3.4.</span> <span class="nav-text">XIB中的UI控件应该链接在ViewController的哪个地方？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XIB中的UITextField怎么绑定事件方法？"><span class="nav-number">3.5.</span> <span class="nav-text">XIB中的UITextField怎么绑定事件方法？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UITableView的工作原理，UITableview中的Cell怎么配置不同高度？"><span class="nav-number">3.6.</span> <span class="nav-text">UITableView的工作原理，UITableview中的Cell怎么配置不同高度？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在Xcode中新建不同类型的文件？"><span class="nav-number">3.7.</span> <span class="nav-text">如何在Xcode中新建不同类型的文件？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何Debug"><span class="nav-number">3.8.</span> <span class="nav-text">如何Debug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么理解ViewController的生命周期"><span class="nav-number">3.9.</span> <span class="nav-text">怎么理解ViewController的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附件下载"><span class="nav-number">4.</span> <span class="nav-text">附件下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下次课程概要"><span class="nav-number">5.</span> <span class="nav-text">下次课程概要</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">red3</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<div class="cdn-info">
+  <a href="https://www.upyun.com"><img src="/assets/images/upyun_logo_90x45.png"><img></a>
+</div>
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"red3"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

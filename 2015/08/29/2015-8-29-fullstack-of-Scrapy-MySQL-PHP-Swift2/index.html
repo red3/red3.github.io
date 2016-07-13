@@ -1,0 +1,796 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="iOS Notes" />
+
+
+
+  <meta name="keywords" content="Linux,Scrapy,Swift," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="系列目录你可以从这个地方做一个快速跳转。
+
+Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇
+Scrapy+MySQL+PHP+Sw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scrapy+MySQL+PHP+Swift开发攻略系列（二）爬虫篇">
+<meta property="og:url" content="http://blog.coderhr.com/2015/08/29/2015-8-29-fullstack-of-Scrapy-MySQL-PHP-Swift2/index.html">
+<meta property="og:site_name" content="red3">
+<meta property="og:description" content="系列目录你可以从这个地方做一个快速跳转。
+
+Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇
+Scrapy+MySQL+PHP+Sw">
+<meta property="og:image" content="http://blog.coderhr.com/assets/2015/img_spiders01.png">
+<meta property="og:image" content="http://redharry.b0.upaiyun.com/pic/spider_show01.gif">
+<meta property="og:updated_time" content="2015-10-08T06:09:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scrapy+MySQL+PHP+Swift开发攻略系列（二）爬虫篇">
+<meta name="twitter:description" content="系列目录你可以从这个地方做一个快速跳转。
+
+Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇
+Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇
+Scrapy+MySQL+PHP+Sw">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> Scrapy+MySQL+PHP+Swift开发攻略系列（二）爬虫篇 | red3 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-66016948-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">red3</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Scrapy+MySQL+PHP+Swift开发攻略系列（二）爬虫篇
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-08-29T09:09:09+08:00" content="2015-08-29">
+            2015-08-29
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/jekyll-update/" itemprop="url" rel="index">
+                  <span itemprop="name">jekyll update</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/08/29/2015-8-29-fullstack-of-Scrapy-MySQL-PHP-Swift2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/29/2015-8-29-fullstack-of-Scrapy-MySQL-PHP-Swift2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="系列目录">系列目录</h2><p>你可以从这个地方做一个快速跳转。</p>
+<ul>
+<li><a href="http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift.html" target="_blank" rel="external">Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇</a></li>
+<li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇</a></li>
+<li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇</a></li>
+<li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇</a></li>
+<li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（五）之API篇</a></li>
+<li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇</a></li>
+<li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇</a></li>
+</ul>
+<p>##安装Scrapy<br>爬虫框架我选择用Python写的Scrapy。</p>
+<p>当然准备工作是确保你的Mac安装了<code>commandline</code>和<code>pip</code>.</p>
+<ul>
+<li>安装<code>commandline</code>可以通过直接安装<code>Xcode</code>或者在终端运行<code>xcode-select --install</code>命令安装。</li>
+<li>安装<code>pip</code>：遵从官方的这个<a href="https://pip.pypa.io/en/stable/installing.html#install-pip" target="_blank" rel="external">步骤</a></li>
+</ul>
+<p>然后通过<code>pip</code>安装<code>Scrapy</code>.</p>
+<pre><code>sudo pip <span class="keyword">install</span> scrapy
+</code></pre><p>如果你安装成功，请直接跳到下一节。我在公司电脑的环境（OS X 10.10 Python2.7.10）以及家里的电脑的环境（OS X 10.11 Python2.7.10）下安装会因为类似<code>libxml not found</code>的原因失败，通过以下方式解决：</p>
+<pre><code>brew <span class="operator"><span class="keyword">install</span> libxml2
+brew <span class="keyword">install</span> libxslt
+brew <span class="keyword">link</span> libxml2 <span class="comment">--force</span>
+brew <span class="keyword">link</span> libxslt <span class="comment">--force</span></span>
+</code></pre><p>安装成功以后，如果<code>scrapy startproject xxx</code>报类似的错<code>ImportError: cannot import name xmlrpc_client</code>，通过以下方式解决：</p>
+<pre><code>sudo rm -rf /<span class="constant">Library</span>/<span class="constant">Python</span>/<span class="number">2.7</span>/site-packages/six*
+sudo rm -rf /<span class="constant">System</span>/<span class="constant">Library</span>/<span class="constant">Frameworks</span>/<span class="constant">Python</span>.framework/<span class="constant">Versions</span>/<span class="number">2.7</span>/<span class="constant">Extras</span>/<span class="class"><span class="keyword">lib</span>/<span class="title">python</span>/<span class="title">six</span>*</span>
+sudo pip install six
+</code></pre><p>如果以上方法不能失效，请参考<a href="http://stackoverflow.com/questions/30964836/scrapy-throws-importerror-cannot-import-name-xmlrpc-client" target="_blank" rel="external">这个链接</a></p>
+<h2 id="创建爬虫项目">创建爬虫项目</h2><p>通过下面这个命令生成一个爬虫项目：</p>
+<pre><code><span class="title">scrapy</span> startproject dbmeizi
+</code></pre><p>然后我们会看到<code>scrapy</code>已经为我们生成了一个工程。这个工程大概是这个结构</p>
+<pre><code>dbmeizi
+<span class="string">|__ scrapy.cfg</span>
+<span class="string">|</span>
+<span class="string">|__     dbmeizi</span>
+     <span class="string">|__ __init__.py</span>
+     <span class="string">|__ items.py</span>
+     <span class="string">|__ pipelines.py</span>
+     <span class="string">|__ settings.py</span>
+     <span class="string">|__ spiders</span>
+</code></pre><p>下面分别解释下各个文件：</p>
+<ul>
+<li><code>items.py</code> - item相当于是mvc中的model，在items里我们定义了自己需要的模型</li>
+<li><code>piplines.py</code> - pipline俗称管道，这个文件主要用来把我们获取的item类型存入MySQL</li>
+<li><code>settings.py</code> -  在这个文件里面配置整个工程的一些设置。例如MySQL的数据库名，数据库地址和数据库端口号等等。</li>
+<li><code>spiders</code> - 这个文件夹存放爬虫文件。</li>
+</ul>
+<p>至此，我们就可以正式开始我们的编码工作了。</p>
+<h2 id="定义Model层（Item）">定义Model层（Item）</h2><p>首先我们想确定一个网站上的图片包含哪些信息，要解决这个问题，就需要打开这个网页使用<code>开发者工具</code>(快捷键<code>option+command+i</code>), 使用<code>页面选择器</code>(开发者工作左上角的放大镜图标)选择一张图片，效果如下:</p>
+<p><img src="/assets/2015/img_spiders01.png" alt=""></p>
+<p>可以看出，我们选中的<code>div</code>块中包含了我们想要的最基本的资料。这个过程，其实就是我们爬虫的一个工作原理，通过网页元素找到我们想要的内容，只不过现在我们是手动查找，等发现规律，我们就通过爬虫程序自动爬取内容。</p>
+<p>所以item.py里面是这个样子：</p>
+<pre><code>// 需要注意的是这个文件的默认模板样式可能根据scrapy版本不同略有不同，依照默认模板样式加入我们的自定义字段就可
+
+<span class="preprocessor"><span class="keyword">import</span> scrapy</span>
+
+<span class="class"><span class="keyword">class</span> <span class="title">DbmeiziItem</span>(<span class="title">scrapy</span>.<span class="title">Item</span>):</span><span class="preprocessor">
+    # define the fields for your item here like:</span><span class="preprocessor">
+    # name = scrapy.Field()</span>
+    imgsrc = scrapy.<span class="keyword">Field</span>()
+    title = scrapy.<span class="keyword">Field</span>()
+    topic_link = scrapy.<span class="keyword">Field</span>()
+    star_count = scrapy.<span class="keyword">Field</span>()
+    update_time = scrapy.<span class="keyword">Field</span>()
+    pass
+</code></pre><p>相当于我们继承自类Item创建了我们自己的MeiziItem，然后我们的自定义类有5个属性，<code>star_count</code>是设计用来让用户点赞的，最后的<code>update_time</code>可以用来记录修改时间。</p>
+<h2 id="编写爬虫(Spider)">编写爬虫(Spider)</h2><p>Spider是我们用于从单个网站(或者一些网站)爬取数据的类。</p>
+<p>其中包含了一个用于下载的初始URL，如何跟进网页中的链接以及如何分析页面中的内容， 提取生成<code>item</code>的方法。</p>
+<p>在<code>spiders</code>文件夹下新建<code>dbmeizi_scrapy.py</code>文件。<br>这个文件里面是这个样子：</p>
+<pre><code class="python">
+<span class="keyword">from</span> scrapy <span class="keyword">import</span> Spider
+<span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector
+<span class="keyword">from</span> dbmeizi.items <span class="keyword">import</span> DbmeiziItem
+<span class="keyword">import</span> time
+
+<span class="class"><span class="keyword">class</span> <span class="title">dbmeiziSpider</span><span class="params">(Spider)</span>:</span>
+    name = <span class="string">"dbmeiziSpider"</span>
+    allowed_domin =[<span class="string">"dbmeinv.com"</span>]
+    strArray = []
+    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>):
+        str = <span class="string">"http://www.dbmeinv.com/?pager_offset=%d"</span> % i
+        strArray.append(str)
+    start_urls = strArray
+
+    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span>
+        divResults = Selector(response).xpath(<span class="string">'//div[@class="img_single"]'</span>)
+        <span class="keyword">for</span> div <span class="keyword">in</span> divResults:
+            item = DbmeiziItem()
+            href = div.xpath(<span class="string">'.//a'</span>)[<span class="number">0</span>]
+            img = div.xpath(<span class="string">'.//img'</span>)[<span class="number">0</span>]
+            item[<span class="string">'topic_link'</span>] = href.xpath(<span class="string">'@href'</span>).extract()[<span class="number">0</span>]
+            item[<span class="string">'title'</span>] = img.xpath(<span class="string">'@title'</span>).extract()[<span class="number">0</span>] 
+            item[<span class="string">'imgsrc'</span>] = img.xpath(<span class="string">'@src'</span>).extract()[<span class="number">0</span>]
+            item[<span class="string">'star_count'</span>] = <span class="number">0</span>
+            item[<span class="string">'update_time'</span>] = time.time()
+            <span class="keyword">yield</span> item
+</code></pre>
+<p>需要解释的几点概念：</p>
+<ul>
+<li><code>allowed_domin</code> - 指定在哪个网站爬东西</li>
+<li><code>start_urls</code> - 包含了Spider在启动时进行爬取的url列表。因此，第一个被获取到的页面将是其中之一。后续的URL则从初始的URL获取到的数据中提取</li>
+<li><code>parse</code>方法 - 继承自父类，每个初始URL完成下载后生成的<code>Response</code>对象将会作为唯一的参数传递给该函数。该方法负责解析返回的数据(response data)，提取数据(生成<code>item</code>)以及生成需要进一步处理的URL的<code>Request</code>对象。可以想象成这个方法一开始拿到的数据就是整个网页的html代码，我们要通过各种过滤，拿到最终我们感兴趣的内容</li>
+<li><code>xpath</code> - 解析数据的时候我们用到这个东西，关于它的详细用法，移步这个<a href="http://www.w3school.com.cn/xpath/index.asp" target="_blank" rel="external">网址</a></li>
+</ul>
+<p>最终，爬虫通过上面的代码爬到我们感兴趣的内容了，通过这些内容为<code>item</code>赋值。</p>
+<h2 id="运行爬虫">运行爬虫</h2><p>到现在为止，这个爬虫就可以正常工作了。在工程的根目录下执行如下命令：</p>
+<pre><code><span class="title">scrapy</span> crawl dbmeiziSpider
+</code></pre><p>不出意外的话，会看见下面的画面：</p>
+<p><img src="http://redharry.b0.upaiyun.com/pic/spider_show01.gif" alt=""></p>
+<p>大功告成。</p>
+<p>刚才提到不出意外的情况，那么出意味的情况是什么呢，当然就是这个网站把我们屏蔽了，我们爬不到他的数据了。针对这种情况，会在系列（四）中给出解决方案。</p>
+<p>还有一种意外情况，就是我们要爬取的网站会检查请求的<code>User-Agent</code>，如果不设置<code>User-Agent</code>，网站可能就会拒绝我们的请求。针对这种情况，在<code>settings.py</code>这个文件里面加上下面一行代码：</p>
+<pre><code><span class="setting">USER_AGENT = <span class="value"><span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20'</span></span></span>
+</code></pre><p>然后重新执行<code>scrapy crawl dbmeiziSpider</code>.</p>
+<h2 id="最后">最后</h2><p>按照惯例，放上源码地址：</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag">#Linux</a>
+          
+            <a href="/tags/Scrapy/" rel="tag">#Scrapy</a>
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/01/2015-9-1-use-adhoc-with-upyun/" rel="prev">通过upyun解决iOS7.1后使用AdHoc下载的问题</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/08/2015-8-8-fullstack-of-Scrapy-MySQL-PHP-Swift/" rel="next">Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/08/29/2015-8-29-fullstack-of-Scrapy-MySQL-PHP-Swift2/"
+                   data-title="Scrapy+MySQL+PHP+Swift开发攻略系列（二）爬虫篇" data-url="http://blog.coderhr.com/2015/08/29/2015-8-29-fullstack-of-Scrapy-MySQL-PHP-Swift2/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="red3" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">red3</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">iOS Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/red3" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/your-user-name" target="_blank">douban</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lofter.com/" target="_blank">lofter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#系列目录"><span class="nav-number">1.</span> <span class="nav-text">系列目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建爬虫项目"><span class="nav-number">2.</span> <span class="nav-text">创建爬虫项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义Model层（Item）"><span class="nav-number">3.</span> <span class="nav-text">定义Model层（Item）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写爬虫(Spider)"><span class="nav-number">4.</span> <span class="nav-text">编写爬虫(Spider)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行爬虫"><span class="nav-number">5.</span> <span class="nav-text">运行爬虫</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">6.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">red3</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<div class="cdn-info">
+  <a href="https://www.upyun.com"><img src="/assets/images/upyun_logo_90x45.png"><img></a>
+</div>
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"red3"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

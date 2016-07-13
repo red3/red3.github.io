@@ -1,0 +1,677 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="iOS Notes" />
+
+
+
+  <meta name="keywords" content="iOS,Swift,PHP,Python,Mac" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
+以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
+在电脑上打开 Charles 或者 Fiddler 等抓包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 开发神器：利用 Surge 访问内网接口">
+<meta property="og:url" content="http://blog.coderhr.com/2016/05/22/2016-5-18-use-surge-to-proxy-http-request/index.html">
+<meta property="og:site_name" content="red3">
+<meta property="og:description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
+以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
+在电脑上打开 Charles 或者 Fiddler 等抓包">
+<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request01.png">
+<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request02.png">
+<meta property="og:updated_time" content="2016-06-20T06:48:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 开发神器：利用 Surge 访问内网接口">
+<meta name="twitter:description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
+以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
+在电脑上打开 Charles 或者 Fiddler 等抓包">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> iOS 开发神器：利用 Surge 访问内网接口 | red3 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-66016948-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">red3</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              iOS 开发神器：利用 Surge 访问内网接口
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-05-22T14:00:00+08:00" content="2016-05-22">
+            2016-05-22
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/05/22/2016-5-18-use-surge-to-proxy-http-request/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/22/2016-5-18-use-surge-to-proxy-http-request/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。</p>
+<h2 id="以前怎么做以及存在的问题">以前怎么做以及存在的问题</h2><p>相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：</p>
+<p>在电脑上打开 <code>Charles</code> 或者 <code>Fiddler</code> 等抓包工具，开启代理服务器，获取电脑的 IP 地址，然后在手机当前连接的 WIFI 代理设置中填入对应的电脑的 IP 地址和端口。</p>
+<p>这么做可以满足需求，但是也有些问题：</p>
+<ol>
+<li><p>操作过于繁琐与频繁。我跟我们公司的测试同事沟通的时候了解到，手机上的 WIFI 网络设置了 HTTP 代理后必须依赖电脑上的抓包软件联网，因此，当电脑无法提供代理服务的时候我们就需手动关闭手机的代理设置。而下次调试，不可避免地还需要再次设置代理信息。常见的场景诸如在公司调试了接口，回到家发现无法联网，关闭代理后第二天到公司又得重新设置代理。</p>
+</li>
+<li><p>安全问题。如果手机上连接的是别人的电脑上的代理服务，那么自己手机中的所有 HTTP 连接都会通过代理服务器电脑来转发，这样的话，所有的通信内容都暴漏到代理服务器电脑上了。</p>
+</li>
+</ol>
+<h2 id="iOS9_后新的解决方案">iOS9 后新的解决方案</h2><p>好在 iOS9.0 后苹果开放了 <code>Network Extension</code>，使得手机上也可以执行代理请求了。意味着我们可以动态将手机上的网络请求做代理处理。具体来说就是可以指定某个域名下的请求走代理。这一特性将大大方便我们在手机上更改代理的需求。因为这一特性，我们可以将代理服务常驻后台，保证只有特定请求才后走代理，不会影响手机其他上的其他请求，同时解决了上述的操作繁琐问题与安全问题。</p>
+<p>满足这一需求的软件有很多，诸如 <code>Surge</code>, <code>Shadowrocks</code>, <code>A.BIG.T</code>等。本文将拿 Surge 为例来说明怎么通过代理软件简化我们的开发调试流程。</p>
+<ul>
+<li>新建一条代理路线</li>
+</ul>
+<p>编辑配置文件，新建代理(Edit-&gt;Add New Proxy…)，然后依据电脑端具体代理规则来填写具体代理服务的 ip 地址和端口，如下图是我依据我的电脑的 ip 来配置了一个名为 dev-api 的代理。这里需要说明的是，如果是用 Charles 来作代理服务的同学需要在电脑上开启 SOCKS 代理，因为 Surge 会将 HTTP 请求转发成 CONNECT，而 Charles 不支持 CONNECT 请求的抓包。</p>
+<p><img src="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request01.png" alt=""></p>
+<ul>
+<li>建立代理规则</li>
+</ul>
+<p>上文有提到过，使用代理软件可以做到针对指定域名下的请求走代理服务。而在 Surge 中将指定域名称为规则。所以我们需要新建一条规则来告诉 Surge 当请求匹配这个规则的时候要走代理服务的路线。</p>
+<p>点击配置文件中 Rules 进入规则设置界面，然后新建一条规则(Edit-&gt;Rules-&gt;右上角+)，如图:</p>
+<p><img src="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request02.png" alt=""></p>
+<p>Surge支持 DOMAIN, SUFFIX, KEYWORD, IP, GEOIP这几种类型的规则，很明显我们选择 DOMAIN 类型的规则，然后在 VALUE 里面填入内网服务器的域名，例如 <code>dev-api.mobile.lashou.com</code>, 凡是发往这个域名的请求都会成功匹配我们的规则。</p>
+<p>光匹配到请求还不够，接下来还有最关键的一步，那就是指定这条规则应该执行哪条代理路线。进入代理选择页面我们会发现有几个可供选择的项目，DIRECT, REJECT, dev-api(我们刚才新建的代理)。这里特别说明一下这三者代表的意思：</p>
+<ul>
+<li>DIRECT 默认行为，表示请求直接手机发出</li>
+<li>REJECT 表示请求直接被拒绝，不会发出</li>
+<li>dev-api 表示请求会交由代理服务器转发</li>
+</ul>
+<p>Surge 比较人性化的一点是可以支持代理 group，意味着你可以创建多个代理服务器，然后把它们加入一个代理 group 里面，然后针对不同的规则，匹配不同的代理服务器。</p>
+<p>通过上面的步骤，我们便轻松完成了类似情形下访问内网服务器接口的问题。并且这是个一劳永逸的过程，一次设置，终身受用，哈哈。顺着这个思路，我们也可以把手机上访问 google 的请求转发到其他代理服务器上以实现科学上网的诉求，这些就留给读者自己发挥了。</p>
+<p>最后还有一个温馨提示，如果有些接口只是通过修改 host 就可以访问，而不需要 vpn 认证的话，直接就可以在手机上完成，在配置文件中的 <code>Locan DNS Map</code> 设置与电脑上的 hosts 文件功能类似，只需要在里面加入跟电脑一样的规则就好了。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/15/2016-6-15-how-to-flip-two-subviews-using-animation/" rel="prev">iOS 中如何实现翻转动画特效</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/19/2016-3-19-eight-patterns-to-help-you-destroy-massive-view-controlle/" rel="next">8种方案帮助你摆脱笨重的ViewController</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/05/22/2016-5-18-use-surge-to-proxy-http-request/"
+                   data-title="iOS 开发神器：利用 Surge 访问内网接口" data-url="http://blog.coderhr.com/2016/05/22/2016-5-18-use-surge-to-proxy-http-request/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="red3" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">red3</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">iOS Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/red3" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/your-user-name" target="_blank">douban</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lofter.com/" target="_blank">lofter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#以前怎么做以及存在的问题"><span class="nav-number">1.</span> <span class="nav-text">以前怎么做以及存在的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS9_后新的解决方案"><span class="nav-number">2.</span> <span class="nav-text">iOS9 后新的解决方案</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">red3</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<div class="cdn-info">
+  <a href="https://www.upyun.com"><img src="/assets/images/upyun_logo_90x45.png"><img></a>
+</div>
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"red3"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
