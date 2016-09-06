@@ -39,22 +39,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="最近读了下唐巧写的《iOS进阶》， 补全了很多iOS开发的盲点，总结下自己在开发过程中认知不足的地方。
-
-GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET请求会在浏览器地址栏暴漏网址，然而在客户端不存在这个问题，所以可能有人觉得用不用GET都无所谓，现在知道GET请求会出现在服务器的access log，这是相当危险的。">
+<meta name="description" content="前言本文假设读者已经了解了 Objective-C 语言中 Blcok 的基础原理知识，如果你还没有了解到这些知识，建议访问这个网址来学习：blog.devtang.com
+回顾我们知道，在 Block 内部是不可以改写截获的局部变量的，如果非要改写，就要使用 __block 存储域修饰符来修饰这个变量，就像下面这个样子：
+123456789void foo_()&amp;#123;    __block">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS进阶读书笔记">
-<meta property="og:url" content="http://blog.coderhr.com/2015/07/02/2015-7-2-readNotes-about-iOSPro/index.html">
+<meta property="og:title" content="Block 结构体中 forwarding 成员变量的作用">
+<meta property="og:url" content="http://blog.coderhr.com/2016/09/01/2016-9-1-how-the-forwarding-property-affect-the-block/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="最近读了下唐巧写的《iOS进阶》， 补全了很多iOS开发的盲点，总结下自己在开发过程中认知不足的地方。
-
-GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET请求会在浏览器地址栏暴漏网址，然而在客户端不存在这个问题，所以可能有人觉得用不用GET都无所谓，现在知道GET请求会出现在服务器的access log，这是相当危险的。">
-<meta property="og:updated_time" content="2015-10-08T06:05:02.000Z">
+<meta property="og:description" content="前言本文假设读者已经了解了 Objective-C 语言中 Blcok 的基础原理知识，如果你还没有了解到这些知识，建议访问这个网址来学习：blog.devtang.com
+回顾我们知道，在 Block 内部是不可以改写截获的局部变量的，如果非要改写，就要使用 __block 存储域修饰符来修饰这个变量，就像下面这个样子：
+123456789void foo_()&amp;#123;    __block">
+<meta property="og:updated_time" content="2016-09-06T08:36:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS进阶读书笔记">
-<meta name="twitter:description" content="最近读了下唐巧写的《iOS进阶》， 补全了很多iOS开发的盲点，总结下自己在开发过程中认知不足的地方。
-
-GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET请求会在浏览器地址栏暴漏网址，然而在客户端不存在这个问题，所以可能有人觉得用不用GET都无所谓，现在知道GET请求会出现在服务器的access log，这是相当危险的。">
+<meta name="twitter:title" content="Block 结构体中 forwarding 成员变量的作用">
+<meta name="twitter:description" content="前言本文假设读者已经了解了 Objective-C 语言中 Blcok 的基础原理知识，如果你还没有了解到这些知识，建议访问这个网址来学习：blog.devtang.com
+回顾我们知道，在 Block 内部是不可以改写截获的局部变量的，如果非要改写，就要使用 __block 存储域修饰符来修饰这个变量，就像下面这个样子：
+123456789void foo_()&amp;#123;    __block">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -64,7 +64,7 @@ GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET�
   };
 </script>
 
-  <title> iOS进阶读书笔记 | red3 </title>
+  <title> Block 结构体中 forwarding 成员变量的作用 | red3 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -180,7 +180,7 @@ GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET�
           
           
             
-              iOS进阶读书笔记
+              Block 结构体中 forwarding 成员变量的作用
             
           
         </h1>
@@ -189,8 +189,8 @@ GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET�
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-07-02T22:45:36+08:00" content="2015-07-02">
-            2015-07-02
+          <time itemprop="dateCreated" datetime="2016-09-01T18:30:00+08:00" content="2016-09-01">
+            2016-09-01
           </time>
         </span>
 
@@ -200,8 +200,8 @@ GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET�
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/07/02/2015-7-2-readNotes-about-iOSPro/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/02/2015-7-2-readNotes-about-iOSPro/" itemprop="commentsCount"></span>
+              <a href="/2016/09/01/2016-9-1-how-the-forwarding-property-affect-the-block/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/01/2016-9-1-how-the-forwarding-property-affect-the-block/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -215,11 +215,22 @@ GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET�
       
 
       
-        <span itemprop="articleBody"><p>最近读了下<a href="www.devtang.com">唐巧</a>写的《iOS进阶》， 补全了很多iOS开发的盲点，总结下自己在开发过程中认知不足的地方。</p>
-<ul>
-<li>GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET请求会在浏览器地址栏暴漏网址，然而在客户端不存在这个问题，所以可能有人觉得用不用GET都无所谓，现在知道GET请求会出现在服务器的access log，这是相当危险的。</li>
-<li></li>
-</ul>
+        <span itemprop="articleBody"><h2 id="前言">前言</h2><p>本文假设读者已经了解了 Objective-C 语言中 Blcok 的基础原理知识，如果你还没有了解到这些知识，建议访问这个网址来学习：<a href="http://blog.devtang.com/2013/07/28/a-look-inside-blocks/" target="_blank" rel="external">blog.devtang.com</a></p>
+<h2 id="回顾">回顾</h2><p>我们知道，在 Block 内部是不可以改写截获的局部变量的，如果非要改写，就要使用 <code>__block</code> 存储域修饰符来修饰这个变量，就像下面这个样子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo_</span><span class="params">()</span></span>&#123;</span><br><span class="line">    __block <span class="keyword">int</span> i = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">long</span> (^myBlock)(<span class="keyword">void</span>) = ^<span class="keyword">long</span>() &#123;</span><br><span class="line">    		i = <span class="number">5</span>;</span><br><span class="line">          <span class="keyword">return</span> i * <span class="number">3</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">long</span> r = myBlock();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%ld"</span>, r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过 clang 改写上面的代码后了解到，使用 <strong>block 修饰变量后，代码量变得很大，并且经过 `</strong>block` 修饰的变量其实已然转化成了对象来对待：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct __Block_byref_i_0 &#123;</span><br><span class="line">  void *__isa<span class="comment">;</span></span><br><span class="line">__Block_byref_i_0 *__forwarding<span class="comment">;</span></span><br><span class="line"> int __flags<span class="comment">;</span></span><br><span class="line"> int __size<span class="comment">;</span></span><br><span class="line"> int i<span class="comment">;</span></span><br><span class="line">&#125;<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>上面的结构体组成中，最后的成员变量 <code>i</code> 的值即为用来我们原始声明变量的值，我们也了解到接下来程序中访问这个原始的变量的地方都被替换成为 <code>i-&gt;__forwarding-&gt;i</code>, 其中我们注意到 <code>__forwarding</code> 指针变量指向的是跟该结构体类型一致的值，我们可以粗暴的理解为这个变量指向了结构体自己，这确实引起了我们的注意，为什么要搞一个变量指向自己，为什么不直接使用 <code>i-&gt;i</code> 来访问我们原始的变量的值呢？</p>
+<p>接下来我们就一步一步解开这个神秘变量的面纱!</p>
+<h2 id="原理探究">原理探究</h2><p>从作用域上来讲，我们知道 Blcok 可以分为栈上的和堆上的。当栈上创建的 Block 超出作用域后依然要访问它，就需要把该 Block 拷贝到堆上，同时也需要把该 Block 持有的栈上的对象也拷贝到堆上。也就是说如果一个 Block 持有一个栈上的 <code>__Block_byref_i_0</code> 的对象的话，经过拷贝，堆上也会有一个 <code>__Block_byref_i_0</code> 对象，这样，在栈上和堆上就同时有了两份一样的对象（当然，只是对象的值是相等的），怎么保证这两份对象之间数据的统一，是个很关键的问题！</p>
+<p>我们从源代码入手，将 Blcok 持有的 <code>__Block_byref_i_0</code> 对象拷贝到堆上是通过下面这个函数来完成的：</p>
+<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">_</span>Block<span class="number">_</span><span class="keyword">object</span><span class="number">_</span><span class="keyword">assign</span>((<span class="keyword">void</span>*)&amp;dst-&gt;i, (<span class="keyword">void</span>*)src-&gt;i, <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span></span><br></pre></td></tr></table></figure>
+<p>我们注意到这个函数的最后一个参数是个标记要拷贝的这个变量的类型，这里的 8 代表 <code>BLOCK_FIELD_IS_BYREF</code> 是说这个变量是 <code>__block</code> 修饰的变量。这个函数的后续动作我们可以通过访问苹果开源的 Block 源代码来查看，或者直接访问这个网址来在线浏览：<a href="http://opensource.apple.com/source/libclosure/libclosure-63/runtime.c" target="_blank" rel="external">opensource.apple.com</a></p>
+<p>源代码中的判断比较多，我直接整理出了针对 <code>__block</code> 修饰的变量的拷贝操作，大概做了下面的事情：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> _Block_byref_assign_copy(<span class="keyword">void</span> *dest, <span class="keyword">const</span> <span class="keyword">void</span> *arg, <span class="keyword">const</span> <span class="keyword">int</span> flags) &#123;</span><br><span class="line">    <span class="keyword">struct</span> Block_byref **destp = (<span class="keyword">struct</span> Block_byref **)dest;</span><br><span class="line">    <span class="keyword">struct</span> Block_byref *src = (<span class="keyword">struct</span> Block_byref *)arg;</span><br><span class="line">    <span class="comment">// src points to stack</span></span><br><span class="line">    <span class="keyword">struct</span> Block_byref *<span class="keyword">copy</span> = (<span class="keyword">struct</span> Block_byref *)_Block_allocator(src-&gt;size, <span class="literal">false</span>, isWeak);</span><br><span class="line">    <span class="keyword">copy</span>-&gt;forwarding = <span class="keyword">copy</span>; <span class="comment">// patch heap copy to point to itself (skip write-barrier)</span></span><br><span class="line">    src-&gt;forwarding = <span class="keyword">copy</span>;  <span class="comment">// patch stack to point to heap copy</span></span><br><span class="line">    <span class="keyword">copy</span>-&gt;size = src-&gt;size;</span><br><span class="line">    <span class="comment">// assign byref data block pointer into new Block</span></span><br><span class="line">    _Block_assign(src-&gt;forwarding, (<span class="keyword">void</span> **)destp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面的代码中可以看到，这个函数核心的动作就是在堆上新创建一个对象 <code>copy</code>, 将 <code>copy</code> 变量的 <code>forwarding</code> 指针指向堆上的 <code>copy</code> 自己，然后再将栈上的原始对象的 <code>forwarding</code> 也指向堆上的 <code>copy</code> 变量。</p>
+<p>现在回过头再看这个 <code>forwarding</code> 这个变量，我们终于明白它的意义：保证无论在栈上还是堆上，我们通过 <code>forwarding</code> 访问到的始终是同一个对象！</p>
+<h2 id="总结">总结</h2><p>通过研究苹果的源代码我们进一步了解了 Block 的工作原理，这样我们在工作中就对是否使用 <code>__block</code> 修饰变量以及修饰变量后实质对代码产生的影响都有了很好的把握，有助于我们写出更完善的代码。</p>
 </span>
       
     </div>
@@ -231,13 +242,11 @@ GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET�
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/04/2015-7-4-WWDC-2015-APP-Thinning/" rel="prev">WWDC2015 Session笔记-App Thinning</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/23/2015-6-23-Mac-OS-ssl/" rel="next">Mac OS X 中为Apache开启ssl</a>
+              <a href="/2016/06/15/2016-6-15-how-to-flip-two-subviews-using-animation/" rel="next">iOS 中如何实现翻转动画特效</a>
             
           </div>
         </div>
@@ -262,8 +271,8 @@ GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET�
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2015/07/02/2015-7-2-readNotes-about-iOSPro/"
-                   data-title="iOS进阶读书笔记" data-url="http://blog.coderhr.com/2015/07/02/2015-7-2-readNotes-about-iOSPro/">
+              <div class="ds-thread" data-thread-key="2016/09/01/2016-9-1-how-the-forwarding-property-affect-the-block/"
+                   data-title="Block 结构体中 forwarding 成员变量的作用" data-url="http://blog.coderhr.com/2016/09/01/2016-9-1-how-the-forwarding-property-affect-the-block/">
               </div>
             
           </div>
@@ -363,7 +372,7 @@ GET请求(为何涉及加密传输比如登陆注册不可以用GET请求):GET�
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回顾"><span class="nav-number">2.</span> <span class="nav-text">回顾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理探究"><span class="nav-number">3.</span> <span class="nav-text">原理探究</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
