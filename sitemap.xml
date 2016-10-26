@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.coderhr.com/2016/10/05/2016-10-5-how-to-improve-performance-in-sd/</loc>
+    <lastmod>2016-10-26T07:37:01.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.coderhr.com/2016/09/01/2016-9-1-how-the-forwarding-property-affect-the-block/</loc>
     <lastmod>2016-09-06T08:36:07.000Z</lastmod>
   </url>
@@ -147,7 +152,7 @@
   </url>
   
   <url>
-    <loc>http://blog.coderhr.com/about/index.html</loc>
+    <loc>http://blog.coderhr.com/2015/09/01/2015-9-1-use-adhoc-with-upyun/</loc>
     <lastmod>2015-09-15T09:50:01.000Z</lastmod>
   </url>
   
@@ -157,7 +162,7 @@
   </url>
   
   <url>
-    <loc>http://blog.coderhr.com/2015/09/01/2015-9-1-use-adhoc-with-upyun/</loc>
+    <loc>http://blog.coderhr.com/about/index.html</loc>
     <lastmod>2015-09-15T09:50:01.000Z</lastmod>
   </url>
   
