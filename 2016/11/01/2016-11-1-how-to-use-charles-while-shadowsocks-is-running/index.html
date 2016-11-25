@@ -39,24 +39,29 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
-以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
-在电脑上打开 Charles 或者 Fiddler 等抓包">
+<meta name="description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。
+长此以往，叔能忍，婶婶不能忍啊！
+这篇文章的主要作用就是解决大家的这个烦恼。
+剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。
+我们就要抓包软件和翻墙软件中的佼佼者来说，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS 开发神器：利用 Surge 访问内网接口">
-<meta property="og:url" content="http://blog.coderhr.com/2016/05/22/2016-5-18-use-surge-to-proxy-http-request/index.html">
+<meta property="og:title" content="如何才能使得 Charles 和 Shadowsocks 共存">
+<meta property="og:url" content="http://blog.coderhr.com/2016/11/01/2016-11-1-how-to-use-charles-while-shadowsocks-is-running/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
-以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
-在电脑上打开 Charles 或者 Fiddler 等抓包">
-<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request01.png">
-<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request02.png">
-<meta property="og:updated_time" content="2016-06-20T06:48:37.000Z">
+<meta property="og:description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。
+长此以往，叔能忍，婶婶不能忍啊！
+这篇文章的主要作用就是解决大家的这个烦恼。
+剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。
+我们就要抓包软件和翻墙软件中的佼佼者来说，">
+<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/ss-charles01.gif">
+<meta property="og:updated_time" content="2016-11-25T09:30:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS 开发神器：利用 Surge 访问内网接口">
-<meta name="twitter:description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
-以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
-在电脑上打开 Charles 或者 Fiddler 等抓包">
+<meta name="twitter:title" content="如何才能使得 Charles 和 Shadowsocks 共存">
+<meta name="twitter:description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。
+长此以往，叔能忍，婶婶不能忍啊！
+这篇文章的主要作用就是解决大家的这个烦恼。
+剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。
+我们就要抓包软件和翻墙软件中的佼佼者来说，">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -66,7 +71,7 @@
   };
 </script>
 
-  <title> iOS 开发神器：利用 Surge 访问内网接口 | red3 </title>
+  <title> 如何才能使得 Charles 和 Shadowsocks 共存 | red3 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -182,7 +187,7 @@
           
           
             
-              iOS 开发神器：利用 Surge 访问内网接口
+              如何才能使得 Charles 和 Shadowsocks 共存
             
           
         </h1>
@@ -191,8 +196,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-05-22T14:00:00+08:00" content="2016-05-22">
-            2016-05-22
+          <time itemprop="dateCreated" datetime="2016-11-01T18:30:00+08:00" content="2016-11-01">
+            2016-11-01
           </time>
         </span>
 
@@ -202,8 +207,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/05/22/2016-5-18-use-surge-to-proxy-http-request/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/22/2016-5-18-use-surge-to-proxy-http-request/" itemprop="commentsCount"></span>
+              <a href="/2016/11/01/2016-11-1-how-to-use-charles-while-shadowsocks-is-running/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/01/2016-11-1-how-to-use-charles-while-shadowsocks-is-running/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -217,39 +222,28 @@
       
 
       
-        <span itemprop="articleBody"><p>注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。</p>
-<h2 id="以前怎么做以及存在的问题">以前怎么做以及存在的问题</h2><p>相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：</p>
-<p>在电脑上打开 <code>Charles</code> 或者 <code>Fiddler</code> 等抓包工具，开启代理服务器，获取电脑的 IP 地址，然后在手机当前连接的 WIFI 代理设置中填入对应的电脑的 IP 地址和端口。</p>
-<p>这么做可以满足需求，但是也有些问题：</p>
-<ol>
-<li><p>操作过于繁琐与频繁。我跟我们公司的测试同事沟通的时候了解到，手机上的 WIFI 网络设置了 HTTP 代理后必须依赖电脑上的抓包软件联网，因此，当电脑无法提供代理服务的时候我们就需手动关闭手机的代理设置。而下次调试，不可避免地还需要再次设置代理信息。常见的场景诸如在公司调试了接口，回到家发现无法联网，关闭代理后第二天到公司又得重新设置代理。</p>
-</li>
-<li><p>安全问题。如果手机上连接的是别人的电脑上的代理服务，那么自己手机中的所有 HTTP 连接都会通过代理服务器电脑来转发，这样的话，所有的通信内容都暴漏到代理服务器电脑上了。</p>
-</li>
-</ol>
-<h2 id="iOS9_后新的解决方案">iOS9 后新的解决方案</h2><p>好在 iOS9.0 后苹果开放了 <code>Network Extension</code>，使得手机上也可以执行代理请求了。意味着我们可以动态将手机上的网络请求做代理处理。具体来说就是可以指定某个域名下的请求走代理。这一特性将大大方便我们在手机上更改代理的需求。因为这一特性，我们可以将代理服务常驻后台，保证只有特定请求才后走代理，不会影响手机其他上的其他请求，同时解决了上述的操作繁琐问题与安全问题。</p>
-<p>满足这一需求的软件有很多，诸如 <code>Surge</code>, <code>Shadowrocks</code>, <code>A.BIG.T</code>等。本文将拿 Surge 为例来说明怎么通过代理软件简化我们的开发调试流程。</p>
-<ul>
-<li>新建一条代理路线</li>
-</ul>
-<p>编辑配置文件，新建代理(Edit-&gt;Add New Proxy…)，然后依据电脑端具体代理规则来填写具体代理服务的 ip 地址和端口，如下图是我依据我的电脑的 ip 来配置了一个名为 dev-api 的代理。这里需要说明的是，如果是用 Charles 来作代理服务的同学需要在电脑上开启 SOCKS 代理，因为 Surge 会将 HTTP 请求转发成 CONNECT，而 Charles 不支持 CONNECT 请求的抓包。</p>
-<p><img src="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request01.png" alt=""></p>
-<ul>
-<li>建立代理规则</li>
-</ul>
-<p>上文有提到过，使用代理软件可以做到针对指定域名下的请求走代理服务。而在 Surge 中将指定域名称为规则。所以我们需要新建一条规则来告诉 Surge 当请求匹配这个规则的时候要走代理服务的路线。</p>
-<p>点击配置文件中 Rules 进入规则设置界面，然后新建一条规则(Edit-&gt;Rules-&gt;右上角+)，如图:</p>
-<p><img src="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request02.png" alt=""></p>
-<p>Surge支持 DOMAIN, SUFFIX, KEYWORD, IP, GEOIP这几种类型的规则，很明显我们选择 DOMAIN 类型的规则，然后在 VALUE 里面填入内网服务器的域名，例如 <code>dev-api.mobile.lashou.com</code>, 凡是发往这个域名的请求都会成功匹配我们的规则。</p>
-<p>光匹配到请求还不够，接下来还有最关键的一步，那就是指定这条规则应该执行哪条代理路线。进入代理选择页面我们会发现有几个可供选择的项目，DIRECT, REJECT, dev-api(我们刚才新建的代理)。这里特别说明一下这三者代表的意思：</p>
-<ul>
-<li>DIRECT 默认行为，表示请求直接手机发出</li>
-<li>REJECT 表示请求直接被拒绝，不会发出</li>
-<li>dev-api 表示请求会交由代理服务器转发</li>
-</ul>
-<p>Surge 比较人性化的一点是可以支持代理 group，意味着你可以创建多个代理服务器，然后把它们加入一个代理 group 里面，然后针对不同的规则，匹配不同的代理服务器。</p>
-<p>通过上面的步骤，我们便轻松完成了类似情形下访问内网服务器接口的问题。并且这是个一劳永逸的过程，一次设置，终身受用，哈哈。顺着这个思路，我们也可以把手机上访问 google 的请求转发到其他代理服务器上以实现科学上网的诉求，这些就留给读者自己发挥了。</p>
-<p>最后还有一个温馨提示，如果有些接口只是通过修改 host 就可以访问，而不需要 vpn 认证的话，直接就可以在手机上完成，在配置文件中的 <code>Locan DNS Map</code> 设置与电脑上的 hosts 文件功能类似，只需要在里面加入跟电脑一样的规则就好了。</p>
+        <span itemprop="articleBody"><h2 id="引子">引子</h2><p>不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。</p>
+<p>长此以往，叔能忍，婶婶不能忍啊！</p>
+<p>这篇文章的主要作用就是解决大家的这个烦恼。</p>
+<h2 id="剖析原理">剖析原理</h2><p>想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。</p>
+<p>我们就要抓包软件和翻墙软件中的佼佼者来说，抓包软件我们选择 <a href="https://www.charlesproxy.com/" target="_blank" rel="external">Charles</a>, 翻墙软件我们选择 <a href="https://github.com/shadowsocks" target="_blank" rel="external">Shadowsocks</a>. </p>
+<p>抓包也好，翻墙也好，其实都是通过修改系统的网络服务的代理配置来完成的，我们自己也是可以看到这个设置的，通过路径 <strong>System Preferences -&gt; Network -&gt; Advanced -&gt; Proxies</strong> 便可一窥究竟。</p>
+<p>这里面，Shadowsocks 是通过设置 <strong>Automatic Proxy Configuration</strong> 指定一个配置文件的方式来完成代理设置的，之所以这样，是因为 Shadowsocks 有两种工作模式，即自动模式和全局模式，这两种模式的切换，实际上就是通过修改这个配置文件来完成的。</p>
+<p>而 Charles 是通过设置 <strong>Web Proxy(HTTP) 和 Secure Web Proxy(HTTPS)</strong> 来完成代理设置的，具体来说，就是将本机的 HTTP 流量和 HTTPS 流量都转发到了 8888 端口上了（这个跟 Charles 里面的设置是对应的）。</p>
+<p>通过以上剖析我们发现，这二者其实都是通过相同的办法来使代理生效的，故不可共存！并且更为坑爹的是，当你打开了 Charles 抓包的时候，发现 Shadowsocks 还在运行着，这个时候你肯定会想，先把 Shadowsocks 临时关闭下吧，然后你就会发现这个玩意不光把自己的配置给关闭了，还捎带着把 Charles 的配置也给关闭了，于是你不得不退出 Charles 一次，然后再次打开以使配置重新生效，就说坑不坑吧！</p>
+<p>这绝对是逼我们动真格的了。</p>
+<h2 id="解决方案">解决方案</h2><p>那么到底有没有办法让这两个东西共存呢？</p>
+<p>答案就是：绝对没有！☺️</p>
+<p>原谅我标题党了，大家先别忙着拍我，因为原理大家都看到了，理论上来说，确实没有办法共存，但是在这种情况下，我们就需要动用我们人人都可以当产品经理的产品思维来思考下，做个思维转换：</p>
+<p>因为 Shadowsocks 的关闭导致了 Charles 的配置也被修改，也就是说 Shadowsocks 关闭了不该关闭的东西，那么我们是否可以跳过 Shadowsocks 的程序控制，自己去手动控制呢？</p>
+<p>答案当然是可以的，不信当你打开 Charles 的时候，再去系统网络代理设置里面把 Shadowsocks 的 <strong>Automatic Proxy Configuration</strong> 关闭，看看是否就可以正常抓包了？</p>
+<p>可惜老是手动去配置怎么看也不是很符合我们的产品经理思维啊！：）</p>
+<p>那么就要隆重推荐今天的主角了：<a href="https://github.com/lululau/proxy-switcher-alfred-workflow" target="_blank" rel="external">proxy-switcher-alfred-workflow</a> (以下简称 proxy-switcher).</p>
+<p>Proxy-switcher 是一款 Alfred 的 workflow 插件，通过这个插件，这个可以快速通过 Aflred 的 Toggle 窗口来切换网络代理控制的开关。</p>
+<p>千言万语不如上张图啊，我们来看看效果：</p>
+<p><img src="http://photo-coder.b0.upaiyun.com/img/ss-charles01.gif" alt=""></p>
+<p>怎么样，很爽吧，以后再有抓包的时候，我们直接呼出 Alfred 键入我们的快键键临时关闭 Shadowsocks 的代理设置，等抓包完毕，我们再使用同样的方法打开就是了。</p>
+<p>心动了吗，赶快去这个插件的项目主页下载安装试试吧。</p>
 </span>
       
     </div>
@@ -261,13 +255,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/06/15/2016-6-15-how-to-flip-two-subviews-using-animation/" rel="prev">iOS 中如何实现翻转动画特效</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/03/19/2016-3-19-eight-patterns-to-help-you-destroy-massive-view-controlle/" rel="next">8种方案帮助你摆脱笨重的ViewController</a>
+              <a href="/2016/10/05/2016-10-5-how-to-improve-performance-in-sd/" rel="next">从 SDWebImage 入手看如何做图片性能优化</a>
             
           </div>
         </div>
@@ -292,8 +284,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2016/05/22/2016-5-18-use-surge-to-proxy-http-request/"
-                   data-title="iOS 开发神器：利用 Surge 访问内网接口" data-url="http://blog.coderhr.com/2016/05/22/2016-5-18-use-surge-to-proxy-http-request/">
+              <div class="ds-thread" data-thread-key="2016/11/01/2016-11-1-how-to-use-charles-while-shadowsocks-is-running/"
+                   data-title="如何才能使得 Charles 和 Shadowsocks 共存" data-url="http://blog.coderhr.com/2016/11/01/2016-11-1-how-to-use-charles-while-shadowsocks-is-running/">
               </div>
             
           </div>
@@ -393,7 +385,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#以前怎么做以及存在的问题"><span class="nav-number">1.</span> <span class="nav-text">以前怎么做以及存在的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS9_后新的解决方案"><span class="nav-number">2.</span> <span class="nav-text">iOS9 后新的解决方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引子"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剖析原理"><span class="nav-number">2.</span> <span class="nav-text">剖析原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
