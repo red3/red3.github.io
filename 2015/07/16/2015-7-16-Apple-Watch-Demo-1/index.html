@@ -39,20 +39,13 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="本系列是我依据WWDC15 Session Video以及苹果官方文档写的一个小Demo，涉及的资料有
--Building Watch Apps
--AppleWatch2 Transition Guide
--WatchKit Programming Guide
-另外需要说明的是本Demo是基于Watch OS 2.0开发的，因为我开始学的时候已经是2.0了，哈哈。在该系列的每篇文章末尾会有一个链接">
+<meta name="description" content="本系列是我依据WWDC15 Session Video以及苹果官方文档写的一个小Demo，涉及的资料有 -Building Watch Apps -AppleWatch2 Transition Guide -WatchKit Programming Guide 另外需要说明的是本Demo是基于Watch OS 2.0开发的，因为我开始学的时候已经是2.0了，哈哈。在该系列的每篇文章末尾会有一个链接">
+<meta name="keywords" content="Apple Watch,WWDC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apple Watch开发系列（一）">
 <meta property="og:url" content="http://blog.coderhr.com/2015/07/16/2015-7-16-Apple-Watch-Demo-1/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="本系列是我依据WWDC15 Session Video以及苹果官方文档写的一个小Demo，涉及的资料有
--Building Watch Apps
--AppleWatch2 Transition Guide
--WatchKit Programming Guide
-另外需要说明的是本Demo是基于Watch OS 2.0开发的，因为我开始学的时候已经是2.0了，哈哈。在该系列的每篇文章末尾会有一个链接">
+<meta property="og:description" content="本系列是我依据WWDC15 Session Video以及苹果官方文档写的一个小Demo，涉及的资料有 -Building Watch Apps -AppleWatch2 Transition Guide -WatchKit Programming Guide 另外需要说明的是本Demo是基于Watch OS 2.0开发的，因为我开始学的时候已经是2.0了，哈哈。在该系列的每篇文章末尾会有一个链接">
 <meta property="og:image" content="http://blog.coderhr.com/assets/2015/img-watchdemo-1.png">
 <meta property="og:image" content="http://blog.coderhr.com/assets/2015/img-watchdemo-2.png">
 <meta property="og:image" content="http://blog.coderhr.com/assets/2015/img-watchdemo-3.png">
@@ -60,11 +53,8 @@
 <meta property="og:updated_time" content="2015-10-08T06:06:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apple Watch开发系列（一）">
-<meta name="twitter:description" content="本系列是我依据WWDC15 Session Video以及苹果官方文档写的一个小Demo，涉及的资料有
--Building Watch Apps
--AppleWatch2 Transition Guide
--WatchKit Programming Guide
-另外需要说明的是本Demo是基于Watch OS 2.0开发的，因为我开始学的时候已经是2.0了，哈哈。在该系列的每篇文章末尾会有一个链接">
+<meta name="twitter:description" content="本系列是我依据WWDC15 Session Video以及苹果官方文档写的一个小Demo，涉及的资料有 -Building Watch Apps -AppleWatch2 Transition Guide -WatchKit Programming Guide 另外需要说明的是本Demo是基于Watch OS 2.0开发的，因为我开始学的时候已经是2.0了，哈哈。在该系列的每篇文章末尾会有一个链接">
+<meta name="twitter:image" content="http://blog.coderhr.com/assets/2015/img-watchdemo-1.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -230,8 +220,8 @@
 <p>-<a href="https://developer.apple.com/library/prerelease/watchos/documentation/General/Conceptual/AppleWatch2TransitionGuide/index.html" target="_blank" rel="external">AppleWatch2 Transition Guide</a></p>
 <p>-<a href="https://developer.apple.com/library/prerelease/watchos/documentation/General/Conceptual/WatchKitProgrammingGuide/index.html" target="_blank" rel="external">WatchKit Programming Guide</a></p>
 <p>另外需要说明的是本Demo是基于Watch OS 2.0开发的，因为我开始学的时候已经是2.0了，哈哈。在该系列的每篇文章末尾会有一个链接地址，指向这个Demo。</p>
-<h1 id="前言">前言</h1><p>当然，首先我们要有一个iOS app，因为WatchKit app的bundle是集成与iOS app中的，安装Watch app的时候会把WatchKit app的bundle从iPhone中传输到Watch上。而对于Watch app来说，分为两个部分：WatchKit app(运行在Apple Watch)以及WatchKit extension(运行在iPhone上)。WatchKit app只包含程序UI相关的storyboards和资源文件（比如图片等），而WatchKit extension包含管理和响应UI的代码。</p>
-<h1 id="添加Watch_app_Target">添加Watch app Target</h1><p>和添加一个iOS app target一样的步骤，如果我要添加了一个名为“Watch”的Target，顺序是下面这样的：<br><img src="/assets/2015/img-watchdemo-1.png" alt=""></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当然，首先我们要有一个iOS app，因为WatchKit app的bundle是集成与iOS app中的，安装Watch app的时候会把WatchKit app的bundle从iPhone中传输到Watch上。而对于Watch app来说，分为两个部分：WatchKit app(运行在Apple Watch)以及WatchKit extension(运行在iPhone上)。WatchKit app只包含程序UI相关的storyboards和资源文件（比如图片等），而WatchKit extension包含管理和响应UI的代码。</p>
+<h1 id="添加Watch-app-Target"><a href="#添加Watch-app-Target" class="headerlink" title="添加Watch app Target"></a>添加Watch app Target</h1><p>和添加一个iOS app target一样的步骤，如果我要添加了一个名为“Watch”的Target，顺序是下面这样的：<br><img src="/assets/2015/img-watchdemo-1.png" alt=""></p>
 <p>选择Next以后，需要勾选这些东西：<br><img src="/assets/2015/img-watchdemo-2.png" alt=""><br>分别解释下这几个选项</p>
 <ul>
 <li>Notification Scene 通知中心：应用程序收到远程或本地通知的时候，手表界面出现的通知布景。</li>
@@ -240,8 +230,8 @@
 </ul>
 <p>这些按需要勾选，确定以后，在WatchKit app的storyboard中就可以看到以下界面：<br><img src="/assets/2015/img-watchdemo-3.png" alt=""><br>图中的Main interface就是Watchkit app的主界面了，Glance Interface是速览界面，剩下的Static Interface和Dynamic Interface是连着一起的，可以这样解释：当Watch上收到iPhone的通知的时候，首先会调起程序对应的Static Interface，当用户对通知表示有兴趣，也就是说抬起了手腕想看这条通知的时候，会切换到对应的Dynamic Interface上。</p>
 <p>此次，我们的任务就是把这几个Interface都运行起来，在Watch上看到效果。</p>
-<h1 id="添加界面元素">添加界面元素</h1><p>暂时，我们可以先在各个界面上拖上一些简单的元素。这里需要注意的是Glance Interface上是不允许可交互元素（比如button，switch等）的存在的。</p>
-<h1 id="编译运行">编译运行</h1><p>到现在为止，查看Scheme menu可以看到，Xcode已经为我们生成了调试不同界面的Scheme了。要编译运行main Interface我们选中Watch Scheme，就可以在模拟器上看到我们的main Interface了。<br>Glance和Notification Interface稍微还要费电周折，分别讲一下：</p>
+<h1 id="添加界面元素"><a href="#添加界面元素" class="headerlink" title="添加界面元素"></a>添加界面元素</h1><p>暂时，我们可以先在各个界面上拖上一些简单的元素。这里需要注意的是Glance Interface上是不允许可交互元素（比如button，switch等）的存在的。</p>
+<h1 id="编译运行"><a href="#编译运行" class="headerlink" title="编译运行"></a>编译运行</h1><p>到现在为止，查看Scheme menu可以看到，Xcode已经为我们生成了调试不同界面的Scheme了。要编译运行main Interface我们选中Watch Scheme，就可以在模拟器上看到我们的main Interface了。<br>Glance和Notification Interface稍微还要费电周折，分别讲一下：</p>
 <ul>
 <li>Glance</li>
 </ul>
@@ -256,11 +246,18 @@
 </ol>
 <p>现在我们选中Static Notification的Scheme来编译运行，就可以看到模拟器上收到的通知内容为“Test Message”，而这个文字是从PushNotificationPayload.apns这个文件中读写出来的。</p>
 <p>然后再选中Dynamic Notification的Scheme来编译运行，发现怎么还是刚才的通知，现在我们要移步到NotificationController.m这个文件下，将一下代码的注释打开</p>
-<pre><code class="Objective-C">- (void)didReceiveRemoteNotification:(NSDictionary *)remoteNotification withCompletion:(void (^)(WKUserNotificationInterfaceType))completionHandler {&#10;    // This method is called when a remote notification needs to be presented.&#10;    // Implement it if you use a dynamic notification interface.&#10;    // Populate your dynamic notification interface as quickly as possible.&#10;    //&#10;    // After populating your dynamic notification interface call the completion block.&#10;    completionHandler(WKUserNotificationInterfaceTypeDefault);&#10;}
+<pre><code class="Objective-C">- (void)didReceiveRemoteNotification:(NSDictionary *)remoteNotification withCompletion:(void (^)(WKUserNotificationInterfaceType))completionHandler {
+    // This method is called when a remote notification needs to be presented.
+    // Implement it if you use a dynamic notification interface.
+    // Populate your dynamic notification interface as quickly as possible.
+    //
+    // After populating your dynamic notification interface call the completion block.
+    completionHandler(WKUserNotificationInterfaceTypeDefault);
+}
 </code></pre>
 <p>然后我们需要把下面这行代码中的”WKUserNotificationInterfaceTypeDefault”替换为”WKUserNotificationInterfaceTypeCustom”，然后重新编译运行，就发现我们定制的Dynamic Notification出现在屏幕上了。</p>
-<pre><code>completionHandler<span class="list">(<span class="keyword">WKUserNotificationInterfaceTypeDefault</span>)</span><span class="comment">;</span>
-</code></pre><h1 id="下期预告">下期预告</h1><p>今天的系列就先到这里，下一系列讲讲怎么创建一个功能栏，就是抬腕可以在表盘上看见的那个东西。</p>
+<pre><code>completionHandler(WKUserNotificationInterfaceTypeDefault);
+</code></pre><h1 id="下期预告"><a href="#下期预告" class="headerlink" title="下期预告"></a>下期预告</h1><p>今天的系列就先到这里，下一系列讲讲怎么创建一个功能栏，就是抬腕可以在表盘上看见的那个东西。</p>
 <ul>
 <li>惯例：<a href="https://github.com/red3/WatchDemo/archive/master.zip" target="_blank" rel="external">点击这里下载Demo</a></li>
 <li>重要：因为博客暂时没有评论区，如果你对本文有什么疑惑，或者你发现本文由存在错误的地方，非常欢迎你联系我指出。QQ：309333018，WeiChat：flipgo</li>
@@ -356,7 +353,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -416,7 +413,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加Watch_app_Target"><span class="nav-number">2.</span> <span class="nav-text">添加Watch app Target</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加界面元素"><span class="nav-number">3.</span> <span class="nav-text">添加界面元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译运行"><span class="nav-number">4.</span> <span class="nav-text">编译运行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下期预告"><span class="nav-number">5.</span> <span class="nav-text">下期预告</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加Watch-app-Target"><span class="nav-number">2.</span> <span class="nav-text">添加Watch app Target</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加界面元素"><span class="nav-number">3.</span> <span class="nav-text">添加界面元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译运行"><span class="nav-number">4.</span> <span class="nav-text">编译运行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下期预告"><span class="nav-number">5.</span> <span class="nav-text">下期预告</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -433,7 +430,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

@@ -39,14 +39,12 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="前言书籍推荐关于时间管理的思考：按照目前正常的进度，iOS学习沙龙已经进行到第三讲，意味着这个沙龙开课已经过去二周了，按照每天3小时的编程工作量，也应该有花费差不多42个小时在iOS编程上面，也应该差不多了解到了Objective-C这门语言的基础语法，Foundation框架的使用，UIKit框架的使用。
-当然这是正常的按照计划的情况，事实上，几乎所有的规划到头来都不是按部就班执行过来的，我自己">
+<meta name="description" content="前言书籍推荐关于时间管理的思考：按照目前正常的进度，iOS学习沙龙已经进行到第三讲，意味着这个沙龙开课已经过去二周了，按照每天3小时的编程工作量，也应该有花费差不多42个小时在iOS编程上面，也应该差不多了解到了Objective-C这门语言的基础语法，Foundation框架的使用，UIKit框架的使用。 当然这是正常的按照计划的情况，事实上，几乎所有的规划到头来都不是按部就班执行过来的，我自己">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS学习沙龙系列（三）：ContentView以及ContainerViewController">
 <meta property="og:url" content="http://blog.coderhr.com/2016/01/27/2016-1-27-how-to-learn-ios03/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="前言书籍推荐关于时间管理的思考：按照目前正常的进度，iOS学习沙龙已经进行到第三讲，意味着这个沙龙开课已经过去二周了，按照每天3小时的编程工作量，也应该有花费差不多42个小时在iOS编程上面，也应该差不多了解到了Objective-C这门语言的基础语法，Foundation框架的使用，UIKit框架的使用。
-当然这是正常的按照计划的情况，事实上，几乎所有的规划到头来都不是按部就班执行过来的，我自己">
+<meta property="og:description" content="前言书籍推荐关于时间管理的思考：按照目前正常的进度，iOS学习沙龙已经进行到第三讲，意味着这个沙龙开课已经过去二周了，按照每天3小时的编程工作量，也应该有花费差不多42个小时在iOS编程上面，也应该差不多了解到了Objective-C这门语言的基础语法，Foundation框架的使用，UIKit框架的使用。 当然这是正常的按照计划的情况，事实上，几乎所有的规划到头来都不是按部就班执行过来的，我自己">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios3_01.png">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios3_02.png">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios3_03.jpg">
@@ -54,8 +52,8 @@
 <meta property="og:updated_time" content="2016-01-28T01:46:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS学习沙龙系列（三）：ContentView以及ContainerViewController">
-<meta name="twitter:description" content="前言书籍推荐关于时间管理的思考：按照目前正常的进度，iOS学习沙龙已经进行到第三讲，意味着这个沙龙开课已经过去二周了，按照每天3小时的编程工作量，也应该有花费差不多42个小时在iOS编程上面，也应该差不多了解到了Objective-C这门语言的基础语法，Foundation框架的使用，UIKit框架的使用。
-当然这是正常的按照计划的情况，事实上，几乎所有的规划到头来都不是按部就班执行过来的，我自己">
+<meta name="twitter:description" content="前言书籍推荐关于时间管理的思考：按照目前正常的进度，iOS学习沙龙已经进行到第三讲，意味着这个沙龙开课已经过去二周了，按照每天3小时的编程工作量，也应该有花费差不多42个小时在iOS编程上面，也应该差不多了解到了Objective-C这门语言的基础语法，Foundation框架的使用，UIKit框架的使用。 当然这是正常的按照计划的情况，事实上，几乎所有的规划到头来都不是按部就班执行过来的，我自己">
+<meta name="twitter:image" content="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios3_01.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -216,38 +214,38 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="前言">前言</h1><h2 id="书籍推荐">书籍推荐</h2><p>关于时间管理的思考：按照目前正常的进度，iOS学习沙龙已经进行到第三讲，意味着这个沙龙开课已经过去二周了，按照每天3小时的编程工作量，也应该有花费差不多42个小时在iOS编程上面，也应该差不多了解到了Objective-C这门语言的基础语法，Foundation框架的使用，UIKit框架的使用。</p>
+        <span itemprop="articleBody"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="书籍推荐"><a href="#书籍推荐" class="headerlink" title="书籍推荐"></a>书籍推荐</h2><p>关于时间管理的思考：按照目前正常的进度，iOS学习沙龙已经进行到第三讲，意味着这个沙龙开课已经过去二周了，按照每天3小时的编程工作量，也应该有花费差不多42个小时在iOS编程上面，也应该差不多了解到了Objective-C这门语言的基础语法，Foundation框架的使用，UIKit框架的使用。</p>
 <p>当然这是正常的按照计划的情况，事实上，几乎所有的规划到头来都不是按部就班执行过来的，我自己的经验也是这样，本来要求自己今天必须完成某件事情，实际做起来总想先看个电影，再小睡一会，结果一天过去了发现任务还没有完成。</p>
 <p>回过头来其实发现我们都犯了一个严重的错误：对短期的收益要求太高，对长期收益要求太低。对收益的把握不平衡导致了各种各种的时间管理的问题。</p>
 <p>但是，这真的是时间管理出了问题了吗？</p>
 <p>李笑来老师在《把时间当做朋友》中这本书中说道：时间是不可管理的，真正需要管理的是人才对。我从读了这本书以后，也慢慢开始学习管理自己。</p>
 <p><a href="http://zhibimo.com/books/xiaolai/ba-shi-jian-dang-zuo-peng-you" target="_blank" rel="external">在线阅读地址</a></p>
 <p><a href="http://item.jd.com/11338691.html" target="_blank" rel="external">京东链接</a></p>
-<h1 id="本期纲要">本期纲要</h1><h2 id="ContentView">ContentView</h2><h3 id="UIScrollView">UIScrollView</h3><p>当需要显示的内容区域要大于View的边界的时候，需要用UIScrollView来滑动显示不可见的范围至可见的范围。设备的大小是固定的，所以一个屏幕上显示的内容大小也被限制，当屏幕上需要显示将A、B、C、D、E、F等不同View按垂直方向排列显示的时候，就需要用到UIScrollView来显示内容</p>
+<h1 id="本期纲要"><a href="#本期纲要" class="headerlink" title="本期纲要"></a>本期纲要</h1><h2 id="ContentView"><a href="#ContentView" class="headerlink" title="ContentView"></a>ContentView</h2><h3 id="UIScrollView"><a href="#UIScrollView" class="headerlink" title="UIScrollView"></a>UIScrollView</h3><p>当需要显示的内容区域要大于View的边界的时候，需要用UIScrollView来滑动显示不可见的范围至可见的范围。设备的大小是固定的，所以一个屏幕上显示的内容大小也被限制，当屏幕上需要显示将A、B、C、D、E、F等不同View按垂直方向排列显示的时候，就需要用到UIScrollView来显示内容</p>
 <ul>
 <li>ContentSize : 内容区域的大小，通过这个属性，ScrollView得知自己需不需要滑动来呈现屏幕外的内容。</li>
 <li>速度（decelerationRate）：滑动的速度</li>
 <li>方向 ：可水平方向滑动，可垂直方向滑动</li>
 <li>Pagemode ： 一次滑动一屏，经常用于广告banner的滑动模式</li>
 </ul>
-<h3 id="UITableView">UITableView</h3><p>单列多行的列表。继承自UIScrollView，当要显示的内容具有规律性、重复性，或者说就像列表中的行的View是一致的，需要用到UITableView来显示内容</p>
+<h3 id="UITableView"><a href="#UITableView" class="headerlink" title="UITableView"></a>UITableView</h3><p>单列多行的列表。继承自UIScrollView，当要显示的内容具有规律性、重复性，或者说就像列表中的行的View是一致的，需要用到UITableView来显示内容</p>
 <ul>
 <li>复用机制，当列表行数足够大，意味着TableView上需要显示的行数有很多，怎么保证内存开销（<code>ReuseIdentifier</code>）？</li>
 <li>数据或者行，可以被分割成多组，或者group</li>
 <li>提供删除、增加行，移动，选择（多选）</li>
 <li>AccessoryType（EditingAccessoryType）: 列表中每一行Cell的辅助指示标志，最常见的为开口向右的小箭头。</li>
 </ul>
-<h3 id="UICollectionView">UICollectionView</h3><p>跟UITableView及其相像，继承自UIScrollView，在展示形式上有着更高级的方式。</p>
-<h3 id="UITextView">UITextView</h3><p>显示大段文字的ScrollView。</p>
-<h3 id="UIWebView">UIWebView</h3><p>也是UIScrollView，用来加载网页。</p>
-<h2 id="Bar">Bar</h2><h3 id="UIStatusBars">UIStatusBars</h3><p>状态栏，位于屏幕最顶部，透明，呈现关于设备的信息。</p>
+<h3 id="UICollectionView"><a href="#UICollectionView" class="headerlink" title="UICollectionView"></a>UICollectionView</h3><p>跟UITableView及其相像，继承自UIScrollView，在展示形式上有着更高级的方式。</p>
+<h3 id="UITextView"><a href="#UITextView" class="headerlink" title="UITextView"></a>UITextView</h3><p>显示大段文字的ScrollView。</p>
+<h3 id="UIWebView"><a href="#UIWebView" class="headerlink" title="UIWebView"></a>UIWebView</h3><p>也是UIScrollView，用来加载网页。</p>
+<h2 id="Bar"><a href="#Bar" class="headerlink" title="Bar"></a>Bar</h2><h3 id="UIStatusBars"><a href="#UIStatusBars" class="headerlink" title="UIStatusBars"></a>UIStatusBars</h3><p>状态栏，位于屏幕最顶部，透明，呈现关于设备的信息。</p>
 <ul>
 <li>轻触以回到顶部</li>
 <li>网络活动指示</li>
 <li>Dark、Light两种Style</li>
 <li>如有必要，全屏浏览多媒体信息时需要隐藏状态栏</li>
 </ul>
-<h3 id="UINavigationBar">UINavigationBar</h3><p>导航栏，位于StatusBar底部，透明，通过呈现层级关系信息来导航，提供对内容的管理。</p>
+<h3 id="UINavigationBar"><a href="#UINavigationBar" class="headerlink" title="UINavigationBar"></a>UINavigationBar</h3><p>导航栏，位于StatusBar底部，透明，通过呈现层级关系信息来导航，提供对内容的管理。</p>
 <blockquote>
 <p>包含在UINabigationController中</p>
 </blockquote>
@@ -265,8 +263,8 @@
 <li>返回按钮（backButton） 的箭头图片可定制，但要在保证用户可辨认的前提下定制。</li>
 <li>如有必要，全屏浏览多媒体信息时需要隐藏状态栏</li>
 </ul>
-<h3 id="UIToolBar">UIToolBar</h3><p>对于用户交互按钮的一组集合，出现在屏幕底部。邮件app的底部有用到，国内的开发者好像不太喜欢使用这个控件，大致了解即可。</p>
-<h3 id="UITabBar">UITabBar</h3><p>tab栏，提供用户在不同栏目（View）之间切换的功能，透明的，屏幕底部，AppStore中绝大部分应用用到UITabBar来管理app中的各个栏目。</p>
+<h3 id="UIToolBar"><a href="#UIToolBar" class="headerlink" title="UIToolBar"></a>UIToolBar</h3><p>对于用户交互按钮的一组集合，出现在屏幕底部。邮件app的底部有用到，国内的开发者好像不太喜欢使用这个控件，大致了解即可。</p>
+<h3 id="UITabBar"><a href="#UITabBar" class="headerlink" title="UITabBar"></a>UITabBar</h3><p>tab栏，提供用户在不同栏目（View）之间切换的功能，透明的，屏幕底部，AppStore中绝大部分应用用到UITabBar来管理app中的各个栏目。</p>
 <blockquote>
 <p>包含在UITabBarController中</p>
 </blockquote>
@@ -274,23 +272,23 @@
 <ul>
 <li>Badge ：考虑使用角标来向用户传达显著的消息通知。</li>
 </ul>
-<h3 id="UIBarButtonItem_&amp;&amp;_UITabBarItem">UIBarButtonItem &amp;&amp; UITabBarItem</h3><p>UIBarButtonItem是被UINavigationBar、UIToolBar管理的对象，上文中提到的导航条上的Item即为UIBarButtonItem，提供交互行为。<br>UITabBarItem是被UITabBar管理的对象。</p>
-<h2 id="Container_View_Controller">Container View Controller</h2><h4 id="UIViewController">UIViewController</h4><p>app中扮演至关重要的角色，简单来说，可以将当下屏幕中显示的内容（场景）比作一个ViewController，因此，一个app至少有一个ViewController。场景的切换就是ViewController的切换，当然，按照面向对象的思考方式，必然有一个对象是设计出来要管理这些场景的切换（UINavigationController、UITabBarController就是这样的存在）。</p>
+<h3 id="UIBarButtonItem-amp-amp-UITabBarItem"><a href="#UIBarButtonItem-amp-amp-UITabBarItem" class="headerlink" title="UIBarButtonItem &amp;&amp; UITabBarItem"></a>UIBarButtonItem &amp;&amp; UITabBarItem</h3><p>UIBarButtonItem是被UINavigationBar、UIToolBar管理的对象，上文中提到的导航条上的Item即为UIBarButtonItem，提供交互行为。<br>UITabBarItem是被UITabBar管理的对象。</p>
+<h2 id="Container-View-Controller"><a href="#Container-View-Controller" class="headerlink" title="Container View Controller"></a>Container View Controller</h2><h4 id="UIViewController"><a href="#UIViewController" class="headerlink" title="UIViewController"></a>UIViewController</h4><p>app中扮演至关重要的角色，简单来说，可以将当下屏幕中显示的内容（场景）比作一个ViewController，因此，一个app至少有一个ViewController。场景的切换就是ViewController的切换，当然，按照面向对象的思考方式，必然有一个对象是设计出来要管理这些场景的切换（UINavigationController、UITabBarController就是这样的存在）。</p>
 <p>具体到单一的某个ViewController，它的职责是：</p>
 <ul>
 <li>提供一个画布（属性<code>view</code>），来管理SubViews</li>
 </ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self.view addSubView:...]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self.view addSubView:...]</div></pre></td></tr></table></figure>
 <ul>
 <li>处理UI交互（方法）</li>
 </ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self.button addTarget:&#60;#(nullable id)#&#62; action:&#60;#(nonnull SEL)#&#62; forControlEvents:&#60;#(UIControlEvents)#&#62;]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self.button addTarget:&lt;#(nullable id)#&gt; action:&lt;#(nonnull SEL)#&gt; forControlEvents:&lt;#(UIControlEvents)#&gt;]</div></pre></td></tr></table></figure>
 <ul>
 <li><p>两种方式来将一个UIViewController显示在屏幕上</p>
 <ol>
 <li>交由ContainerViewController来管理 （push、pop）</li>
 <li><p>模态推出(present)一个视图控制器</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> UINavigationController *naviVC = [[UINavigationController alloc] initWithRootViewController:aVC];&#10;[self presentViewController:naviVC animated:YES completion:NULL];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> UINavigationController *naviVC = [[UINavigationController alloc] initWithRootViewController:aVC];</div><div class="line">[self presentViewController:naviVC animated:YES completion:NULL];</div></pre></td></tr></table></figure>
 </li>
 </ol>
 </li>
@@ -298,7 +296,7 @@
 <p>图示以及真相：</p>
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios3_01.png" alt=""></p>
 <p>详细的说明，以及关于怎么在StoryBoard中连接View到ViewController中，请参考这个<a href="https://developer.apple.com/library/ios/featuredarticles/ViewControllerPGforiPhoneOS/index.html" target="_blank" rel="external">链接</a></p>
-<h4 id="UINavigationViewController">UINavigationViewController</h4><p>用来管理ViewController的容器，提供导航，即不同ViewController之间的转场切换。</p>
+<h4 id="UINavigationViewController"><a href="#UINavigationViewController" class="headerlink" title="UINavigationViewController"></a>UINavigationViewController</h4><p>用来管理ViewController的容器，提供导航，即不同ViewController之间的转场切换。</p>
 <p>从组分上来讲</p>
 <ul>
 <li>容器属性（属性viewControllers）：包含着当前任务栈中所有的ViewController，任务栈最上面的ViewController即为当前可见的ViewController</li>
@@ -308,15 +306,15 @@
 <ul>
 <li>Push ： 显示下一等级或者步骤的页面</li>
 </ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self.navigationController pushViewController:aVC animated:YES];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self.navigationController pushViewController:aVC animated:YES];</div></pre></td></tr></table></figure>
 <ul>
 <li>Pop ： 回到上一等级或者步骤的页面</li>
 </ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self.navigationController popViewController:aVC animated:YES];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self.navigationController popViewController:aVC animated:YES];</div></pre></td></tr></table></figure>
 <p>图示以及真相：</p>
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios3_02.png" alt=""></p>
 <p>详细的说明，以及关于怎么在StoryBoard中拖拽导航的子视图场景切换，请参考这个<a href="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/ViewControllerCatalog/Chapters/NavigationControllers.html" target="_blank" rel="external">链接</a></p>
-<h4 id="UITabBarViewController">UITabBarViewController</h4><p>用来管理ViewController的容器，提供app的栏目之间的切换。</p>
+<h4 id="UITabBarViewController"><a href="#UITabBarViewController" class="headerlink" title="UITabBarViewController"></a>UITabBarViewController</h4><p>用来管理ViewController的容器，提供app的栏目之间的切换。</p>
 <p>从组分上来讲</p>
 <ul>
 <li>容器属性（属性viewControllers）：一般来说，应该包含app的几个主要栏目，每个栏目可能是UINavigationViewController，也可以是UIViewController</li>
@@ -329,13 +327,13 @@
 <p>图示以及真相：</p>
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios3_03.jpg" alt=""></p>
 <p>详细的说明，请参考这个<a href="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/ViewControllerCatalog/Chapters/TabBarControllers.html" target="_blank" rel="external">链接</a></p>
-<h4 id="UIWindow以及上面所讲的之间的联系">UIWindow以及上面所讲的之间的联系</h4><p>先看这张图：</p>
+<h4 id="UIWindow以及上面所讲的之间的联系"><a href="#UIWindow以及上面所讲的之间的联系" class="headerlink" title="UIWindow以及上面所讲的之间的联系"></a>UIWindow以及上面所讲的之间的联系</h4><p>先看这张图：</p>
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios3_04.png" alt=""></p>
 <p>从图中可以看到，UIWindow是所有内容的承载，window通过rootViewController来将生产内容的职责赋予给Controller，这个Controller一般来讲是UITabBarController，也可以是UINavigationController。广义上来说是ContainerViewController，确定了这个ContainerViewController以后，Container管理的subViewController通过自己的 <code>navigationItem</code> 与 <code>tabBarItem</code> 和 自己的容器之间交流信息。</p>
-<h2 id="附件下载">附件下载</h2><ul>
+<h2 id="附件下载"><a href="#附件下载" class="headerlink" title="附件下载"></a>附件下载</h2><ul>
 <li><a href="https://redharry.b0.upaiyun.com/download/UIKitDemo02.zip" target="_blank" rel="external">附件01</a>: UIScrollView、UITableView以及ContainerViewController</li>
 </ul>
-<h2 id="下次课程概要">下次课程概要</h2><p>UIViewController的生命周期、内存管理</p>
+<h2 id="下次课程概要"><a href="#下次课程概要" class="headerlink" title="下次课程概要"></a>下次课程概要</h2><p>UIViewController的生命周期、内存管理</p>
 </span>
       
     </div>
@@ -419,7 +417,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -479,7 +477,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#书籍推荐"><span class="nav-number">1.1.</span> <span class="nav-text">书籍推荐</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本期纲要"><span class="nav-number">2.</span> <span class="nav-text">本期纲要</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ContentView"><span class="nav-number">2.1.</span> <span class="nav-text">ContentView</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UIScrollView"><span class="nav-number">2.1.1.</span> <span class="nav-text">UIScrollView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UITableView"><span class="nav-number">2.1.2.</span> <span class="nav-text">UITableView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UICollectionView"><span class="nav-number">2.1.3.</span> <span class="nav-text">UICollectionView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UITextView"><span class="nav-number">2.1.4.</span> <span class="nav-text">UITextView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIWebView"><span class="nav-number">2.1.5.</span> <span class="nav-text">UIWebView</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bar"><span class="nav-number">2.2.</span> <span class="nav-text">Bar</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UIStatusBars"><span class="nav-number">2.2.1.</span> <span class="nav-text">UIStatusBars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UINavigationBar"><span class="nav-number">2.2.2.</span> <span class="nav-text">UINavigationBar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIToolBar"><span class="nav-number">2.2.3.</span> <span class="nav-text">UIToolBar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UITabBar"><span class="nav-number">2.2.4.</span> <span class="nav-text">UITabBar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIBarButtonItem_&&_UITabBarItem"><span class="nav-number">2.2.5.</span> <span class="nav-text">UIBarButtonItem && UITabBarItem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Container_View_Controller"><span class="nav-number">2.3.</span> <span class="nav-text">Container View Controller</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UIViewController"><span class="nav-number">2.3.0.1.</span> <span class="nav-text">UIViewController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UINavigationViewController"><span class="nav-number">2.3.0.2.</span> <span class="nav-text">UINavigationViewController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UITabBarViewController"><span class="nav-number">2.3.0.3.</span> <span class="nav-text">UITabBarViewController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UIWindow以及上面所讲的之间的联系"><span class="nav-number">2.3.0.4.</span> <span class="nav-text">UIWindow以及上面所讲的之间的联系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附件下载"><span class="nav-number">2.4.</span> <span class="nav-text">附件下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下次课程概要"><span class="nav-number">2.5.</span> <span class="nav-text">下次课程概要</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#书籍推荐"><span class="nav-number">1.1.</span> <span class="nav-text">书籍推荐</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本期纲要"><span class="nav-number">2.</span> <span class="nav-text">本期纲要</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ContentView"><span class="nav-number">2.1.</span> <span class="nav-text">ContentView</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UIScrollView"><span class="nav-number">2.1.1.</span> <span class="nav-text">UIScrollView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UITableView"><span class="nav-number">2.1.2.</span> <span class="nav-text">UITableView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UICollectionView"><span class="nav-number">2.1.3.</span> <span class="nav-text">UICollectionView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UITextView"><span class="nav-number">2.1.4.</span> <span class="nav-text">UITextView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIWebView"><span class="nav-number">2.1.5.</span> <span class="nav-text">UIWebView</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bar"><span class="nav-number">2.2.</span> <span class="nav-text">Bar</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UIStatusBars"><span class="nav-number">2.2.1.</span> <span class="nav-text">UIStatusBars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UINavigationBar"><span class="nav-number">2.2.2.</span> <span class="nav-text">UINavigationBar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIToolBar"><span class="nav-number">2.2.3.</span> <span class="nav-text">UIToolBar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UITabBar"><span class="nav-number">2.2.4.</span> <span class="nav-text">UITabBar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIBarButtonItem-amp-amp-UITabBarItem"><span class="nav-number">2.2.5.</span> <span class="nav-text">UIBarButtonItem && UITabBarItem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Container-View-Controller"><span class="nav-number">2.3.</span> <span class="nav-text">Container View Controller</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UIViewController"><span class="nav-number">2.3.0.1.</span> <span class="nav-text">UIViewController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UINavigationViewController"><span class="nav-number">2.3.0.2.</span> <span class="nav-text">UINavigationViewController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UITabBarViewController"><span class="nav-number">2.3.0.3.</span> <span class="nav-text">UITabBarViewController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UIWindow以及上面所讲的之间的联系"><span class="nav-number">2.3.0.4.</span> <span class="nav-text">UIWindow以及上面所讲的之间的联系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附件下载"><span class="nav-number">2.4.</span> <span class="nav-text">附件下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下次课程概要"><span class="nav-number">2.5.</span> <span class="nav-text">下次课程概要</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -496,7 +494,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

@@ -39,29 +39,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。
-长此以往，叔能忍，婶婶不能忍啊！
-这篇文章的主要作用就是解决大家的这个烦恼。
-剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。
-我们就要抓包软件和翻墙软件中的佼佼者来说，">
+<meta name="description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。 长此以往，叔能忍，婶婶不能忍啊！ 这篇文章的主要作用就是解决大家的这个烦恼。 剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。 我们就要抓包软件和翻墙软件中的佼佼者来说，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何才能使得 Charles 和 Shadowsocks 共存">
 <meta property="og:url" content="http://blog.coderhr.com/2016/11/01/2016-11-1-how-to-use-charles-while-shadowsocks-is-running/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。
-长此以往，叔能忍，婶婶不能忍啊！
-这篇文章的主要作用就是解决大家的这个烦恼。
-剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。
-我们就要抓包软件和翻墙软件中的佼佼者来说，">
+<meta property="og:description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。 长此以往，叔能忍，婶婶不能忍啊！ 这篇文章的主要作用就是解决大家的这个烦恼。 剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。 我们就要抓包软件和翻墙软件中的佼佼者来说，">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/ss-charles01.gif">
 <meta property="og:updated_time" content="2016-11-25T09:30:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何才能使得 Charles 和 Shadowsocks 共存">
-<meta name="twitter:description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。
-长此以往，叔能忍，婶婶不能忍啊！
-这篇文章的主要作用就是解决大家的这个烦恼。
-剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。
-我们就要抓包软件和翻墙软件中的佼佼者来说，">
+<meta name="twitter:description" content="引子不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。 长此以往，叔能忍，婶婶不能忍啊！ 这篇文章的主要作用就是解决大家的这个烦恼。 剖析原理想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。 我们就要抓包软件和翻墙软件中的佼佼者来说，">
+<meta name="twitter:image" content="http://photo-coder.b0.upaiyun.com/img/ss-charles01.gif">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -222,17 +211,17 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="引子">引子</h2><p>不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。</p>
+        <span itemprop="articleBody"><h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>不知道诸位程序员君有没有在接口抓包过程中发现抓包程序中毛都没有，然后搜索发现原来是跟翻墙程序有冲突，于是乎往后每次需要抓包都需要事先关闭翻墙程序，然后抓包完毕再将翻墙程序打开。。。</p>
 <p>长此以往，叔能忍，婶婶不能忍啊！</p>
 <p>这篇文章的主要作用就是解决大家的这个烦恼。</p>
-<h2 id="剖析原理">剖析原理</h2><p>想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。</p>
+<h2 id="剖析原理"><a href="#剖析原理" class="headerlink" title="剖析原理"></a>剖析原理</h2><p>想要解决这个冲突问题，我们就要先从它们的原理入手，看冲突的根源是什么，方可对症下药。</p>
 <p>我们就要抓包软件和翻墙软件中的佼佼者来说，抓包软件我们选择 <a href="https://www.charlesproxy.com/" target="_blank" rel="external">Charles</a>, 翻墙软件我们选择 <a href="https://github.com/shadowsocks" target="_blank" rel="external">Shadowsocks</a>. </p>
 <p>抓包也好，翻墙也好，其实都是通过修改系统的网络服务的代理配置来完成的，我们自己也是可以看到这个设置的，通过路径 <strong>System Preferences -&gt; Network -&gt; Advanced -&gt; Proxies</strong> 便可一窥究竟。</p>
 <p>这里面，Shadowsocks 是通过设置 <strong>Automatic Proxy Configuration</strong> 指定一个配置文件的方式来完成代理设置的，之所以这样，是因为 Shadowsocks 有两种工作模式，即自动模式和全局模式，这两种模式的切换，实际上就是通过修改这个配置文件来完成的。</p>
 <p>而 Charles 是通过设置 <strong>Web Proxy(HTTP) 和 Secure Web Proxy(HTTPS)</strong> 来完成代理设置的，具体来说，就是将本机的 HTTP 流量和 HTTPS 流量都转发到了 8888 端口上了（这个跟 Charles 里面的设置是对应的）。</p>
 <p>通过以上剖析我们发现，这二者其实都是通过相同的办法来使代理生效的，故不可共存！并且更为坑爹的是，当你打开了 Charles 抓包的时候，发现 Shadowsocks 还在运行着，这个时候你肯定会想，先把 Shadowsocks 临时关闭下吧，然后你就会发现这个玩意不光把自己的配置给关闭了，还捎带着把 Charles 的配置也给关闭了，于是你不得不退出 Charles 一次，然后再次打开以使配置重新生效，就说坑不坑吧！</p>
 <p>这绝对是逼我们动真格的了。</p>
-<h2 id="解决方案">解决方案</h2><p>那么到底有没有办法让这两个东西共存呢？</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>那么到底有没有办法让这两个东西共存呢？</p>
 <p>答案就是：绝对没有！☺️</p>
 <p>原谅我标题党了，大家先别忙着拍我，因为原理大家都看到了，理论上来说，确实没有办法共存，但是在这种情况下，我们就需要动用我们人人都可以当产品经理的产品思维来思考下，做个思维转换：</p>
 <p>因为 Shadowsocks 的关闭导致了 Charles 的配置也被修改，也就是说 Shadowsocks 关闭了不该关闭的东西，那么我们是否可以跳过 Shadowsocks 的程序控制，自己去手动控制呢？</p>
@@ -254,6 +243,8 @@
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/01/2017-5-1-Fixing-Chrome-missing-subjectAltName-selfsigned-cert-openssl/" rel="prev">Fixing Chrome 58+ [missing_subjectAltName] with openssl when using self signed certificates</a>
             
           </div>
 
@@ -325,7 +316,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -402,7 +393,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

@@ -39,22 +39,20 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="前段时间余弦在他的公众账号（@Lazy-Thought）中提到了一种优雅且靠谱的翻墙方案，就是利用一台海外的服务器去转发本地的网络请求，很值得尝试。所以本文为对该方案的一次探索和记录。如果你也有幸采用这种方案，希望我的记录可以帮到你。
-准备工作是需要购买一台海外服务器。当然我需要小心翼翼的说出我用的是亚马逊的服务器，之所以选择这家，是因为亚马逊的流量通道中有大量的商业流量在里面，个人的流量充斥在里">
+<meta name="description" content="前段时间余弦在他的公众账号（@Lazy-Thought）中提到了一种优雅且靠谱的翻墙方案，就是利用一台海外的服务器去转发本地的网络请求，很值得尝试。所以本文为对该方案的一次探索和记录。如果你也有幸采用这种方案，希望我的记录可以帮到你。 准备工作是需要购买一台海外服务器。当然我需要小心翼翼的说出我用的是亚马逊的服务器，之所以选择这家，是因为亚马逊的流量通道中有大量的商业流量在里面，个人的流量充斥在里">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论如何科学搭建梯子">
 <meta property="og:url" content="http://blog.coderhr.com/2015/10/10/how-to-fuck-the-greatfirewall/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="前段时间余弦在他的公众账号（@Lazy-Thought）中提到了一种优雅且靠谱的翻墙方案，就是利用一台海外的服务器去转发本地的网络请求，很值得尝试。所以本文为对该方案的一次探索和记录。如果你也有幸采用这种方案，希望我的记录可以帮到你。
-准备工作是需要购买一台海外服务器。当然我需要小心翼翼的说出我用的是亚马逊的服务器，之所以选择这家，是因为亚马逊的流量通道中有大量的商业流量在里面，个人的流量充斥在里">
+<meta property="og:description" content="前段时间余弦在他的公众账号（@Lazy-Thought）中提到了一种优雅且靠谱的翻墙方案，就是利用一台海外的服务器去转发本地的网络请求，很值得尝试。所以本文为对该方案的一次探索和记录。如果你也有幸采用这种方案，希望我的记录可以帮到你。 准备工作是需要购买一台海外服务器。当然我需要小心翼翼的说出我用的是亚马逊的服务器，之所以选择这家，是因为亚马逊的流量通道中有大量的商业流量在里面，个人的流量充斥在里">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how-gfw-work01.png">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how-gfw-work02.png">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how-gfw-work02.png">
 <meta property="og:updated_time" content="2015-12-28T03:22:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="论如何科学搭建梯子">
-<meta name="twitter:description" content="前段时间余弦在他的公众账号（@Lazy-Thought）中提到了一种优雅且靠谱的翻墙方案，就是利用一台海外的服务器去转发本地的网络请求，很值得尝试。所以本文为对该方案的一次探索和记录。如果你也有幸采用这种方案，希望我的记录可以帮到你。
-准备工作是需要购买一台海外服务器。当然我需要小心翼翼的说出我用的是亚马逊的服务器，之所以选择这家，是因为亚马逊的流量通道中有大量的商业流量在里面，个人的流量充斥在里">
+<meta name="twitter:description" content="前段时间余弦在他的公众账号（@Lazy-Thought）中提到了一种优雅且靠谱的翻墙方案，就是利用一台海外的服务器去转发本地的网络请求，很值得尝试。所以本文为对该方案的一次探索和记录。如果你也有幸采用这种方案，希望我的记录可以帮到你。 准备工作是需要购买一台海外服务器。当然我需要小心翼翼的说出我用的是亚马逊的服务器，之所以选择这家，是因为亚马逊的流量通道中有大量的商业流量在里面，个人的流量充斥在里">
+<meta name="twitter:image" content="http://photo-coder.b0.upaiyun.com/img/how-gfw-work01.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -217,25 +215,25 @@
       
         <span itemprop="articleBody"><p>前段时间余弦在他的公众账号（@Lazy-Thought）中提到了一种优雅且靠谱的翻墙方案，就是利用一台海外的服务器去转发本地的网络请求，很值得尝试。所以本文为对该方案的一次探索和记录。如果你也有幸采用这种方案，希望我的记录可以帮到你。</p>
 <p>准备工作是需要购买一台海外服务器。当然我需要小心翼翼的说出我用的是亚马逊的服务器，之所以选择这家，是因为亚马逊的流量通道中有大量的商业流量在里面，个人的流量充斥在里面不算什么，真要是被防火墙嗅探到，以亚马逊的商业博弈能力，相信会解决问题。说不定博弈来博弈去，防火墙都没了也说不定。（哈哈，我就是这么天真）</p>
-<h2 id="原理">原理</h2><h3 id="防火墙是怎么工作的">防火墙是怎么工作的</h3><p><code>GFW</code>会将自己不喜欢的东西统统过滤掉，当用户触发<code>GFW</code>的过滤规则的时候，连接就会被重置。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><h3 id="防火墙是怎么工作的"><a href="#防火墙是怎么工作的" class="headerlink" title="防火墙是怎么工作的"></a>防火墙是怎么工作的</h3><p><code>GFW</code>会将自己不喜欢的东西统统过滤掉，当用户触发<code>GFW</code>的过滤规则的时候，连接就会被重置。</p>
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how-gfw-work01.png" alt=""></p>
-<h3 id="SSH_Tunnel是怎么工作的">SSH Tunnel是怎么工作的</h3><p>先跟境外服务器基于<code>ssh</code>建立一条加密通道，接下来，当用户访问<code>GFW</code>的过滤规则内的内容的时候是通过建立起的隧道进行代理，实际上就是到了境外的服务器才会触发真实的网络请求。但由于创建隧道和数据传输的过程中，ssh本身的特征是比较明显，所以<code>GFW</code>一度通过分析连接的特征进行干扰，导致<code>ssh</code>存在被定向进行干扰的问题。</p>
+<h3 id="SSH-Tunnel是怎么工作的"><a href="#SSH-Tunnel是怎么工作的" class="headerlink" title="SSH Tunnel是怎么工作的"></a>SSH Tunnel是怎么工作的</h3><p>先跟境外服务器基于<code>ssh</code>建立一条加密通道，接下来，当用户访问<code>GFW</code>的过滤规则内的内容的时候是通过建立起的隧道进行代理，实际上就是到了境外的服务器才会触发真实的网络请求。但由于创建隧道和数据传输的过程中，ssh本身的特征是比较明显，所以<code>GFW</code>一度通过分析连接的特征进行干扰，导致<code>ssh</code>存在被定向进行干扰的问题。</p>
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how-gfw-work02.png" alt=""></p>
-<h3 id="Shadowsocks是怎么工作的">Shadowsocks是怎么工作的</h3><p>简单来说，就是把上图常见<code>ssh</code>通道的过程拆分成为两个部分，local和server. 这样一来，创建<code>ssh</code>的过程挪到了局域网内部，<code>GFW</code>无法嗅探其特征，故无法进行干扰。</p>
+<h3 id="Shadowsocks是怎么工作的"><a href="#Shadowsocks是怎么工作的" class="headerlink" title="Shadowsocks是怎么工作的"></a>Shadowsocks是怎么工作的</h3><p>简单来说，就是把上图常见<code>ssh</code>通道的过程拆分成为两个部分，local和server. 这样一来，创建<code>ssh</code>的过程挪到了局域网内部，<code>GFW</code>无法嗅探其特征，故无法进行干扰。</p>
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how-gfw-work02.png" alt=""></p>
-<h2 id="服务器端配置">服务器端配置</h2><p>服务器端需要安装<code>shadowsocks</code>, 并作为server部分来工作:</p>
-<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo -s <span class="comment">// 获取超级管理员权限</span></span><br><span class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> <span class="comment">// 更新apt-get</span></span><br><span class="line">apt-<span class="built_in">get</span> install python-pip <span class="comment">// 安装python包管理工具pip</span></span><br><span class="line">pip install shadowsocks <span class="comment">// 安装shadowsocks</span></span><br></pre></td></tr></table></figure>
+<h2 id="服务器端配置"><a href="#服务器端配置" class="headerlink" title="服务器端配置"></a>服务器端配置</h2><p>服务器端需要安装<code>shadowsocks</code>, 并作为server部分来工作:</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo -s <span class="comment">// 获取超级管理员权限</span></div><div class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> <span class="comment">// 更新apt-get</span></div><div class="line">apt-<span class="built_in">get</span> install python-pip <span class="comment">// 安装python包管理工具pip</span></div><div class="line">pip install shadowsocks <span class="comment">// 安装shadowsocks</span></div></pre></td></tr></table></figure>
 <p><code>shadowsocks</code>的启动依赖一份配置文件，需要创建这个文件：</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi <span class="regexp">/etc/</span>shadowsocks.json</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo vi <span class="regexp">/etc/</span>shadowsocks.json</div></pre></td></tr></table></figure>
 <p>如果是单个用户使用，则写入以下内容：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">server</span>":<span class="value"><span class="string">"0.0.0.0"</span></span>,</span><br><span class="line">    "<span class="attribute">server_port</span>":<span class="value"><span class="number">8388</span></span>,</span><br><span class="line">    "<span class="attribute">local_address</span>": <span class="value"><span class="string">"127.0.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">local_port</span>":<span class="value"><span class="number">1080</span></span>,</span><br><span class="line">    "<span class="attribute">password</span>":<span class="value"><span class="string">"myvpnpwd"</span></span>,</span><br><span class="line">    "<span class="attribute">timeout</span>":<span class="value"><span class="number">300</span></span>,</span><br><span class="line">    "<span class="attribute">method</span>":<span class="value"><span class="string">"aes-256-cfb"</span></span>,</span><br><span class="line">    "<span class="attribute">fast_open</span>": <span class="value"><span class="literal">false</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"server"</span>:<span class="string">"0.0.0.0"</span>,</div><div class="line">    <span class="attr">"server_port"</span>:<span class="number">8388</span>,</div><div class="line">    <span class="attr">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</div><div class="line">    <span class="attr">"local_port"</span>:<span class="number">1080</span>,</div><div class="line">    <span class="attr">"password"</span>:<span class="string">"myvpnpwd"</span>,</div><div class="line">    <span class="attr">"timeout"</span>:<span class="number">300</span>,</div><div class="line">    <span class="attr">"method"</span>:<span class="string">"aes-256-cfb"</span>,</div><div class="line">    <span class="attr">"fast_open"</span>: <span class="literal">false</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>如果是多个用户，则按下面的格式写入：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">server</span>":<span class="value"><span class="string">"0.0.0.0"</span></span>,</span><br><span class="line">    "<span class="attribute">port_password</span>":</span><br><span class="line">    <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">8388</span>": <span class="value"><span class="string">"pwd"</span></span>,</span><br><span class="line">        "<span class="attribute">8389</span>": <span class="value"><span class="string">"pwd"</span></span>,</span><br><span class="line">        "<span class="attribute">8390</span>": <span class="value"><span class="string">"pwd"</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">local_address</span>": <span class="value"><span class="string">"127.0.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">local_port</span>":<span class="value"><span class="number">1080</span></span>,</span><br><span class="line">    "<span class="attribute">timeout</span>":<span class="value"><span class="number">300</span></span>,</span><br><span class="line">    "<span class="attribute">method</span>":<span class="value"><span class="string">"aes-256-cfb"</span></span>,</span><br><span class="line">    "<span class="attribute">fast_open</span>": <span class="value"><span class="literal">false</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"server"</span>:<span class="string">"0.0.0.0"</span>,</div><div class="line">    <span class="attr">"port_password"</span>:</div><div class="line">    &#123;</div><div class="line">        <span class="attr">"8388"</span>: <span class="string">"pwd"</span>,</div><div class="line">        <span class="attr">"8389"</span>: <span class="string">"pwd"</span>,</div><div class="line">        <span class="attr">"8390"</span>: <span class="string">"pwd"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</div><div class="line">    <span class="attr">"local_port"</span>:<span class="number">1080</span>,</div><div class="line">    <span class="attr">"timeout"</span>:<span class="number">300</span>,</div><div class="line">    <span class="attr">"method"</span>:<span class="string">"aes-256-cfb"</span>,</div><div class="line">    <span class="attr">"fast_open"</span>: <span class="literal">false</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>然后利用这个配置文件启动shadowsocks：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssserver -c /etc/shadowsocks<span class="class">.json</span> -d start</span><br></pre></td></tr></table></figure>
-<h2 id="本地配置">本地配置</h2><p>在这个<a href="https://github.com/shadowsocks/shadowsocks/tree/master#client" target="_blank" rel="external">地址</a>下载对应的客户端。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo ssserver -c /etc/shadowsocks<span class="selector-class">.json</span> -d start</div></pre></td></tr></table></figure>
+<h2 id="本地配置"><a href="#本地配置" class="headerlink" title="本地配置"></a>本地配置</h2><p>在这个<a href="https://github.com/shadowsocks/shadowsocks/tree/master#client" target="_blank" rel="external">地址</a>下载对应的客户端。</p>
 <p>运行客户端以后，配置上服务器的公网ip以及上面的配置文件中配置的端口以及密码，大功告成，一条梯子已经搭成了。</p>
-<h2 id="最后">最后</h2><p>其实这个方案还是有一个缺点的，恩，致命的缺点，购买一台海外服务器将是一笔不菲的费用。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>其实这个方案还是有一个缺点的，恩，致命的缺点，购买一台海外服务器将是一笔不菲的费用。</p>
 <blockquote>
 <p>金钱其实什么都不能给你，除了自由。——Savio</p>
 </blockquote>
@@ -323,7 +321,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -383,7 +381,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#防火墙是怎么工作的"><span class="nav-number">1.1.</span> <span class="nav-text">防火墙是怎么工作的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH_Tunnel是怎么工作的"><span class="nav-number">1.2.</span> <span class="nav-text">SSH Tunnel是怎么工作的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shadowsocks是怎么工作的"><span class="nav-number">1.3.</span> <span class="nav-text">Shadowsocks是怎么工作的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器端配置"><span class="nav-number">2.</span> <span class="nav-text">服务器端配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地配置"><span class="nav-number">3.</span> <span class="nav-text">本地配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#防火墙是怎么工作的"><span class="nav-number">1.1.</span> <span class="nav-text">防火墙是怎么工作的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH-Tunnel是怎么工作的"><span class="nav-number">1.2.</span> <span class="nav-text">SSH Tunnel是怎么工作的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shadowsocks是怎么工作的"><span class="nav-number">1.3.</span> <span class="nav-text">Shadowsocks是怎么工作的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器端配置"><span class="nav-number">2.</span> <span class="nav-text">服务器端配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地配置"><span class="nav-number">3.</span> <span class="nav-text">本地配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -400,7 +398,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

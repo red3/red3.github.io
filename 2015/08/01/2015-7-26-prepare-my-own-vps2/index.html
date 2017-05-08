@@ -40,6 +40,7 @@
 
 
 <meta name="description" content="生命不息，折腾不止。此次系列主要记录怎么将自己的域名解析到服务器上。当然，首先，你需要一个域名。这里吐槽下阿里云，我是因为买域名送了买服务器的优惠券才选择购买的阿里云，到头来我要将自己的域名解析到阿里云的时候，阿里云又需要备案域名才可以解析，我购买的服务器的期限是1个月，估计备案域名的时间也需要这么长时间，意味着备案成功后，我的服务器也到期了。那我还解析个毛啊，果断退了阿里云服务器，购买了香港的v">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="折腾自己的服务器系列（二）之解析域名到服务器">
 <meta property="og:url" content="http://blog.coderhr.com/2015/08/01/2015-7-26-prepare-my-own-vps2/index.html">
@@ -53,6 +54,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="折腾自己的服务器系列（二）之解析域名到服务器">
 <meta name="twitter:description" content="生命不息，折腾不止。此次系列主要记录怎么将自己的域名解析到服务器上。当然，首先，你需要一个域名。这里吐槽下阿里云，我是因为买域名送了买服务器的优惠券才选择购买的阿里云，到头来我要将自己的域名解析到阿里云的时候，阿里云又需要备案域名才可以解析，我购买的服务器的期限是1个月，估计备案域名的时间也需要这么长时间，意味着备案成功后，我的服务器也到期了。那我还解析个毛啊，果断退了阿里云服务器，购买了香港的v">
+<meta name="twitter:image" content="http://blog.coderhr.com/assets/2015/img_prepaer_vps1.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -221,39 +223,39 @@
 <p><img src="/assets/2015/img_prepaer_vps2.png" alt=""></p>
 <p>至此，以后所有域名的操作都可以在Dnspod上搞定了，跟阿里云没有关系了。</p>
 <p>接下来就折腾下怎么把主域名解析到服务器www目录，以及解析一个二级域名到服务器自定义的一个目录。</p>
-<h2 id="解析主域名">解析主域名</h2><p>当我们需要将域名解析到我们服务器的公网ip的时候，就需要在Dnspod上添加记录，如图：</p>
+<h2 id="解析主域名"><a href="#解析主域名" class="headerlink" title="解析主域名"></a>解析主域名</h2><p>当我们需要将域名解析到我们服务器的公网ip的时候，就需要在Dnspod上添加记录，如图：</p>
 <p><img src="/assets/2015/img_prepaer_vps3.png" alt=""></p>
 <p>可以看出，我们在刚才的基础上添加了两条<code>A记录</code>。A记录的意思是把域名解析到一个ip地址，是符合我们当下的需求的。</p>
 <p>在主机记录栏，分别添加了<code>@</code>和<code>www</code>两条，分别对应的意思是：</p>
-<pre><code><span class="comment">// 假设域名是bbbb</span>
-@ ： 通过浏览器访问 bbbb<span class="class">.com</span> 会跳转到服务器
-www ：通过浏览器访问 www<span class="class">.bbbb</span><span class="class">.com</span> 会跳转到服务器
+<pre><code>// 假设域名是bbbb
+@ ： 通过浏览器访问 bbbb.com 会跳转到服务器
+www ：通过浏览器访问 www.bbbb.com 会跳转到服务器
 </code></pre><p>在记录值栏，要添加成服务器的公网ip，假如你的服务器的公网ip是<code>100.200.160.70</code>, 就填这个地址就可以。</p>
 <p>现在，等dns解析生效，在浏览器中访问自己的域名，应该可以跳转到服务器了。</p>
-<h2 id="解析二级域名">解析二级域名</h2><p>假设主域名是bbbb.com, 二级域名是类似<code>wx.bbbb.com</code>这种。现在的需求是把二级域名也解析到服务器上。还是需要添加记录：</p>
+<h2 id="解析二级域名"><a href="#解析二级域名" class="headerlink" title="解析二级域名"></a>解析二级域名</h2><p>假设主域名是bbbb.com, 二级域名是类似<code>wx.bbbb.com</code>这种。现在的需求是把二级域名也解析到服务器上。还是需要添加记录：</p>
 <p><img src="/assets/2015/img_prepaer_vps4.png" alt=""></p>
 <p>还是一条<code>A记录</code>，因为我们需要先把二级域名解析到服务器上，然后在服务器的Apache设置跳转规则，将二级域名跳转到指定目录。</p>
 <p>在主机记录栏，添加了<code>wx</code>，意思是：</p>
-<pre><code><span class="comment">// 假设域名是bbbb</span>
-wx ： 通过浏览器访问 wx<span class="class">.bbbb</span><span class="class">.com</span> 会跳转到服务器
+<pre><code>// 假设域名是bbbb
+wx ： 通过浏览器访问 wx.bbbb.com 会跳转到服务器
 </code></pre><p>在记录值那里还是填服务器的公网ip。<br>现在等dns解析生效，访问<code>wx.bbbb.com</code>就会跳转到服务器www目录了。显然这不是我们想要的结果。</p>
 <p>需要指向指定目录，还要更改下Apache的配置：</p>
-<pre><code><span class="keyword">vi</span> /etc/httpd/<span class="keyword">conf</span>/httpd.<span class="keyword">conf</span>
+<pre><code>vi /etc/httpd/conf/httpd.conf
 </code></pre><p>在配置文件末尾添加如下代码：</p>
-<pre><code><span class="keyword"><span class="common">RewriteEngine</span></span> <span class="literal">on</span>
-<span class="keyword">RewriteMap</span> lowercase int:tolower
-<span class="keyword">RewriteMap</span> vhost txt:/etc/httpd/conf/vhost.map
-<span class="keyword"><span class="common">RewriteCond</span></span> <span class="cbracket">${lowercase:<span class="cbracket">%{SERVER_NAME}</span>}</span> ^(.+)$
-<span class="keyword"><span class="common">RewriteCond</span></span> <span class="cbracket">${vhost:<span class="number">%1</span>}</span> ^(/.*)$
-<span class="keyword"><span class="common">RewriteRule</span></span> ^/(.*)$ <span class="number">%1</span>/<span class="number">$1</span>
+<pre><code>RewriteEngine on
+RewriteMap lowercase int:tolower
+RewriteMap vhost txt:/etc/httpd/conf/vhost.map
+RewriteCond ${lowercase:%{SERVER_NAME}} ^(.+)$
+RewriteCond ${vhost:%1} ^(/.*)$
+RewriteRule ^/(.*)$ %1/$1
 </code></pre><p>目的是告诉Apache，我们有一个<code>vhost.map</code>文件，通过这个文件来定义连接到服务器的二级域名该跳转到哪个目录。</p>
 <p>接下来创建在<code>/etc/httpd/conf</code>这个目录下创建这个文件：</p>
-<pre><code>vi vhost<span class="class">.map</span>
-<span class="comment">// 这个文件下添加下面的记录</span>
-wx<span class="class">.bbbb</span><span class="class">.com</span> /var/www/html/bbbb.com/wx
+<pre><code>vi vhost.map
+// 这个文件下添加下面的记录
+wx.bbbb.com /var/www/html/bbbb.com/wx
 </code></pre><p>通过这个文件，Apache会把<code>wx.bbbb.com</code>这个域名解析到我们设置的那个目录去。以后的二级域名跳转规则都可以添加到这个文件下，并且不需要重启Apache服务就可以使之生效。</p>
 <p>现在，通过浏览器访问<code>wx.bbbb.com</code>就可以跳转到我们刚才设置的那个目录了。</p>
-<h2 id="最后">最后</h2><p>折腾服务器的这个系列就要先告一段落了，因为刚开始接触这些东西，有些东西并不是很深入，人生路漫漫，以后还要接着折腾。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>折腾服务器的这个系列就要先告一段落了，因为刚开始接触这些东西，有些东西并不是很深入，人生路漫漫，以后还要接着折腾。</p>
 </span>
       
     </div>
@@ -343,7 +345,7 @@ wx<span class="class">.bbbb</span><span class="class">.com</span> /var/www/html/
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -420,7 +422,7 @@ wx<span class="class">.bbbb</span><span class="class">.com</span> /var/www/html/
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

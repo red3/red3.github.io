@@ -39,43 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="最近由于工作需要，需要给Mac本地的Apache配置ssl环境，折腾了一下午，终于解决了，把过程记录下来，留给有需要的人。
-
-生成ssl证书
-
-
-生成主机密匙 （’ssl’这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）
-
-sudo mkdir /private/etc/apache2/ssl
-cd /private/etc/apache2/ssl
-sudo ssh-keygen -f">
+<meta name="description" content="最近由于工作需要，需要给Mac本地的Apache配置ssl环境，折腾了一下午，终于解决了，把过程记录下来，留给有需要的人。  生成ssl证书   生成主机密匙 （’ssl’这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）  sudo mkdir /private/etc/apache2/ssl cd /private/etc/apache2/ssl sudo ssh-keygen -f">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mac OS X 中为Apache开启ssl">
 <meta property="og:url" content="http://blog.coderhr.com/2015/06/23/2015-6-23-Mac-OS-ssl/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="最近由于工作需要，需要给Mac本地的Apache配置ssl环境，折腾了一下午，终于解决了，把过程记录下来，留给有需要的人。
-
-生成ssl证书
-
-
-生成主机密匙 （’ssl’这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）
-
-sudo mkdir /private/etc/apache2/ssl
-cd /private/etc/apache2/ssl
-sudo ssh-keygen -f">
+<meta property="og:description" content="最近由于工作需要，需要给Mac本地的Apache配置ssl环境，折腾了一下午，终于解决了，把过程记录下来，留给有需要的人。  生成ssl证书   生成主机密匙 （’ssl’这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）  sudo mkdir /private/etc/apache2/ssl cd /private/etc/apache2/ssl sudo ssh-keygen -f">
 <meta property="og:updated_time" content="2015-10-08T06:04:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mac OS X 中为Apache开启ssl">
-<meta name="twitter:description" content="最近由于工作需要，需要给Mac本地的Apache配置ssl环境，折腾了一下午，终于解决了，把过程记录下来，留给有需要的人。
-
-生成ssl证书
-
-
-生成主机密匙 （’ssl’这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）
-
-sudo mkdir /private/etc/apache2/ssl
-cd /private/etc/apache2/ssl
-sudo ssh-keygen -f">
+<meta name="twitter:description" content="最近由于工作需要，需要给Mac本地的Apache配置ssl环境，折腾了一下午，终于解决了，把过程记录下来，留给有需要的人。  生成ssl证书   生成主机密匙 （’ssl’这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）  sudo mkdir /private/etc/apache2/ssl cd /private/etc/apache2/ssl sudo ssh-keygen -f">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -243,18 +216,18 @@ sudo ssh-keygen -f">
 <ol>
 <li>生成主机密匙 （’ssl’这个文件夹可以随意起名字，只要在后面的设置中保持一致即可）</li>
 </ol>
-<pre><code>sudo mkdir <span class="regexp">/private/</span>etc<span class="regexp">/apache2/</span>ssl
-cd <span class="regexp">/private/</span>etc<span class="regexp">/apache2/</span>ssl
+<pre><code>sudo mkdir /private/etc/apache2/ssl
+cd /private/etc/apache2/ssl
 sudo ssh-keygen -f server.key
 </code></pre><ol>
 <li><p>生成证书请求文件（这个过程感觉跟iOS生成开发证书类似）</p>
-<pre><code>sudo openssl req -new -key server<span class="class">.key</span> -out request<span class="class">.csr</span>
-<span class="comment">// 这个过程中会让输入一些证书机构的信息，按照提示或者留空就行</span>
+<pre><code>sudo openssl req -new -key server.key -out request.csr
+// 这个过程中会让输入一些证书机构的信息，按照提示或者留空就行
 </code></pre></li>
 </ol>
 <ol>
 <li><p>使用server.key 和 request.csr 生成ssl证书</p>
-<pre><code>sudo openssl x509 -req -days <span class="number">365</span> -<span class="keyword">in</span> request<span class="class">.csr</span> -signkey server<span class="class">.key</span> -out server.crt
+<pre><code>sudo openssl x509 -req -days 365 -in request.csr -signkey server.key -out server.crt
 </code></pre></li>
 </ol>
 <ul>
@@ -277,41 +250,41 @@ LoadModule socache_shmcb_module libexec/apache2/mod_socache_shmcb.so
 </li>
 </ol>
 <p>将以下两行：</p>
-<pre><code><span class="title">SSLCertificateFile</span> <span class="string">"/private/etc/apache2/server.crt"</span>
+<pre><code>SSLCertificateFile &quot;/private/etc/apache2/server.crt&quot;
 
-SSLCertificateKeyFile <span class="string">"/private/etc/apache2/server.key"</span>
+SSLCertificateKeyFile &quot;/private/etc/apache2/server.key&quot;
 </code></pre><p>分别修改为：（需要注意的是ssl文件夹为第1步创建的文件夹）</p>
-<pre><code><span class="title">SSLCertificateFile</span> <span class="string">"/private/etc/apache2/ssl/server.crt"</span>
+<pre><code>SSLCertificateFile &quot;/private/etc/apache2/ssl/server.crt&quot;
 
-SSLCertificateKeyFile <span class="string">"/private/etc/apache2/ssl/server.key"</span>
+SSLCertificateKeyFile &quot;/private/etc/apache2/ssl/server.key&quot;
 </code></pre><p>需要注意的是该文件68行的代码会在Apache运行的时候报错</p>
-<pre><code><span class="title">SSLMutex</span>  <span class="string">"file:/private/var/run/ssl_mutex"</span>
+<pre><code>SSLMutex  &quot;file:/private/var/run/ssl_mutex&quot;
 </code></pre><p>查找网上的解决方案是将这行代码注释，不知道会不会带来安全隐患，烦请知道的同学告知。</p>
 <ol>
 <li>编辑httpd-vhosts.conf文件</li>
 </ol>
 <p>在文件末尾添加：</p>
-<pre><code>&lt;<span class="constant">VirtualHost</span> *<span class="symbol">:</span><span class="number">443</span>&gt; 
-<span class="constant">SSLEngine</span> on
-<span class="constant">SSLCipherSuite</span> <span class="constant">ALL</span><span class="symbol">:</span>!<span class="constant">ADH</span><span class="symbol">:</span>!<span class="constant">EXPORT56</span><span class="symbol">:RC4+RSA</span><span class="symbol">:+HIGH</span><span class="symbol">:+MEDIUM</span><span class="symbol">:+LOW</span><span class="symbol">:+SSLv2</span><span class="symbol">:+EXP</span><span class="symbol">:+eNULL</span>
-<span class="constant">SSLCertificateFile</span> /<span class="keyword">private</span>/etc/apache2/ssl/server.crt 
-<span class="constant">SSLCertificateKeyFile</span> /<span class="keyword">private</span>/etc/apache2/ssl/server.key
-<span class="constant">ServerName</span> localhost
-/<span class="regexp">/ copy your DocumentRoot setting in httpd.conf to here
-DocumentRoot "/</span><span class="constant">Users</span>/<span class="variable">$yourName</span>/<span class="constant">Sites</span><span class="string">"
-&lt;/VirtualHost&gt;</span>
+<pre><code>&lt;VirtualHost *:443&gt; 
+SSLEngine on
+SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+SSLCertificateFile /private/etc/apache2/ssl/server.crt 
+SSLCertificateKeyFile /private/etc/apache2/ssl/server.key
+ServerName localhost
+// copy your DocumentRoot setting in httpd.conf to here
+DocumentRoot &quot;/Users/$yourName/Sites&quot;
+&lt;/VirtualHost&gt;
 </code></pre><p>这时需要注意，httpd-vhosts.conf文件里面有个默认的 <virtualhost *:80="">标签， 不做修改的话，访问localhost会报错:The Request / Not Found</virtualhost></p>
 <p>这是因为<virtualhost *:80="">里的设置会覆盖以前单站点模式下的设置, 所以要把该文件里的一些设置同步过来, 我把他修改成这样:</virtualhost></p>
-<pre><code><span class="variable">&lt;VirtualHost *:80&gt;</span>
+<pre><code>&lt;VirtualHost *:80&gt;
 ServerAdmin xxx@example.com
-// copy your DocumentRoot setting <span class="keyword">in</span> httpd.conf <span class="keyword">to</span> here
-DocumentRoot <span class="string">"/Users/$yourName/Sites"</span>
+// copy your DocumentRoot setting in httpd.conf to here
+DocumentRoot &quot;/Users/$yourName/Sites&quot;
 ServerName localhost
-ErrorLog <span class="string">"/private/var/log/apache2/error_log"</span>
-CustomLog <span class="string">"/private/var/log/apache2/access_log"</span> common
-<span class="variable">&lt;/VirtualHost&gt;</span> 
+ErrorLog &quot;/private/var/log/apache2/error_log&quot;
+CustomLog &quot;/private/var/log/apache2/access_log&quot; common
+&lt;/VirtualHost&gt; 
 </code></pre><p>进行到这里就配置完了，重启Apache，访问<a href="https://localhost试试吧！" target="_blank" rel="external">https://localhost试试吧！</a></p>
-<pre><code><span class="title">sudo</span> apachectl configtest
+<pre><code>sudo apachectl configtest
 sudo apachectl restart
 </code></pre><ul>
 <li>后记</li>
@@ -401,7 +374,7 @@ sudo apachectl restart
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -478,7 +451,7 @@ sudo apachectl restart
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

@@ -39,20 +39,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。
-对于以往的学习，推荐阅读附件01-iOS学习的路线图">
+<meta name="description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。 对于以往的学习，推荐阅读附件01-iOS学习的路线图">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS学习沙龙系列（四）：一些疑难问题的解答">
 <meta property="og:url" content="http://blog.coderhr.com/2016/02/18/2016-2-18-how-to-learn-ios04/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。
-对于以往的学习，推荐阅读附件01-iOS学习的路线图">
+<meta property="og:description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。 对于以往的学习，推荐阅读附件01-iOS学习的路线图">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios4_01.jpeg">
 <meta property="og:updated_time" content="2016-02-24T01:26:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS学习沙龙系列（四）：一些疑难问题的解答">
-<meta name="twitter:description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。
-对于以往的学习，推荐阅读附件01-iOS学习的路线图">
+<meta name="twitter:description" content="学习路线回顾回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了UIViewController这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕UIViewController来进行。 对于以往的学习，推荐阅读附件01-iOS学习的路线图">
+<meta name="twitter:image" content="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios4_01.jpeg">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -213,21 +211,21 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="学习路线回顾">学习路线回顾</h2><p>回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了<code>UIViewController</code>这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕<code>UIViewController</code>来进行。</p>
+        <span itemprop="articleBody"><h2 id="学习路线回顾"><a href="#学习路线回顾" class="headerlink" title="学习路线回顾"></a>学习路线回顾</h2><p>回顾以往的课程，基本涵盖了Xcode的介绍使用，OC语言的学习，基本的UI控件的创建以及使用，ContenView以及ContentViewController的应用。截止目前为止，我们的课程进行到了<code>UIViewController</code>这个节点，可以说是iOS开发的重中之重，今后的内容也基本是围绕<code>UIViewController</code>来进行。</p>
 <p>对于以往的学习，推荐阅读附件01-iOS学习的路线图来进行查漏补缺。</p>
-<h2 id="本期纲要">本期纲要</h2><p>本期沙龙由于春节放假原因，部分同事还没有上班，故不进行新的内容讲解，着重解决下学习iOS过程中遇到的问题。</p>
-<h2 id="问题">问题</h2><h3 id="AppDelegate这个文件和UIApplication的关系以及这个文件中能写哪些代码？"><code>AppDelegate</code>这个文件和<code>UIApplication</code>的关系以及这个文件中能写哪些代码？</h3><p><code>UIApplication</code>比作手机中的一个我们编写的app，<code>AppDelegate</code>这个文件（包括.h和.m文件）就是这个app的代理。每一个app都需要一个代理来响应app的状态变化。举例来说，当app首次启动，进入后台，或者再次进入前台的时刻就会通过代理（也就是<code>AppDelegate</code>这个文件）来下发这些状态的变化。远程的消息通知，app之间的信息交换，也是通过这个文件来下发的。Xcode在每次创建新工程的时候其实会自动生成这个代理文件，并把这个代理赋值给app，不需要开发人员去额外操作。</p>
+<h2 id="本期纲要"><a href="#本期纲要" class="headerlink" title="本期纲要"></a>本期纲要</h2><p>本期沙龙由于春节放假原因，部分同事还没有上班，故不进行新的内容讲解，着重解决下学习iOS过程中遇到的问题。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="AppDelegate这个文件和UIApplication的关系以及这个文件中能写哪些代码？"><a href="#AppDelegate这个文件和UIApplication的关系以及这个文件中能写哪些代码？" class="headerlink" title="AppDelegate这个文件和UIApplication的关系以及这个文件中能写哪些代码？"></a><code>AppDelegate</code>这个文件和<code>UIApplication</code>的关系以及这个文件中能写哪些代码？</h3><p><code>UIApplication</code>比作手机中的一个我们编写的app，<code>AppDelegate</code>这个文件（包括.h和.m文件）就是这个app的代理。每一个app都需要一个代理来响应app的状态变化。举例来说，当app首次启动，进入后台，或者再次进入前台的时刻就会通过代理（也就是<code>AppDelegate</code>这个文件）来下发这些状态的变化。远程的消息通知，app之间的信息交换，也是通过这个文件来下发的。Xcode在每次创建新工程的时候其实会自动生成这个代理文件，并把这个代理赋值给app，不需要开发人员去额外操作。</p>
 <p>这个文件中应该写哪些代码：AppDelegate作为程序级状态变化的delegate，应该只做<code>路由</code>和<code>分发</code>的作用，具体逻辑实现代码还是应该在分别的模块中，这个文件应该保持整洁，除了<code>&lt;UIApplicationDelegate&gt;</code>的方法外不应该出现其他方法。</p>
-<h3 id="ViewController中的view属性跟XIB的关系？">ViewController中的<code>view</code>属性跟XIB的关系？</h3><p>由于iOS UI方面编程的特殊性，开发者既可以在Storyboard中编辑UI，也可以在ViewController中手写UI代码。</p>
+<h3 id="ViewController中的view属性跟XIB的关系？"><a href="#ViewController中的view属性跟XIB的关系？" class="headerlink" title="ViewController中的view属性跟XIB的关系？"></a>ViewController中的<code>view</code>属性跟XIB的关系？</h3><p>由于iOS UI方面编程的特殊性，开发者既可以在Storyboard中编辑UI，也可以在ViewController中手写UI代码。</p>
 <p>对于在Storyboard或者XIB文件中的UI，ViewController会在运行时将Storyboard中承载subViews的rootView赋值给ViewController的view属性；对于没有Storyboard的ViewController，运行时会有ViewController的父类创建一个空白的UIView对象赋值给view属性。</p>
-<h3 id="如何在storyboard中编辑UI">如何在storyboard中编辑UI</h3><p>一般借助Xcode中的<code>inspector</code>区域中的attribute选项卡和size选项卡来编辑UI控件。</p>
+<h3 id="如何在storyboard中编辑UI"><a href="#如何在storyboard中编辑UI" class="headerlink" title="如何在storyboard中编辑UI"></a>如何在storyboard中编辑UI</h3><p>一般借助Xcode中的<code>inspector</code>区域中的attribute选项卡和size选项卡来编辑UI控件。</p>
 <p>要连接UI控件至对应的ViewController，则需按住<code>control</code>键，然后退拽控件至ViewControl中。</p>
-<h3 id="XIB中的UI控件应该链接在ViewController的哪个地方？">XIB中的UI控件应该链接在ViewController的哪个地方？</h3><p>Xcode中，.h文件是接口文件，一般会看见<code>@interface</code>的声明， 这个文件用于声明对象之间的交流通信的桥梁，一般而言，放在这个地方的属性声明，说明这个属性需要跟其他对象信息。</p>
+<h3 id="XIB中的UI控件应该链接在ViewController的哪个地方？"><a href="#XIB中的UI控件应该链接在ViewController的哪个地方？" class="headerlink" title="XIB中的UI控件应该链接在ViewController的哪个地方？"></a>XIB中的UI控件应该链接在ViewController的哪个地方？</h3><p>Xcode中，.h文件是接口文件，一般会看见<code>@interface</code>的声明， 这个文件用于声明对象之间的交流通信的桥梁，一般而言，放在这个地方的属性声明，说明这个属性需要跟其他对象信息。</p>
 <p>.m是实现文件，一般会看见<code>@implementation</code>的声明，这个文件用于实现.h文件中的声明，也包括这个类的一些内部实现。这个文件中一般也会看到<code>@interface 类名()</code>这样的声明，是匿名分类的声明，放在这个地方的属性，其他类也是访问不到的。</p>
 <p>一般而言，XIB中的控件的引用需要拖在<code>@interface</code>中，至于是拖在.h 还是.m中，则根据上述抉择；而XIB中的控件对用的事件方法，则需要拖到<code>@implementation</code>实现中。</p>
-<h3 id="XIB中的UITextField怎么绑定事件方法？">XIB中的UITextField怎么绑定事件方法？</h3><p>与拖UIButton的各种点击事件类似。</p>
-<h3 id="UITableView的工作原理，UITableview中的Cell怎么配置不同高度？">UITableView的工作原理，UITableview中的Cell怎么配置不同高度？</h3><p>这个比较复杂，下节课会重点讲讲这个。</p>
-<h3 id="如何在Xcode中新建不同类型的文件？">如何在Xcode中新建不同类型的文件？</h3><p>首先定位到导航区的工程选项卡下面需要新建文件的目标文件夹-&gt;<code>File-New-File</code> 或者<code>Command+N</code>即出现下图：</p>
+<h3 id="XIB中的UITextField怎么绑定事件方法？"><a href="#XIB中的UITextField怎么绑定事件方法？" class="headerlink" title="XIB中的UITextField怎么绑定事件方法？"></a>XIB中的UITextField怎么绑定事件方法？</h3><p>与拖UIButton的各种点击事件类似。</p>
+<h3 id="UITableView的工作原理，UITableview中的Cell怎么配置不同高度？"><a href="#UITableView的工作原理，UITableview中的Cell怎么配置不同高度？" class="headerlink" title="UITableView的工作原理，UITableview中的Cell怎么配置不同高度？"></a>UITableView的工作原理，UITableview中的Cell怎么配置不同高度？</h3><p>这个比较复杂，下节课会重点讲讲这个。</p>
+<h3 id="如何在Xcode中新建不同类型的文件？"><a href="#如何在Xcode中新建不同类型的文件？" class="headerlink" title="如何在Xcode中新建不同类型的文件？"></a>如何在Xcode中新建不同类型的文件？</h3><p>首先定位到导航区的工程选项卡下面需要新建文件的目标文件夹-&gt;<code>File-New-File</code> 或者<code>Command+N</code>即出现下图：</p>
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how_to_learn_ios4_01.jpeg" alt=""></p>
 <p>分别解释下几个选项：</p>
 <ol>
@@ -257,9 +255,9 @@
 </ul>
 </li>
 </ol>
-<h3 id="如何Debug">如何Debug</h3><p>详细的Debug教程参考官方的这个<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/debugging_with_xcode/chapters/about_debugging_w_xcode.html" target="_blank" rel="external">教程</a></p>
+<h3 id="如何Debug"><a href="#如何Debug" class="headerlink" title="如何Debug"></a>如何Debug</h3><p>详细的Debug教程参考官方的这个<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/debugging_with_xcode/chapters/about_debugging_w_xcode.html" target="_blank" rel="external">教程</a></p>
 <p>进阶的教程参考这个<a href="http://objccn.io/issue-19-2/" target="_blank" rel="external">链接</a></p>
-<h3 id="怎么理解ViewController的生命周期">怎么理解ViewController的生命周期</h3><p>这个会在下节课重点讲，这节课先大致给出点说明，有个大致的了解。</p>
+<h3 id="怎么理解ViewController的生命周期"><a href="#怎么理解ViewController的生命周期" class="headerlink" title="怎么理解ViewController的生命周期"></a>怎么理解ViewController的生命周期</h3><p>这个会在下节课重点讲，这节课先大致给出点说明，有个大致的了解。</p>
 <p>首先说明一下，在运行时ViewController是怎么动态获取到Storyboard中关于UI的信息的以及跟自身关联起来的</p>
 <ol>
 <li>通过Storyboard或者XIB中的配置信息实例化对应的UI控件</li>
@@ -269,9 +267,9 @@
 <li>调用ViewController的<code>viewDidLoad</code>方法</li>
 </ol>
 <p>具体的ViewController之间的转场中，对应的view的生命周期：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;- (void)loadView;&#10;&#10;&#19981;&#29992;&#20027;&#21160;&#37325;&#20889;&#36825;&#20010;&#26041;&#27861;&#12290;view&#36825;&#20010;property&#34987;&#20351;&#29992;&#65292;&#19988;&#36825;&#20010;property&#20540;&#20026;&#31354;&#65292;&#36825;&#20010;&#26041;&#27861;&#23601;&#34987;&#35843;&#29992;&#65292;&#20026;&#30340;&#26159;&#21019;&#24314;&#19968;&#20010;view&#24182;&#25226;&#23427;&#36171;&#20540;&#32473;vc&#30340;view&#23646;&#24615;&#12290;&#10;&#26377;nib&#26102;&#65292;&#20174;nib&#21152;&#36733;&#65292;&#27809;&#26377;nib&#26102;&#65292;&#36825;&#20010;&#26041;&#27861;&#21019;&#24314;&#19968;&#20010;UIView&#23545;&#35937;&#12290;&#10;&#10;&#22914;&#26524;&#29992;nib&#65292;&#27704;&#36828;&#19981;&#35201;&#37325;&#20889;&#36825;&#20010;&#26041;&#27861;&#12290;&#10;&#24819;&#33258;&#23450;&#20041;&#36825;&#20010;view&#23545;&#35937;&#65292;&#21487;&#20197;&#37325;&#20889;&#36825;&#20010;&#26041;&#27861;&#65292;&#20294;&#26159;&#19981;&#35201;&#35843;&#29992; super&#30340;&#23454;&#29616;&#12290;&#10;&#10;- (void)viewDidLoad;&#10;&#10;&#19968;&#33324;&#38656;&#35201;&#37325;&#20889;&#36825;&#20010;&#26041;&#27861;&#65292;&#26469;&#22686;&#21152;&#25110;&#32773;&#31227;&#38500;&#23376;view&#25110;&#32773;&#20462;&#25913;&#20174;nib&#20013;&#21152;&#36733;&#26469;&#30340;&#23376;view&#30340;&#29366;&#24577;&#65292;&#21152;&#36733;&#25968;&#25454;&#65292;&#25110;&#32773;&#21457;&#36865;&#32593;&#32476;&#35831;&#27714;&#10;&#10;- (void)viewWillAppear:(BOOL)animated&#10;&#10;&#21487;&#20197;&#22312;&#36825;&#20010;&#26041;&#27861;&#20013;&#25913;&#21464;&#29366;&#24577;&#26639;&#65292;&#23548;&#33322;&#26639;&#29366;&#24577;&#65292;&#24517;&#39035;&#35843;&#29992;&#29238;&#31867;&#30340;&#23454;&#29616; &#10;&#10;- (void)viewDidAppear:(BOOL)animated&#10;&#10;views&#20986;&#29616;&#22312;&#23631;&#24149;&#19978;&#10;&#10;- (void)viewWillDisappear:(BOOL)animated&#10;&#10;&#21487;&#20197;&#22312;&#36825;&#20010;&#26041;&#27861;&#20013;&#25913;&#21464;&#29366;&#24577;&#26639;&#65292;&#23548;&#33322;&#26639;&#29366;&#24577;&#65292;&#24517;&#39035;&#35843;&#29992;&#29238;&#31867;&#30340;&#23454;&#29616; &#10;&#10;- (void)viewDidDisappear:(BOOL)animated&#10;&#10;views&#28040;&#22833;&#22312;&#23631;&#24149;&#19978;</span><br></pre></td></tr></table></figure>
-<h2 id="附件下载">附件下载</h2><p>附件01：<a href="http://everythingcomputerscience.com/books/RoadMapiOS.pdf" target="_blank" rel="external">roadMapIOS</a></p>
-<h2 id="下次课程概要">下次课程概要</h2><p>内存管理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">- (void)loadView;</div><div class="line"></div><div class="line">不用主动重写这个方法。view这个property被使用，且这个property值为空，这个方法就被调用，为的是创建一个view并把它赋值给vc的view属性。</div><div class="line">有nib时，从nib加载，没有nib时，这个方法创建一个UIView对象。</div><div class="line"></div><div class="line">如果用nib，永远不要重写这个方法。</div><div class="line">想自定义这个view对象，可以重写这个方法，但是不要调用 super的实现。</div><div class="line"></div><div class="line">- (void)viewDidLoad;</div><div class="line"></div><div class="line">一般需要重写这个方法，来增加或者移除子view或者修改从nib中加载来的子view的状态，加载数据，或者发送网络请求</div><div class="line"></div><div class="line">- (void)viewWillAppear:(BOOL)animated</div><div class="line"></div><div class="line">可以在这个方法中改变状态栏，导航栏状态，必须调用父类的实现 </div><div class="line"></div><div class="line">- (void)viewDidAppear:(BOOL)animated</div><div class="line"></div><div class="line">views出现在屏幕上</div><div class="line"></div><div class="line">- (void)viewWillDisappear:(BOOL)animated</div><div class="line"></div><div class="line">可以在这个方法中改变状态栏，导航栏状态，必须调用父类的实现 </div><div class="line"></div><div class="line">- (void)viewDidDisappear:(BOOL)animated</div><div class="line"></div><div class="line">views消失在屏幕上</div></pre></td></tr></table></figure>
+<h2 id="附件下载"><a href="#附件下载" class="headerlink" title="附件下载"></a>附件下载</h2><p>附件01：<a href="http://everythingcomputerscience.com/books/RoadMapiOS.pdf" target="_blank" rel="external">roadMapIOS</a></p>
+<h2 id="下次课程概要"><a href="#下次课程概要" class="headerlink" title="下次课程概要"></a>下次课程概要</h2><p>内存管理</p>
 </span>
       
     </div>
@@ -355,7 +353,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -432,7 +430,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

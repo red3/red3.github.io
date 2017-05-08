@@ -39,34 +39,17 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="系列目录你可以从这个地方做一个快速跳转。
-
-Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇
-Scrapy+MySQL+PHP+Sw">
+<meta name="description" content="系列目录你可以从这个地方做一个快速跳转。  Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇 Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇 Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇 Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇 Scrapy+MySQL+PHP+Sw">
+<meta name="keywords" content="Linux,Scrapy,Swift">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇">
 <meta property="og:url" content="http://blog.coderhr.com/2015/09/08/2015-9-8-fullstack-of-Scrapy-MySQL-PHP-Swift4/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="系列目录你可以从这个地方做一个快速跳转。
-
-Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇
-Scrapy+MySQL+PHP+Sw">
+<meta property="og:description" content="系列目录你可以从这个地方做一个快速跳转。  Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇 Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇 Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇 Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇 Scrapy+MySQL+PHP+Sw">
 <meta property="og:updated_time" content="2015-10-08T06:09:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇">
-<meta name="twitter:description" content="系列目录你可以从这个地方做一个快速跳转。
-
-Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇
-Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇
-Scrapy+MySQL+PHP+Sw">
+<meta name="twitter:description" content="系列目录你可以从这个地方做一个快速跳转。  Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇 Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇 Scrapy+MySQL+PHP+Swift开发攻略系列（三）之数据库MySQL篇 Scrapy+MySQL+PHP+Swift开发攻略系列（四）之爬虫被封+爬虫自动运行篇 Scrapy+MySQL+PHP+Sw">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -227,7 +210,7 @@ Scrapy+MySQL+PHP+Sw">
       
 
       
-        <span itemprop="articleBody"><h2 id="系列目录">系列目录</h2><p>你可以从这个地方做一个快速跳转。</p>
+        <span itemprop="articleBody"><h2 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h2><p>你可以从这个地方做一个快速跳转。</p>
 <ul>
 <li><a href="http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift1.html" target="_blank" rel="external">Scrapy+MySQL+PHP+Swift开发攻略系列（一）之前言篇</a></li>
 <li><a href="http://blog.coderharry.com/2015/08/08/fullstack-of-Scrapy+MySQL+PHP+Swift2.html" target="_blank" rel="external">Scrapy+MySQL+PHP+Swift开发攻略系列（二）之爬虫篇</a></li>
@@ -237,31 +220,31 @@ Scrapy+MySQL+PHP+Sw">
 <li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（六）之RESTAPI篇</a></li>
 <li><a href="">Scrapy+MySQL+PHP+Swift开发攻略系列（七）之Swift篇</a></li>
 </ul>
-<h2 id="防止爬虫被封">防止爬虫被封</h2><p>系列（二）中提到过，对于一个网络请求，网站后台可能会检查其<code>User-Agent</code>，所以一个防止爬虫可行的做法就是设置请求的<code>User-Agent</code>。对于频繁的请求，还要对<code>User-Agent</code>做随机变换。</p>
+<h2 id="防止爬虫被封"><a href="#防止爬虫被封" class="headerlink" title="防止爬虫被封"></a>防止爬虫被封</h2><p>系列（二）中提到过，对于一个网络请求，网站后台可能会检查其<code>User-Agent</code>，所以一个防止爬虫可行的做法就是设置请求的<code>User-Agent</code>。对于频繁的请求，还要对<code>User-Agent</code>做随机变换。</p>
 <p>可以通过<code>Downloader Middleware</code>来修改爬虫的request和respons。</p>
-<h3 id="使用下载器中间件(Downloader_Middleware)">使用下载器中间件(Downloader Middleware)</h3><p>要激活下载器中间件组件，需要将其加入到<code>DOWNLOADER_MIDDLEWARES</code>设置中。 该设置是一个字典(dict)，键为中间件类的路径，值为其中间件的顺序(order)。</p>
-<pre><code><span class="component">DOWNLOADER_MIDDLEWARES = {
-'dbmeizi<span class="string">.middlewares.RandomUserAgent':</span> 1
-}</span>
+<h3 id="使用下载器中间件-Downloader-Middleware"><a href="#使用下载器中间件-Downloader-Middleware" class="headerlink" title="使用下载器中间件(Downloader Middleware)"></a>使用下载器中间件(Downloader Middleware)</h3><p>要激活下载器中间件组件，需要将其加入到<code>DOWNLOADER_MIDDLEWARES</code>设置中。 该设置是一个字典(dict)，键为中间件类的路径，值为其中间件的顺序(order)。</p>
+<pre><code>DOWNLOADER_MIDDLEWARES = {
+&apos;dbmeizi.middlewares.RandomUserAgent&apos;: 1
+}
 </code></pre><p>因为要使用随机的<code>User-Agent</code>，所以在设置中，顺便加上随机<code>User-Agent</code>的配置：</p>
-<pre><code><span class="title">USER_AGENTS</span> = [
-<span class="string">"Mozilla/5.0 (X11; Linux i686; U;) Gecko/20070322 Kazehakase/0.4.5"</span>,
-<span class="string">"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko Fedora/1.9.0.8-1.fc10 Kazehakase/0.5.6"</span>,
-<span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20"</span>,
-<span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36"</span>,
-<span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12"</span>,
+<pre><code>USER_AGENTS = [
+&quot;Mozilla/5.0 (X11; Linux i686; U;) Gecko/20070322 Kazehakase/0.4.5&quot;,
+&quot;Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko Fedora/1.9.0.8-1.fc10 Kazehakase/0.5.6&quot;,
+&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20&quot;,
+&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36&quot;,
+&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12&quot;,
 ]
-</code></pre><h3 id="编写下载器中间件">编写下载器中间件</h3><p>创建一个中间件文件<code>middlewares.py</code>.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomUserAgent</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, agents)</span>:</span></span><br><span class="line">        self.agents = agents</span><br><span class="line"></span><br><span class="line"><span class="decorator">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span><span class="params">(cls, crawler)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> cls(crawler.settings.getlist(<span class="string">'USER_AGENTS'</span>))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></span><br><span class="line">        request.headers.setdefault(<span class="string">'User-Agent'</span>, random.choice(self.agents))</span><br></pre></td></tr></table></figure>
-<h2 id="自动运行">自动运行</h2><p>为了源源不断获取数据，要每天都运行爬虫抓取数据，显然每次都人为发起爬虫是不切实际的。</p>
+</code></pre><h3 id="编写下载器中间件"><a href="#编写下载器中间件" class="headerlink" title="编写下载器中间件"></a>编写下载器中间件</h3><p>创建一个中间件文件<code>middlewares.py</code>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> random</div><div class="line"><span class="keyword">import</span> base64</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomUserAgent</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, agents)</span>:</span></div><div class="line">        self.agents = agents</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span><span class="params">(cls, crawler)</span>:</span></div><div class="line">        <span class="keyword">return</span> cls(crawler.settings.getlist(<span class="string">'USER_AGENTS'</span>))</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        request.headers.setdefault(<span class="string">'User-Agent'</span>, random.choice(self.agents))</div></pre></td></tr></table></figure>
+<h2 id="自动运行"><a href="#自动运行" class="headerlink" title="自动运行"></a>自动运行</h2><p>为了源源不断获取数据，要每天都运行爬虫抓取数据，显然每次都人为发起爬虫是不切实际的。</p>
 <p>在Mac上可以通过<code>crontab</code>让爬虫定时自动执行。</p>
-<pre><code><span class="comment">// 为当前用户新增任务</span>
+<pre><code>// 为当前用户新增任务
 crontab -e
-<span class="comment">// 增加如下记录 注意替换自己的爬虫目录 由于环境变量的原因，scrapy要给出全路径</span>
-<span class="number">0</span> <span class="number">10</span> * * * cd <span class="regexp">/Users/</span>herui<span class="regexp">/Sites/</span>dbmeizi &amp;&amp; <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>scrapy crawl dbmeiziSpider
+// 增加如下记录 注意替换自己的爬虫目录 由于环境变量的原因，scrapy要给出全路径
+0 10 * * * cd /Users/herui/Sites/dbmeizi &amp;&amp; /usr/local/bin/scrapy crawl dbmeiziSpider
 </code></pre><p>如上，添加了一个任务，这个任务会每天早上10：00启动，这个任务要做得就是进入爬虫目录，并启动爬虫。</p>
 <p>不过查了下，Mac上目前好像不太推荐用<code>crontab</code>了，推荐使用<code>launchd</code>. 有机会可以了解下。</p>
-<h2 id="最后">最后</h2><p>按照惯例，放上源码地址：</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>按照惯例，放上源码地址：</p>
 </span>
       
     </div>
@@ -355,7 +338,7 @@ crontab -e
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -415,7 +398,7 @@ crontab -e
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#系列目录"><span class="nav-number">1.</span> <span class="nav-text">系列目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防止爬虫被封"><span class="nav-number">2.</span> <span class="nav-text">防止爬虫被封</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用下载器中间件(Downloader_Middleware)"><span class="nav-number">2.1.</span> <span class="nav-text">使用下载器中间件(Downloader Middleware)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写下载器中间件"><span class="nav-number">2.2.</span> <span class="nav-text">编写下载器中间件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动运行"><span class="nav-number">3.</span> <span class="nav-text">自动运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#系列目录"><span class="nav-number">1.</span> <span class="nav-text">系列目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防止爬虫被封"><span class="nav-number">2.</span> <span class="nav-text">防止爬虫被封</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用下载器中间件-Downloader-Middleware"><span class="nav-number">2.1.</span> <span class="nav-text">使用下载器中间件(Downloader Middleware)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写下载器中间件"><span class="nav-number">2.2.</span> <span class="nav-text">编写下载器中间件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动运行"><span class="nav-number">3.</span> <span class="nav-text">自动运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -432,7 +415,7 @@ crontab -e
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

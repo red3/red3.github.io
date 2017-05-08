@@ -1,0 +1,685 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="iOS Notes" />
+
+
+
+  <meta name="keywords" content="iOS,Swift,PHP,Python,Mac" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="最近在开发 PlayAppStore 项目的时候，发现一个问题， 谷歌 Chrome 浏览器从 58 版本开始，不再信任缺少 SAN (Subject Alternative Name)的证书，具体来说，就是在 PlayAppStore 项目中，我们使用了自签名的证书来提供 HTTPS 服务，这个自签名证书仅包含常用的 CN(Common Name) 字段。 所以，自新版本开始，当用户通过谷歌浏览">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fixing Chrome 58+ [missing_subjectAltName] with openssl when using self signed certificates">
+<meta property="og:url" content="http://blog.coderhr.com/2017/05/01/2017-5-1-Fixing-Chrome-missing-subjectAltName-selfsigned-cert-openssl/index.html">
+<meta property="og:site_name" content="red3">
+<meta property="og:description" content="最近在开发 PlayAppStore 项目的时候，发现一个问题， 谷歌 Chrome 浏览器从 58 版本开始，不再信任缺少 SAN (Subject Alternative Name)的证书，具体来说，就是在 PlayAppStore 项目中，我们使用了自签名的证书来提供 HTTPS 服务，这个自签名证书仅包含常用的 CN(Common Name) 字段。 所以，自新版本开始，当用户通过谷歌浏览">
+<meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/missing_subjectAltName01.png">
+<meta property="og:updated_time" content="2017-05-08T01:30:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fixing Chrome 58+ [missing_subjectAltName] with openssl when using self signed certificates">
+<meta name="twitter:description" content="最近在开发 PlayAppStore 项目的时候，发现一个问题， 谷歌 Chrome 浏览器从 58 版本开始，不再信任缺少 SAN (Subject Alternative Name)的证书，具体来说，就是在 PlayAppStore 项目中，我们使用了自签名的证书来提供 HTTPS 服务，这个自签名证书仅包含常用的 CN(Common Name) 字段。 所以，自新版本开始，当用户通过谷歌浏览">
+<meta name="twitter:image" content="http://photo-coder.b0.upaiyun.com/img/missing_subjectAltName01.png">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> Fixing Chrome 58+ [missing_subjectAltName] with openssl when using self signed certificates | red3 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-66016948-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">red3</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Fixing Chrome 58+ [missing_subjectAltName] with openssl when using self signed certificates
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-05-01T18:30:00+08:00" content="2017-05-01">
+            2017-05-01
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/05/01/2017-5-1-Fixing-Chrome-missing-subjectAltName-selfsigned-cert-openssl/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/01/2017-5-1-Fixing-Chrome-missing-subjectAltName-selfsigned-cert-openssl/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>最近在开发 <a href="https://github.com/playappstore/PlayAppStore" target="_blank" rel="external">PlayAppStore</a> 项目的时候，发现一个问题， 谷歌 Chrome 浏览器从 58 版本开始，不再信任缺少 <strong>SAN</strong> (Subject Alternative Name)的证书，具体来说，就是在 PlayAppStore 项目中，我们使用了自签名的证书来提供 HTTPS 服务，这个自签名证书仅包含常用的 <strong>CN</strong>(Common Name) 字段。</p>
+<p>所以，自新版本开始，当用户通过谷歌浏览器访问使用了这个证书的网站的时候，就会报这样的错：</p>
+<p><img src="http://photo-coder.b0.upaiyun.com/img/missing_subjectAltName01.png" alt="error"></p>
+<p>虽然仅仅是差了一个字段，但是解决起来，也是费了一番功夫。</p>
+<h3 id="自签名证书情况"><a href="#自签名证书情况" class="headerlink" title="自签名证书情况"></a>自签名证书情况</h3><p>如果说，仅仅是给自签名证书加入这个 <strong>SAN</strong> 字段，还好说，通过 <code>openssl</code> 命令增加 <code>config</code> 参数就可以解决问题，见下： </p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">openssl req \</div><div class="line">    -<span class="ruby">newkey <span class="symbol">rsa:</span><span class="number">2048</span> \</span></div><div class="line">    -<span class="ruby">x509 \</span></div><div class="line">    -<span class="ruby">nodes \</span></div><div class="line">    -<span class="ruby">keyout server.key \</span></div><div class="line">    -<span class="ruby">new \</span></div><div class="line">    -<span class="ruby">out server.pem \</span></div><div class="line">    -<span class="ruby">subj /CN=localhost \</span></div><div class="line">    -<span class="ruby">reqexts SAN \</span></div><div class="line">    -<span class="ruby">config &lt;(cat /System/Library/OpenSSL/openssl.cnf \</span></div><div class="line">        &lt;(printf '[SAN]\nsubjectAltName=DNS:localhost')) \</div><div class="line">    -<span class="ruby">sha256 \</span></div><div class="line">    -<span class="ruby">days <span class="number">3650</span></span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>注：上面的解决方案来自 github 讨论，通过这个<a href="https://github.com/webpack/webpack-dev-server/issues/854" target="_blank" rel="external">链接</a>了解更多内容</p>
+</blockquote>
+<p>具体来说就是 SAN 字段无法在命令行中直接配置，需要在配置文件中指定，故需要你配置文件中增加 <code>subjectAltName=DNS:localhost</code> 来使 SAN 的配置生效，这里需要注意的是，上面的配置文件路径适用于 MacOS 用户，其他系统用户需要替换为自己主机上的具体地址。</p>
+<h3 id="从自签名-CA-请求证书情况"><a href="#从自签名-CA-请求证书情况" class="headerlink" title="从自签名 CA 请求证书情况"></a>从自签名 CA 请求证书情况</h3><p>但是如果你配置了自己的 CA，需要这个 CA 来签发证书的话，情况就有点不一样了。<br>首先是先创建证书请求文件：</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">openssl genrsa \</div><div class="line">  -<span class="ruby">out private.key \</span></div><div class="line">  2048 \</div><div class="line">  </div><div class="line">openssl req \</div><div class="line">  -<span class="ruby">new \</span></div><div class="line">  -<span class="ruby">nodes \</span></div><div class="line">  -<span class="ruby">key private.key \</span></div><div class="line">  -<span class="ruby">out csr.req \</span></div><div class="line">  -<span class="ruby">reqexts SAN \</span></div><div class="line">  -<span class="ruby">config &lt;(cat /System/Library/OpenSSL/openssl.cnf \</span></div><div class="line">        &lt;(printf '[SAN]\nsubjectAltName=DNS:localhost')) \</div><div class="line">  -<span class="ruby">subj <span class="string">"/C=US/ST=Utah/L=Provo/O=PLAYAPPSTORE Tech Inc/CN=localhost"</span></span></div></pre></td></tr></table></figure>
+<p>对比之前的情况就可以发现，这次我们缺少了 <code>x509</code> 字段，并且产出的是     <code>csr.req</code>，因为我们是为了创建证书请求文件，并不是为了生成证书。我们在证书请求文件中包好了 SAN 字段，然后拿这个请求文件去 CA 那里请求 CA 给颁发证书。</p>
+<p>为了验证是否成功包含 SAN 字段，我们可以用下面的命令，看输出中是否有包含设定的 DNS.</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl req -text -<span class="keyword">in</span> csr<span class="selector-class">.req</span> -noout</div></pre></td></tr></table></figure>
+<p>在 CA 颁发证书这个环节，之前的时候，一般是通过下面的方式：</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">openssl x509 \</div><div class="line">  -<span class="ruby">req -<span class="keyword">in</span> csr.req \</span></div><div class="line">  -<span class="ruby">CA my-root-ca.cer \</span></div><div class="line">  -<span class="ruby">CAkey my-root-ca.key \</span></div><div class="line">  -<span class="ruby">CAcreateserial \</span></div><div class="line">  -<span class="ruby">sha256 \</span></div><div class="line">  -<span class="ruby">out cert.cer \</span></div><div class="line">  -<span class="ruby">days <span class="number">365</span></span></div></pre></td></tr></table></figure>
+<p>但是问题就是出现在了这个环节，通过下面的方式验证生成的证书并没有包含请求文件中的 SAN 字段：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl x509 -text -<span class="keyword">in</span> cert<span class="selector-class">.cer</span> -noout</div></pre></td></tr></table></figure>
+<p>并且奇怪的是，用上面的命令生成的证书的版本竟然还是 V1 (见输出中的字段中有 Version: 1)，而我们期望生成的应该是 V3 证书才对。</p>
+<p>带着这个好奇，我查看了 MacOS 系统下自带的 openssl 的配置文件，发现了下面的说明：</p>
+<blockquote>
+<p>To use this configuration file with the “-extfile” option of the<br> openssl x509 utility.  name here the section containing the X.509v3 extensions to use <code>extensions    =</code></p>
+</blockquote>
+<p>意思就是说当使用 openssl x509 命令生成证书的时候，想要包含 X.509v3 拓展的话，需要使用 extfile 参数来指定这个配置文件，并且指定具体的 extension. 遗憾的是，默认的配置文件并没有指定具体的 extensions, 不过我们可以自己生成自己的 extensions：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">authorityKeyIdentifier=keyid,issuer</div><div class="line">basicConstraints=CA:FALSE</div><div class="line">keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment</div><div class="line">subjectAltName = @alt_names</div><div class="line">[alt_names]</div><div class="line">DNS.1 = localhost</div><div class="line">IP.1 = 127.0.0.1</div></pre></td></tr></table></figure>
+<p>我们把上面的配置文件保存为 v3.cnf, 然后重新修改签名证书的命令：</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">openssl x509 \</div><div class="line">  -<span class="ruby">req -<span class="keyword">in</span> csr.req \</span></div><div class="line">  -<span class="ruby">CA my-root-ca.cer \</span></div><div class="line">  -<span class="ruby">CAkey my-root-ca.key \</span></div><div class="line">  -<span class="ruby">CAcreateserial \</span></div><div class="line">  -<span class="ruby">sha256 \</span></div><div class="line">  -<span class="ruby">out cert.cer \</span></div><div class="line">  -<span class="ruby">extfile v3.cnf \</span></div><div class="line">  -<span class="ruby">days <span class="number">375</span></span></div></pre></td></tr></table></figure>
+<p>再次验证证书的时候，发现证书已经是 V3 格式了，并且在 X509v3 Subject Alternative Name 栏目下也是可以看见我们刚才添加的 SAN 内容：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">DNS:</span>localhost, <span class="built_in">IP</span> Address:<span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span></div></pre></td></tr></table></figure>
+<p>大功告成，满心欢喜以为解决了问题，过了一会，突然隐隐觉得哪有不对：命名已经在证书请求文件中设置过 SAN 了，为什么在签发证书的时候在重新再搞一次？想想这样一个问题，你向正规的 CA 机构请求证书，在请求文件中设置了自己的 SAN, 但是 CA 机构忽略了你的 SAN 内容，替换成了别的内容，这样肯定是有问题的啊! 正经的做法应该是读取请求文件中的 SAN 才对。</p>
+<p>再一次，看看默认的配置文件，发现了下面的配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[ CA_default ]</div><div class="line"><span class="meta"> #</span><span class="bash"> Extension copying option: use with caution.</span></div><div class="line"><span class="meta"> #</span><span class="bash"> copy_extensions = copy</span></div></pre></td></tr></table></figure>
+<p>这个配置默认是关闭的，从字面上来看，和我们的需求相符合，就是拷贝证书拓展内容，但是注释中说要小心使用这个配置，究竟要小心什么，并没有详细说明，只能借助文档了。</p>
+<p>从 openssl 的<a href="https://www.openssl.org/docs/manmaster/man1/ca.html" target="_blank" rel="external">官方文档</a>中找到了这个字段的说明：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">copy_extensions</div><div class="line">Determines how extensions in certificate requests should be handled. If <span class="keyword">set</span> <span class="keyword">to</span> <span class="keyword">none</span> <span class="keyword">or</span> this <span class="keyword">option</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">present</span> <span class="keyword">then</span> extensions <span class="keyword">are</span> ignored <span class="keyword">and</span> <span class="keyword">not</span> copied <span class="keyword">to</span> the certificate. <span class="keyword">If</span> <span class="keyword">set</span> <span class="keyword">to</span> copy <span class="keyword">then</span> <span class="keyword">any</span> extensions <span class="keyword">present</span> <span class="keyword">in</span> the request that <span class="keyword">are</span> <span class="keyword">not</span> already <span class="keyword">present</span> <span class="keyword">are</span> copied <span class="keyword">to</span> the certificate. <span class="keyword">If</span> <span class="keyword">set</span> <span class="keyword">to</span> copyall <span class="keyword">then</span> all extensions <span class="keyword">in</span> the request <span class="keyword">are</span> copied <span class="keyword">to</span> the certificate: <span class="keyword">if</span> the extension <span class="keyword">is</span> already <span class="keyword">present</span> <span class="keyword">in</span> the certificate it <span class="keyword">is</span> deleted first. See the <span class="keyword">WARNINGS</span> <span class="keyword">section</span> <span class="keyword">before</span> <span class="keyword">using</span> this option.</div><div class="line"></div><div class="line">The <span class="keyword">main</span> <span class="keyword">use</span> <span class="keyword">of</span> this <span class="keyword">option</span> <span class="keyword">is</span> <span class="keyword">to</span> <span class="keyword">allow</span> a certificate request <span class="keyword">to</span> supply <span class="keyword">values</span> <span class="keyword">for</span> certain extensions such <span class="keyword">as</span> subjectAltName.</div></pre></td></tr></table></figure>
+<p>我尤其注意到下面这句话：</p>
+<blockquote>
+<p>The main use of this option is to allow a certificate request to supply values for certain extensions such as subjectAltName.</p>
+</blockquote>
+<p>Bingo, 文档中着重解释了这个字段的主要作用就是用来处理证书请求文件中的 subjectAltName 拓展的，看来我们找对了方向。</p>
+<p>但是 <code>copy_extensions = copy</code> 配置是位于 <code>openssl ca</code> 命令下的，意味着我们要抛弃之前使用的 <code>openssl x509</code> 改用这个命令。现在思路是这样，修改或者新建配置文件，使 <code>copy_extensions = copy</code> 生效:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="section">[ ca ]</span></div><div class="line"><span class="attr">default_ca</span>      = CA_default</div><div class="line"><span class="section">[ CA_default ]</span></div><div class="line"><span class="attr">dir</span>            = ./demeCA</div><div class="line"><span class="attr">database</span>       = <span class="variable">$dir</span>/index.txt</div><div class="line"><span class="attr">serial</span>         = <span class="variable">$dir</span>/serial</div><div class="line"><span class="attr">RANDFILE</span>       = <span class="variable">$dir</span>/private/.rand</div><div class="line"><span class="attr">new_certs_dir</span>  = <span class="variable">$dir</span>/newcerts</div><div class="line"><span class="attr">copy_extensions</span> = copy</div><div class="line"><span class="attr">policy</span>         = policy_any</div><div class="line"><span class="attr">x509_extensions</span> = usr_cert</div><div class="line"><span class="section">[ policy_any ]</span></div><div class="line"><span class="attr">countryName</span>            = supplied</div><div class="line"><span class="attr">stateOrProvinceName</span>    = optional</div><div class="line"><span class="attr">organizationName</span>       = optional</div><div class="line"><span class="attr">organizationalUnitName</span> = optional</div><div class="line"><span class="attr">commonName</span>             = supplied</div><div class="line"><span class="attr">emailAddress</span>           = optional</div><div class="line"><span class="section">[ usr_cert ]</span></div><div class="line"><span class="attr">basicConstraints</span>=CA:<span class="literal">FALSE</span></div><div class="line"><span class="attr">keyUsage</span> = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment</div></pre></td></tr></table></figure>
+<p>这里需要注意的是，CA_default 里面需要指定特定的文件夹，如果你要使用自己新建的配置文件，要确保配置文件中指定的文件及文件夹确实存在，有了这个配置文件，我们就可以重新对针对证书请求文件颁发证书了 (假定这个配置文件保存为 ca.cnf)：</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">openssl ca \</div><div class="line">-<span class="ruby">config ca.cnf \</span></div><div class="line">-<span class="ruby">keyfile my-root-ca.key \</span></div><div class="line">-<span class="ruby">cert my-root-ca.cer \</span></div><div class="line">-<span class="ruby">days <span class="number">375</span>  \</span></div><div class="line">-<span class="ruby">md sha256 \</span></div><div class="line">-<span class="ruby"><span class="keyword">in</span> csr.req \</span></div><div class="line">-<span class="ruby">out cert.cer \</span></div><div class="line">-<span class="ruby">batch</span></div></pre></td></tr></table></figure>
+<h3 id="Use-with-caution"><a href="#Use-with-caution" class="headerlink" title="Use with caution"></a>Use with caution</h3><p>之前说过，默认的配置文件中指出使用 <code>copy_extensions</code> 配置要加以小心，具体小心什么，配置文件中并没有说，但是从官方文档中可以了解到，只所以要小心，是因为拷贝拓展的时候，可能把不安全的配置也一并拷贝进去。举例来说，如果一个证书请求文件中误把 basicConstraints 设为 CA:TRUE 并且配置文件中把 copy_extensions 设为了 copyall, 这样就会签发出一个有效的 CA 证书。</p>
+<p>如何避免这样的情形发生？那就是使用中间证书，因为 CA 根证书的保密措施，不可能签发证书的时候频繁使用根证书去签发，相反，是先用根证书签发出一个中间证书，后续的签发工作则有中间证书接管，这样，如果中间证书的密钥泄露了，那么根证书只要吊销这个中间证书就行了。话说回来，用中间证书来签发的时候，是怎么杜绝上述不安全情形的？诀窍就在下面这行配置：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">basicConstraints</span> = CA:<span class="literal">TRUE</span>, pathlen:<span class="number">0</span></div></pre></td></tr></table></figure>
+<p>这个配置通过 pathlen:0 明确指出该中间证书下面不会再有 CA 证书，故即使证书请求文件中出现 CA:TRUE 也会被忽略。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/01/2016-11-1-how-to-use-charles-while-shadowsocks-is-running/" rel="next">如何才能使得 Charles 和 Shadowsocks 共存</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2017/05/01/2017-5-1-Fixing-Chrome-missing-subjectAltName-selfsigned-cert-openssl/"
+                   data-title="Fixing Chrome 58+ [missing_subjectAltName] with openssl when using self signed certificates" data-url="http://blog.coderhr.com/2017/05/01/2017-5-1-Fixing-Chrome-missing-subjectAltName-selfsigned-cert-openssl/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="red3" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">red3</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">iOS Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/red3" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/your-user-name" target="_blank">douban</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lofter.com/" target="_blank">lofter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#自签名证书情况"><span class="nav-number">1.</span> <span class="nav-text">自签名证书情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从自签名-CA-请求证书情况"><span class="nav-number">2.</span> <span class="nav-text">从自签名 CA 请求证书情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-with-caution"><span class="nav-number">3.</span> <span class="nav-text">Use with caution</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">red3</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<div class="cdn-info">
+  <a href="https://www.upyun.com"><img src="/assets/images/upyun_logo_90x45.png"><img></a>
+</div>
+
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"red3"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

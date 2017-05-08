@@ -39,27 +39,19 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="前言相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。
-itms-services://?action=download-manifest&amp;amp;url=http://yourdomain.com/app.plist
-==&amp;gt; //更换为
-itms-services://?act">
+<meta name="description" content="前言相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。 itms-services://?action=download-manifest&amp;amp;url=http://yourdomain.com/app.plist ==&amp;gt; //更换为 itms-services://?act">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过upyun解决iOS7.1后使用AdHoc下载的问题">
 <meta property="og:url" content="http://blog.coderhr.com/2015/09/01/2015-9-1-use-adhoc-with-upyun/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="前言相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。
-itms-services://?action=download-manifest&amp;amp;url=http://yourdomain.com/app.plist
-==&amp;gt; //更换为
-itms-services://?act">
+<meta property="og:description" content="前言相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。 itms-services://?action=download-manifest&amp;amp;url=http://yourdomain.com/app.plist ==&amp;gt; //更换为 itms-services://?act">
 <meta property="og:image" content="http://redharry.b0.upaiyun.com/pic/upyun_with_ssl.gif">
 <meta property="og:image" content="http://redharry.b0.upaiyun.com/pic/how_does_filezilla_looks_like.png">
 <meta property="og:updated_time" content="2015-09-15T09:50:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过upyun解决iOS7.1后使用AdHoc下载的问题">
-<meta name="twitter:description" content="前言相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。
-itms-services://?action=download-manifest&amp;amp;url=http://yourdomain.com/app.plist
-==&amp;gt; //更换为
-itms-services://?act">
+<meta name="twitter:description" content="前言相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。 itms-services://?action=download-manifest&amp;amp;url=http://yourdomain.com/app.plist ==&amp;gt; //更换为 itms-services://?act">
+<meta name="twitter:image" content="http://redharry.b0.upaiyun.com/pic/upyun_with_ssl.gif">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -220,21 +212,21 @@ itms-services://?act">
       
 
       
-        <span itemprop="articleBody"><h2 id="前言">前言</h2><p>相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。</p>
-<pre><code>itms-<span class="symbol">services:</span>/<span class="regexp">/?action=download-manifest&amp;url=http:/</span><span class="regexp">/yourdomain.com/app</span>.plist
-==&gt; <span class="regexp">//</span>更换为
-itms-<span class="symbol">services:</span>/<span class="regexp">/?action=download-manifest&amp;url=https:/</span><span class="regexp">/yourdomain.com/app</span>.plist
+        <span itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>相信大家都已经知道，在苹果发布iOS7.1后，AdHoc不能够接受未经ssl验证的mainfest了，也就是说plist文件的路径需要从http转换为https了。</p>
+<pre><code>itms-services://?action=download-manifest&amp;url=http://yourdomain.com/app.plist
+==&gt; //更换为
+itms-services://?action=download-manifest&amp;url=https://yourdomain.com/app.plist
 </code></pre><p>应对这个改变，我们有两种方法可以采取：</p>
 <ul>
 <li>在本地局域网搭建ssl环境。之前的博客<a href="">Mac OS X 中为Apache开启ssl</a>就是为了应对这个改变做得一些尝试，但是无奈在本地局域网中配置证书太过麻烦，最终放弃。想要尝试该方法的童鞋可以参考<a href="http://blog.cnbluebox.com/blog/2014/03/25/ios7-dot-1xia-shi-yong-adhocfang-fa-xia-zai-de-jie-jue-fang-an/" target="_blank" rel="external">这篇博客</a></li>
 <li>采用https外链。很高兴了解到<a href="">upyun</a>今天（2015.9.1）宣布全面免费，并且upyun是支持做https外链的。所以今天主要尝试通过upyun做一个支持ssl的外链。</li>
 </ul>
 <p>仔细想想，是不是今后博客中的图片都可以放在upyun做CDN加速了，吼吼。</p>
-<h2 id="准备工作">准备工作</h2><p>注册upyun成功后会提示必须绑定支付宝做实名认证，否则无法享受全部功能，吓得我赶紧连接支付宝做了实名认证，没有做实验不实名认证的话，是否支持https外链功能。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>注册upyun成功后会提示必须绑定支付宝做实名认证，否则无法享受全部功能，吓得我赶紧连接支付宝做了实名认证，没有做实验不实名认证的话，是否支持https外链功能。</p>
 <p>添加一个<code>存储类</code>空间，并为这个空间开启https访问功能，如下图：</p>
 <p><img src="http://redharry.b0.upaiyun.com/pic/upyun_with_ssl.gif" alt=""></p>
 <p>哈哈，其实这么简单地步骤完全没有必要上图，我只是单纯想测试下Mac上录制gif图片（我用的是<a href="http://www.recordit.co/" target="_blank" rel="external">Recordit</a>这个软件）以及测试下upyun的CDN图片加速。</p>
-<h2 id="上传文件">上传文件</h2><p>上传文件需要先创建一个<code>操作员</code>。在<code>账号管理</code>菜单下选择<code>操作员管理</code>来新建一个操作员，并在<code>通用</code>菜单中选择<code>操作员管理授权</code>将刚才新建的操作员授权于管理空间权限。</p>
+<h2 id="上传文件"><a href="#上传文件" class="headerlink" title="上传文件"></a>上传文件</h2><p>上传文件需要先创建一个<code>操作员</code>。在<code>账号管理</code>菜单下选择<code>操作员管理</code>来新建一个操作员，并在<code>通用</code>菜单中选择<code>操作员管理授权</code>将刚才新建的操作员授权于管理空间权限。</p>
 <p>假设现在我们有一个名为<code>bucket</code>的空间，并且为这个空间授权了一个名为<code>user</code>的操作员。那么：</p>
 <ol>
 <li><p>关于FTP的配置</p>
@@ -260,16 +252,16 @@ itms-<span class="symbol">services:</span>/<span class="regexp">/?action=downloa
 <p><img src="http://redharry.b0.upaiyun.com/pic/how_does_filezilla_looks_like.png" alt=""></p>
 <p>可以直接把文件拖到红框圈住的地方实现文件的上传。</p>
 <p>如果非要使用终端的话，下面是终端的操作：</p>
-<pre><code><span class="comment">// 以`user/bucket`这个用户登录ftp服务器</span>
-ftp user/bucket@v1<span class="class">.ftp</span><span class="class">.upyun</span><span class="class">.com</span>
-<span class="comment">// 然后输入密码</span>
-<span class="comment">// 登录成功</span>
-<span class="comment">// 查看所有可用命令</span>
+<pre><code>// 以`user/bucket`这个用户登录ftp服务器
+ftp user/bucket@v1.ftp.upyun.com
+// 然后输入密码
+// 登录成功
+// 查看所有可用命令
 ？
-<span class="comment">// 上传本地文件</span>
-put Info<span class="class">.plist</span> /plist/abc<span class="class">.plist</span> <span class="comment">//将本地的工作目录下地Info.plist 上传至服务器/plist/abc.plist这个路径，plist这个文件夹如不存在，会自动创建</span>
-<span class="comment">// 下载远程文件</span>
-get /plist/abc<span class="class">.plist</span> abc<span class="class">.plist</span> <span class="comment">//将远程服务器/plist/abc.plist 拷贝到本地工作目录下</span>
+// 上传本地文件
+put Info.plist /plist/abc.plist //将本地的工作目录下地Info.plist 上传至服务器/plist/abc.plist这个路径，plist这个文件夹如不存在，会自动创建
+// 下载远程文件
+get /plist/abc.plist abc.plist //将远程服务器/plist/abc.plist 拷贝到本地工作目录下
 </code></pre><p>至此，就可以通过<code>https://bucket.b0.upaiyun.com/plist/abc.plist</code>这个外链来访问plist文件了。</p>
 </span>
       
@@ -354,7 +346,7 @@ get /plist/abc<span class="class">.plist</span> abc<span class="class">.plist</s
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -431,7 +423,7 @@ get /plist/abc<span class="class">.plist</span> abc<span class="class">.plist</s
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

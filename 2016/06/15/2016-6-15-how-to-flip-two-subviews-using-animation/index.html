@@ -39,29 +39,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="先上一个动图，阐述下本文所谓的翻转动画到底是怎样的效果？
-
-乍一看很懵逼，翻来覆去的，以前完全没有搞过这种动画啊。
-那我们就先复习下，我们可以搞定的动画在 iOS 中一般是用哪些 API：
-12Block 版本+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations comp">
+<meta name="description" content="先上一个动图，阐述下本文所谓的翻转动画到底是怎样的效果？  乍一看很懵逼，翻来覆去的，以前完全没有搞过这种动画啊。 那我们就先复习下，我们可以搞定的动画在 iOS 中一般是用哪些 API： 12Block 版本+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations comp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS 中如何实现翻转动画特效">
 <meta property="og:url" content="http://blog.coderhr.com/2016/06/15/2016-6-15-how-to-flip-two-subviews-using-animation/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="先上一个动图，阐述下本文所谓的翻转动画到底是怎样的效果？
-
-乍一看很懵逼，翻来覆去的，以前完全没有搞过这种动画啊。
-那我们就先复习下，我们可以搞定的动画在 iOS 中一般是用哪些 API：
-12Block 版本+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations comp">
+<meta property="og:description" content="先上一个动图，阐述下本文所谓的翻转动画到底是怎样的效果？  乍一看很懵逼，翻来覆去的，以前完全没有搞过这种动画啊。 那我们就先复习下，我们可以搞定的动画在 iOS 中一般是用哪些 API： 12Block 版本+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations comp">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/how-to-flip-two-subviews-using-animation01.gif">
 <meta property="og:updated_time" content="2016-07-12T05:35:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS 中如何实现翻转动画特效">
-<meta name="twitter:description" content="先上一个动图，阐述下本文所谓的翻转动画到底是怎样的效果？
-
-乍一看很懵逼，翻来覆去的，以前完全没有搞过这种动画啊。
-那我们就先复习下，我们可以搞定的动画在 iOS 中一般是用哪些 API：
-12Block 版本+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations comp">
+<meta name="twitter:description" content="先上一个动图，阐述下本文所谓的翻转动画到底是怎样的效果？  乍一看很懵逼，翻来覆去的，以前完全没有搞过这种动画啊。 那我们就先复习下，我们可以搞定的动画在 iOS 中一般是用哪些 API： 12Block 版本+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations comp">
+<meta name="twitter:image" content="http://photo-coder.b0.upaiyun.com/img/how-to-flip-two-subviews-using-animation01.gif">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -226,26 +215,26 @@
 <p><img src="http://photo-coder.b0.upaiyun.com/img/how-to-flip-two-subviews-using-animation01.gif" alt=""></p>
 <p>乍一看很懵逼，翻来覆去的，以前完全没有搞过这种动画啊。</p>
 <p>那我们就先复习下，我们可以搞定的动画在 iOS 中一般是用哪些 API：</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Block 版本</span><br><span class="line">+ (<span class="keyword">void</span>)animateWithDuration:(NSTimeInterval)duration animations:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))animations completion:(<span class="keyword">void</span> (^ __nullable)(BOOL finished))completion NS_AVAILABLE_IOS(4_0);</span><br></pre></td></tr></table></figure>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">Block</span> 版本</div><div class="line">+ (void)<span class="selector-tag">animateWithDuration</span><span class="selector-pseudo">:(NSTimeInterval)duration</span> <span class="selector-tag">animations</span><span class="selector-pseudo">:(void</span> (^)(void))<span class="selector-tag">animations</span> <span class="selector-tag">completion</span><span class="selector-pseudo">:(void</span> (^ __nullable)(BOOL finished))<span class="selector-tag">completion</span> <span class="selector-tag">NS_AVAILABLE_IOS</span>(<span class="number">4</span>_0);</div></pre></td></tr></table></figure>
 <p>或者是这样的：</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">事务模式</span><br><span class="line"><span class="attr_selector">[UIView beginAnimations:nil context:nil]</span>;</span><br><span class="line"><span class="attr_selector">[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut]</span>;</span><br><span class="line"><span class="attr_selector">[UIView setAnimationDuration:1]</span>;</span><br><span class="line"><span class="comment">// Apply the animation to the backdrop </span></span><br><span class="line"><span class="attr_selector">[UIView commitAnimations]</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">事务模式</div><div class="line">[<span class="built_in">UIView</span> beginAnimations:<span class="literal">nil</span> context:<span class="literal">nil</span>];</div><div class="line">[<span class="built_in">UIView</span> setAnimationCurve:<span class="built_in">UIViewAnimationCurveEaseInOut</span>];</div><div class="line">[<span class="built_in">UIView</span> setAnimationDuration:<span class="number">1</span>];</div><div class="line"><span class="comment">// Apply the animation to the backdrop </span></div><div class="line">[<span class="built_in">UIView</span> commitAnimations];</div></pre></td></tr></table></figure>
 <p>相比较来说，Block版本的 API 使用起来更加方便，只需要将动画变化放入 Block块中就可以了，其实 Block 版的 API 内部还是用事务实现的。</p>
 <p>利用上面的 API ，我们可以完成 iOS 开发中绝大多数情况下的动画效果。</p>
 <p>值得为 UIKit 团队喝彩的是，本文的这种效果同样包含在这绝大多数情况里面。仔细阅读 UIView 头文件里面关于动画的部分发现这个api：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="typename">void</span>)<span class="string">setAnimationTransition:</span>(UIViewAnimationTransition)transition <span class="string">forView:</span>(UIView *)view <span class="string">cache:</span>(BOOL)cache;</span><br></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)<span class="string">setAnimationTransition:</span>(UIViewAnimationTransition)transition <span class="string">forView:</span>(UIView *)view <span class="string">cache:</span>(BOOL)cache;</div></pre></td></tr></table></figure>
 <p>意即如果你想在变换两个子 View 的时候加上反转动画效果，可以使用这个 API. 并且苹果在接口注释里面还给出了一个示例告诉我们如何做出这样的动画效果：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">[fromView removeFromSuperview]</span><span class="comment">; </span></span><br><span class="line"><span class="title">[containerView addSubview:toView]</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="section">[fromView removeFromSuperview]</span><span class="comment">; </span></div><div class="line"><span class="section">[containerView addSubview:toView]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
 <p>事实上这个接口也是有block版本的，对应的 API 是：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="typename">void</span>)<span class="string">transitionWithView:</span>(UIView *)view <span class="string">duration:</span>(NSTimeInterval)duration <span class="string">options:</span>(UIViewAnimationOptions)options <span class="string">animations:</span>(<span class="typename">void</span> (^ __nullable)(<span class="typename">void</span>))animations <span class="string">completion:</span>(<span class="typename">void</span> (^ __nullable)(BOOL finished))completion NS_AVAILABLE_IOS(<span class="number">4</span>_0);</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)transitionWithView:(<span class="built_in">UIView</span> *)view duration:(<span class="built_in">NSTimeInterval</span>)duration options:(<span class="built_in">UIViewAnimationOptions</span>)options animations:(<span class="keyword">void</span> (^ __<span class="keyword">nullable</span>)(<span class="keyword">void</span>))animations completion:(<span class="keyword">void</span> (^ __<span class="keyword">nullable</span>)(<span class="built_in">BOOL</span> finished))completion <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">4</span>_0);</div></pre></td></tr></table></figure>
 <p>并且在 iOS4.0 后苹果更加推荐用这种方式来做类似的动画效果。</p>
 <p>完整的动画效果代码应该是这样的：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *toView;</span><br><span class="line"><span class="built_in">UIView</span> *fromView;</span><br><span class="line"><span class="built_in">UIViewAnimationOptions</span> option =  <span class="built_in">UIViewAnimationOptionTransitionFlipFromLeft</span>;</span><br><span class="line"><span class="keyword">void</span> (^update)(<span class="keyword">void</span>) = ^ &#123;</span><br><span class="line">       <span class="comment">// reload data</span></span><br><span class="line">    &#125;;</span><br><span class="line">[<span class="built_in">UIView</span> transitionWithView:<span class="keyword">self</span><span class="variable">.containerView</span></span><br><span class="line">                      duration:<span class="number">0.5</span>f</span><br><span class="line">                       options:option </span><br><span class="line">                    animations:^ &#123;</span><br><span class="line">                        [fromView removeFromSuperview]; </span><br><span class="line">						[containerView addSubview:toView];</span><br><span class="line">                    &#125;</span><br><span class="line">                    completion:^ (<span class="built_in">BOOL</span> finished)&#123;</span><br><span class="line">                        update();</span><br><span class="line">                    &#125;];</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">UIView</span> *toView;</div><div class="line"><span class="built_in">UIView</span> *fromView;</div><div class="line"><span class="built_in">UIViewAnimationOptions</span> option =  <span class="built_in">UIViewAnimationOptionTransitionFlipFromLeft</span>;</div><div class="line"><span class="keyword">void</span> (^update)(<span class="keyword">void</span>) = ^ &#123;</div><div class="line">       <span class="comment">// reload data</span></div><div class="line">    &#125;;</div><div class="line">[<span class="built_in">UIView</span> transitionWithView:<span class="keyword">self</span>.containerView</div><div class="line">                      duration:<span class="number">0.5</span>f</div><div class="line">                       options:option </div><div class="line">                    animations:^ &#123;</div><div class="line">                        [fromView removeFromSuperview]; </div><div class="line">						[containerView addSubview:toView];</div><div class="line">                    &#125;</div><div class="line">                    completion:^ (<span class="built_in">BOOL</span> finished)&#123;</div><div class="line">                        update();</div><div class="line">                    &#125;];</div></pre></td></tr></table></figure>
 <p>目前来看，这个动画效果基本实现了。但是还有点问题，拿我们这个例子来说，假如用户当前在 TableView 上浏览商品，为了良好的用户体验，当用户点击切换视图按钮的时候，我们想把用户在 TableView 上的浏览轨迹(浏览到第几个条目)同步到 CollectionView 上，该怎么做？</p>
 <p>我想到的办法是在 ScrollView 的滑动减速的代理里面同步当前浏览位置，但是依据目前的实现，当我们切换浏览视图的视图，会把上一个视图从父视图上移除，所以即使我拿到了当前浏览视图的浏览位置，也无法同步到另一个视图上（因为这个视图并不在屏幕上）。</p>
 <p>顺着这个思路，解决办法就是把 Tableview 和 CollectionView 都加到父视图上，在初始化的时候调用这个 API 改变两个视图的 Z 轴位置：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[containerView <span class="string">insertSubview:</span>collectionView <span class="string">belowSubview:</span>tableView];</span><br></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[containerView <span class="string">insertSubview:</span>collectionView <span class="string">belowSubview:</span>tableView];</div></pre></td></tr></table></figure>
 <p>对应的，在做动画的 Block 块里，切换两个视图的 Z 轴位置：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[containerView exchangeSubviewAtIndex:<span class="number">0</span> withSubviewAtIndex:<span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[containerView <span class="string">exchangeSubviewAtIndex:</span><span class="number">0</span> <span class="string">withSubviewAtIndex:</span><span class="number">1</span>];</div></pre></td></tr></table></figure>
 <p>至此，我们完美解决了问题！</p>
 <p>BTW，我们还可以使用 Core Animation 框架 <code>CATransition</code> 类来做类似的动画效果，具体该怎么实现，就留读者自己探索吧。</p>
 </span>
@@ -331,7 +320,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -408,7 +397,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

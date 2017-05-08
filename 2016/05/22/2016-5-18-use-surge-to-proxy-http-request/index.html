@@ -39,24 +39,19 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
-以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
-在电脑上打开 Charles 或者 Fiddler 等抓包">
+<meta name="description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。 以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程： 在电脑上打开 Charles 或者 Fiddler 等抓包">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS 开发神器：利用 Surge 访问内网接口">
 <meta property="og:url" content="http://blog.coderhr.com/2016/05/22/2016-5-18-use-surge-to-proxy-http-request/index.html">
 <meta property="og:site_name" content="red3">
-<meta property="og:description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
-以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
-在电脑上打开 Charles 或者 Fiddler 等抓包">
+<meta property="og:description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。 以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程： 在电脑上打开 Charles 或者 Fiddler 等抓包">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request01.png">
 <meta property="og:image" content="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request02.png">
 <meta property="og:updated_time" content="2016-06-20T06:48:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS 开发神器：利用 Surge 访问内网接口">
-<meta name="twitter:description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。
-以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：
-在电脑上打开 Charles 或者 Fiddler 等抓包">
+<meta name="twitter:description" content="注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。 以前怎么做以及存在的问题相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程： 在电脑上打开 Charles 或者 Fiddler 等抓包">
+<meta name="twitter:image" content="http://photo-coder.b0.upaiyun.com/img/use-surge-to-proxy-http-request01.png">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -218,7 +213,7 @@
 
       
         <span itemprop="articleBody"><p>注1：本文基于 Surge 1.2.4版本，后续版本可能存在操作差异。</p>
-<h2 id="以前怎么做以及存在的问题">以前怎么做以及存在的问题</h2><p>相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：</p>
+<h2 id="以前怎么做以及存在的问题"><a href="#以前怎么做以及存在的问题" class="headerlink" title="以前怎么做以及存在的问题"></a>以前怎么做以及存在的问题</h2><p>相信大多数移动端开发者都面临过这样的问题：开发过程中需要访问内网服务器资源，有些公司的内网环境需要修改 host 才可以访问，甚至有的公司需要连 vpn 认证才可以访问，比如我们公司。由于在手机上修改 host 不太方便，所以就有了这样的流程：</p>
 <p>在电脑上打开 <code>Charles</code> 或者 <code>Fiddler</code> 等抓包工具，开启代理服务器，获取电脑的 IP 地址，然后在手机当前连接的 WIFI 代理设置中填入对应的电脑的 IP 地址和端口。</p>
 <p>这么做可以满足需求，但是也有些问题：</p>
 <ol>
@@ -227,7 +222,7 @@
 <li><p>安全问题。如果手机上连接的是别人的电脑上的代理服务，那么自己手机中的所有 HTTP 连接都会通过代理服务器电脑来转发，这样的话，所有的通信内容都暴漏到代理服务器电脑上了。</p>
 </li>
 </ol>
-<h2 id="iOS9_后新的解决方案">iOS9 后新的解决方案</h2><p>好在 iOS9.0 后苹果开放了 <code>Network Extension</code>，使得手机上也可以执行代理请求了。意味着我们可以动态将手机上的网络请求做代理处理。具体来说就是可以指定某个域名下的请求走代理。这一特性将大大方便我们在手机上更改代理的需求。因为这一特性，我们可以将代理服务常驻后台，保证只有特定请求才后走代理，不会影响手机其他上的其他请求，同时解决了上述的操作繁琐问题与安全问题。</p>
+<h2 id="iOS9-后新的解决方案"><a href="#iOS9-后新的解决方案" class="headerlink" title="iOS9 后新的解决方案"></a>iOS9 后新的解决方案</h2><p>好在 iOS9.0 后苹果开放了 <code>Network Extension</code>，使得手机上也可以执行代理请求了。意味着我们可以动态将手机上的网络请求做代理处理。具体来说就是可以指定某个域名下的请求走代理。这一特性将大大方便我们在手机上更改代理的需求。因为这一特性，我们可以将代理服务常驻后台，保证只有特定请求才后走代理，不会影响手机其他上的其他请求，同时解决了上述的操作繁琐问题与安全问题。</p>
 <p>满足这一需求的软件有很多，诸如 <code>Surge</code>, <code>Shadowrocks</code>, <code>A.BIG.T</code>等。本文将拿 Surge 为例来说明怎么通过代理软件简化我们的开发调试流程。</p>
 <ul>
 <li>新建一条代理路线</li>
@@ -333,7 +328,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -393,7 +388,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#以前怎么做以及存在的问题"><span class="nav-number">1.</span> <span class="nav-text">以前怎么做以及存在的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS9_后新的解决方案"><span class="nav-number">2.</span> <span class="nav-text">iOS9 后新的解决方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#以前怎么做以及存在的问题"><span class="nav-number">1.</span> <span class="nav-text">以前怎么做以及存在的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS9-后新的解决方案"><span class="nav-number">2.</span> <span class="nav-text">iOS9 后新的解决方案</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -410,7 +405,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>
