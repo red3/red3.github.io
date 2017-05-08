@@ -65,7 +65,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: http://hexo.io/plugins/
 plugins:
-- hexo-generator-sitemap
+#- hexo-generator-sitemap
 ## Themes: http://hexo.io/themes/
 theme: next
 
@@ -73,7 +73,7 @@ theme: next
 ## Docs: http://hexo.io/docs/deployment.html
 deploy: 
 - type: git
-# repo: git@github.com:red3/red3.github.io.git
+#  repo: git@github.com:red3/red3.github.io.git
   repo: https://github.com/red3/red3.github.io.git
 - type: git
   repo: https://git.coding.net/red3/red3.git
