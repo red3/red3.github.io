@@ -50,7 +50,7 @@ Proxy-switcher 是一款 Alfred 的 workflow 插件，通过这个插件，这�
 
 千言万语不如上张图啊，我们来看看效果：
 
-![](http://photo-coder.b0.upaiyun.com/img/ss-charles01.gif)
+![](https://photo-coder.b0.upaiyun.com/img/ss-charles01.gif)
 
 怎么样，很爽吧，以后再有抓包的时候，我们直接呼出 Alfred 键入我们的快键键临时关闭 Shadowsocks 的代理设置，等抓包完毕，我们再使用同样的方法打开就是了。
 

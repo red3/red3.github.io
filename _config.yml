@@ -3,13 +3,13 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: red3
+title: red3's Site
 subtitle: 
-description: iOS Notes
+description: Live with study
 author: red3
-language: zh-Hans
+language: en
 timezone:
-avatar: /images/avatar.jpg
+avatar: https://avatars2.githubusercontent.com/u/7303389
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -73,19 +73,18 @@ theme: next
 ## Docs: http://hexo.io/docs/deployment.html
 deploy: 
 - type: git
-  repo: git@github-red3:red3/red3.github.io.git
+  repo: git@git-google:red3_blog.git
+  branch: master
 #  repo: https://github.com/red3/red3.github.io.git
-- type: git
-  repo: https://git.coding.net/red3/red3.git
+#- type: git
+#  repo: https://git.coding.net/red3/red3.git
 
 # Social links
 social:
-  github: https://github.com/red3
-  douban: http://douban.com/people/your-user-name
-  zhihu: http://www.zhihu.com/
-  lofter: http://www.lofter.com/
-# duoshuo
-duoshuo_shortname: red3
+  GitHub: https://github.com/red3
+  Twitter: https://twitter.com/
+
+
 
 # analytics
 google_analytics: UA-66016948-1

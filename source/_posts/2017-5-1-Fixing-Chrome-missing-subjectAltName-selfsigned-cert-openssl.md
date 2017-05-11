@@ -5,11 +5,11 @@ date:   2017-5-1 18:30:00
 ---
 
 
-最近在开发 [PlayAppStore](https://github.com/playappstore/PlayAppStore) 项目的时候，发现一个问题， 谷歌 Chrome 浏览器从 58 版本开始，不再信任缺少 **SAN** (Subject Alternative Name)的证书，具体来说，就是在 PlayAppStore 项目中，我们使用了自签名的证书来提供 HTTPS 服务，这个自签名证书仅包含常用的 **CN**(Common Name) 字段。
+最近在开发 [PlayAppStore](https://github.com/playappstore/PlayAppStore) 项目的时候，发现一个问题， 谷歌 Chrome 浏览器从 58 版本开始，不再信任缺少 **SAN** (Subject Alternative Name)的证书。<!-- more --> 具体来说，就是在 PlayAppStore 项目中，我们使用了自签名的证书来提供 HTTPS 服务，这个自签名证书仅包含常用的 **CN**(Common Name) 字段。
 
 所以，自新版本开始，当用户通过谷歌浏览器访问使用了这个证书的网站的时候，就会报这样的错：
 
-![error](http://photo-coder.b0.upaiyun.com/img/missing_subjectAltName01.png)
+![](https://photo-coder.b0.upaiyun.com/img/missing_subjectAltName01.png)
 
 虽然仅仅是差了一个字段，但是解决起来，也是费了一番功夫。
 

@@ -3,3 +3,5 @@ _posts/.DS_Store
 public/
 db.json
 node_modules/
+.deploy_git/
+debug.log
